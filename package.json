@@ -22,6 +22,12 @@
   },
   "homepage": "https://github.com/Furious-Four/bashify#readme",
   "devDependencies": {
-    "jest": "^26.6.3"
+    "@babel/core": "^7.14.3",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-proposal-private-methods": "^7.13.0",
+    "@babel/preset-react": "^7.13.13",
+    "jest": "^26.6.3",
+    "webpack": "^5.37.1",
+    "webpack-cli": "^4.7.0"
   }
 }
