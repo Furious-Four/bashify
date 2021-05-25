@@ -1,18 +1,17 @@
 const db = require('./db');
 
 //import all models
-
-const init = async () => {
-  try {
-    await db.sync({ force: true });
-    //call the seed file
-    console.log('connected');
-    await db.close();
-  } catch (error) {
-    console.log(error);
-  }
-};
+const Order = require('./models/Order');
+const OrderDrink = require('./models/Order_Drink');
 
 //model associations
 
-module.exports = init;
+// OrderDrink is a connection table that connects a Drink to an Order and keeps the quantity and price at the time of order
+// Order.belongsToMany(Drink, { through: OrderDrink });
+// Drink.belongsToMany(Order, { through: OrderDrink });
+Order.hasMany(OrderDrink);
+OrderDrink.belongsTo(Order);
+// Drink.hasMany(OrderDrink);
+// OrderDrink.belongsTo(Drink);
+
+module.exports = { db, models };
