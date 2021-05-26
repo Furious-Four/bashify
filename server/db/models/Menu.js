@@ -1,19 +1,27 @@
-const db = require("../db");
-const { DataTypes } = require("sequelize");
+const {
+    Model,
+    DataTypes,
+  } = require('sequelize');
+  const db = require('../db');
+  
+class Menu extends Model {}
 
-const Menu = db.define("menu", {
-  id: {
+Menu.init(
+{
+id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
-  },
-  name: {
+    },
+name: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: { 
-      notEmpty: true,
+        notEmpty: true,
     },
-  },
-});
-
-module.exports = Menu;
+},
+},
+{ sequelize: db, modelName: 'menu' }
+);
+  
+  module.exports = Menu;
