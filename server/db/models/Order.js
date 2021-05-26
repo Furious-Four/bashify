@@ -23,10 +23,11 @@ class Order extends Model {
     });
   }
 }
+
 Order.init(
   {
     status: {
-      type: ENUM('ORDERING', 'SUBMITTED', 'ACCEPTED', 'COMPLETED'),
+      type: ENUM('ORDERING', 'SUBMITTED', 'ACCEPTED', 'READY', 'COMPLETED'),
       defaultValue: 'ORDERING',
     },
   },
