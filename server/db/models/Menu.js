@@ -14,12 +14,12 @@ id: {
     primaryKey: true,
     },
 name: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING, // is menu name just venue name?
     allowNull: false,
     validate: { 
         notEmpty: true,
     },
-},
+}, 
 },
 { sequelize: db, modelName: 'menu' }
 );

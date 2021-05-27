@@ -37,7 +37,7 @@ Drink.init(
         type: DataTypes.INTEGER
       }
 },
-{ sequelize: db, modelName: 'menu' }
+{ sequelize: db, modelName: 'drink' }
 );
   
 module.exports = Drink;
