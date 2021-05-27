@@ -13,5 +13,6 @@ test('init test', () => {
 describe('Model Tests', () => {
   require('./Models/Order.spec');
   require('./Models/Menu.spec');
+  require('./Models/Employee.spec');
 });
 

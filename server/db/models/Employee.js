@@ -6,35 +6,35 @@ const {
   
 class Employee extends Model {}
 
-Menu.init(
+Employee.init(
 {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         },
-        firstName: {
+    firstName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
             notEmpty: true,
         },
-        },
-        lasName: {
+    },
+    lastName: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
             notEmpty: true,
         },
-        },
-        role: {
+    },
+    role: {
         type: DataTypes.STRING
-        },
-        pin: {
+    },
+    pin: {
         type: DataTypes.INTEGER
-        }
+    }
 },
-{ sequelize: db, modelName: 'menu' }
+{ sequelize: db, modelName: 'employee' }
 );
   
-  module.exports = Employee;
+module.exports = Employee;

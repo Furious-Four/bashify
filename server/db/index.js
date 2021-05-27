@@ -4,6 +4,7 @@ const db = require('./db');
 const Order = require('./models/Order');
 const OrderDrink = require('./models/Order_Drink');
 const Menu = require('./models/Menu')
+const Employee = require('./models/Employee')
 
 //model associations
 
@@ -15,4 +16,4 @@ OrderDrink.belongsTo(Order);
 // Drink.hasMany(OrderDrink);
 // OrderDrink.belongsTo(Drink);
 
-module.exports = { db, models: { Order, OrderDrink, Menu } };
+module.exports = { db, models: { Order, OrderDrink, Menu, Employee } };
