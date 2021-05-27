@@ -14,4 +14,4 @@ OrderDrink.belongsTo(Order);
 // Drink.hasMany(OrderDrink);
 // OrderDrink.belongsTo(Drink);
 
-module.exports = { db, models };
+module.exports = { db, models: { Order, OrderDrink } };

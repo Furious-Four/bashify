@@ -1,6 +1,6 @@
 const {
   Model,
-  DataTypes: { ENUM },
+  DataTypes: { ENUM, UUID, UUIDV4, VIRTUAL },
 } = require('sequelize');
 const db = require('../db');
 
@@ -23,11 +23,24 @@ class Order extends Model {
     });
   }
 }
+
 Order.init(
   {
+    id: {
+      type: UUID,
+      primaryKey: true,
+      defaultValue: UUIDV4,
+    },
+    confirmationId: {
+      type: VIRTUAL,
+      get() {
+        return this.id.slice(-6).toUpperCase();
+      },
+    },
     status: {
-      type: ENUM('ORDERING', 'SUBMITTED', 'ACCEPTED', 'COMPLETED'),
+      type: ENUM('ORDERING', 'SUBMITTED', 'ACCEPTED', 'READY', 'COMPLETED'),
       defaultValue: 'ORDERING',
+      allowNull: false,
     },
   },
   { sequelize: db, modelName: 'orders' }
