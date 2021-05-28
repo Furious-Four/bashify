@@ -14,7 +14,7 @@ id: {
     primaryKey: true,
     },
 name: {
-    type: DataTypes.STRING, // is menu name just venue name?
+    type: DataTypes.STRING,
     allowNull: false,
     validate: { 
         notEmpty: true,

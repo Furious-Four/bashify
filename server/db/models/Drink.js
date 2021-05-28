@@ -27,7 +27,7 @@ Drink.init(
         type: DataTypes.STRING
       },
       price: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false,
         validate: {
           notEmpty: true,

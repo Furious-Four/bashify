@@ -17,8 +17,7 @@ describe('Menu properties', () => {
     })
     describe('property: name', ()=> {
         test('menu name is Dive Bar', () => {
-            //console.log(menu)
-            expect(menu.name).toEqual('Dive Bar') // is the menu name just the venue name?
+            expect(menu.name).toEqual('Dive Bar')
         })
     })
 })
