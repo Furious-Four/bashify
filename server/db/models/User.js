@@ -60,13 +60,14 @@ User.init(
     fullName: {
       type: VIRTUAL,
       get() {
-        return `${firstName} ${lastName}`;
+        return `${this.firstName} ${this.lastName}`;
       },
     },
     email: {
       type: STRING,
       allowNull: false,
       validate: {
+        isEmail: true,
         notEmpty: true,
       },
     },

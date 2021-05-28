@@ -29,7 +29,7 @@ Venue.init(
       allowNull: false,
       validate: {
         notEmpty: true,
-        contains: '@',
+        isEmail: true,
       },
     },
     address: {
