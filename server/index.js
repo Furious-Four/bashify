@@ -11,4 +11,8 @@ app.use(morgan('dev'));
 
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
+//routers
+app.use('/api/user', require('./api/user'));
+app.use('/api/venue', require('./api/venue'));
+
 app.listen(port, () => console.log('listening on port', port));
