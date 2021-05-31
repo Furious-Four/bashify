@@ -3,6 +3,8 @@ const Venue = require('../db/models/Venue');
 const PickUpLocation = require('../db/models/PickUpLocation');
 const Tab = require('../db/models/Tab');
 const Menu = require('../db/models/Menu');
+const Drink = require('../db/models/Drink');
+const Employee = require('../db/models/Employee');
 const router = Router();
 
 // This router is mounted at /api/venue
@@ -21,14 +23,14 @@ router.get('/', async (req, res, next) => {
 
 //get venue with id
 router.get('/:id', async (req, res, next) => {
-  //still gotta eager load pickuplocation, menu, drink
+  //still gotta eager load pickuplocation
   try {
     const { id } = req.params;
     const venue = await Venue.findAll({
       where: {
         id,
       },
-      include: Menu,
+      include: { model: Menu, include: [Drink] },
     });
     res.status(200).send(venue);
   } catch (error) {
@@ -75,6 +77,21 @@ router.get('/:id/tabs', async (req, res, next) => {
       include: Tab,
     });
     res.status(200).send(venueWithTabs);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/:id/employees', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const venueWithEmployees = await Venue.findAll({
+      where: {
+        id,
+      },
+      include: Employee,
+    });
+    res.status(200).send(venueWithEmployees);
   } catch (error) {
     next(error);
   }
