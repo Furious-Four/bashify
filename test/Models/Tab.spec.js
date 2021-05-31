@@ -4,11 +4,10 @@ const { DatabaseError } = require('sequelize');
 const {
   models: { Tab },
 } = require('../../server/db/index.js');
+const Venue = require('../../server/db/models/Venue.js');
 
 beforeAll(async () => {
-  await Tab.create({
-    subTotal: 10.0,
-  });
+  await Tab.create();
 });
 
 describe('Tab Attributes', () => {
@@ -22,8 +21,8 @@ describe('Tab Attributes', () => {
     });
   });
   describe('Attribute: tax', () => {
-    test('default value is 9%', () => {
-      expect(tab.tax).toEqual(0.9);
+    test('default value is 0%', () => {
+      expect(tab.tax).toEqual(0.0);
     });
   });
   describe('Attribute: tip', () => {
