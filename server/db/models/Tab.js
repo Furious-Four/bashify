@@ -25,7 +25,7 @@ class Tab extends Model {
   }
   getTotal() {
     const subTotal = this.subTotal;
-    const tabTotal = subTotal * tax + subTotal * tip + subTotal;
+    const tabTotal = subTotal * this.tax + subTotal * this.tip + this.subTotal;
     return (this.total = tabTotal);
   }
 }
@@ -36,7 +36,7 @@ Tab.init(
       defaultValue: 'open',
     },
     tip: { type: FLOAT(2), defaultValue: 0.2 },
-    tax: { type: FLOAT(2), defaultValue: 0.0 },
+    tax: { type: FLOAT(2), defaultValue: 0.9 },
     subTotal: {
       type: FLOAT(2),
       defaultValue: 0.0,
