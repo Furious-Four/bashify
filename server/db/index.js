@@ -3,9 +3,11 @@ const db = require('./db');
 //import all models
 const Order = require('./models/Order');
 const OrderDrink = require('./models/Order_Drink');
-const Menu = require('./models/Menu')
-const Employee = require('./models/Employee')
-const Drink = require('./models/Drink')
+const Menu = require('./models/Menu');
+const Employee = require('./models/Employee');
+const Drink = require('./models/Drink');
+const Tab = require('./models/Tab');
+const PickUpLocation = require('./models/PickUpLocation');
 
 //model associations
 
@@ -18,7 +20,10 @@ OrderDrink.belongsTo(Order);
 // OrderDrink.belongsTo(Drink);
 // Employee.belongsTo(Venue)
 // Menu.belongsTo(Venue)
-Drink.belongsTo(Menu)
-Menu.hasMany(Drink)
+Drink.belongsTo(Menu);
+Menu.hasMany(Drink);
 
-module.exports = { db, models: { Order, OrderDrink, Menu, Employee, Drink } };
+module.exports = {
+  db,
+  models: { Order, OrderDrink, Menu, Employee, Drink, Tab, PickUpLocation },
+};
