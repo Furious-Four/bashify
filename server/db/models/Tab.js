@@ -36,7 +36,7 @@ Tab.init(
       defaultValue: 'open',
     },
     tip: { type: FLOAT(2), defaultValue: 0.2 },
-    tax: { type: FLOAT(2), defaultValue: 0.9 },
+    tax: { type: FLOAT(2), defaultValue: 0.09 },
     subTotal: {
       type: FLOAT(2),
       defaultValue: 0.0,
