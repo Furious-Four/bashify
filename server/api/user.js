@@ -6,9 +6,9 @@ const router = Router();
 // High-level User Routes
 
 // Nested routers for the user api
-const { userAuth } = require('./auth');
-router.use('/auth', userAuth);
-router.use('/order', require('./user/order'));
-router.use('/tab', require('./user/tab'));
+// const { userAuth } = require('./auth');
+// router.use('/auth', userAuth);
+// router.use('/order', require('./user/order'));
+// router.use('/tab', require('./user/tab'));
 
 module.exports = router;
