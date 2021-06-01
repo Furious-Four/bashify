@@ -35,11 +35,11 @@ describe('Tab Attributes', () => {
       expect(tab.getTotal()).toEqual(12.9);
     });
   });
-  // describe('Association: User', () => {
-  //   test('Tab is associated with a user', () => {
-  //     expect(tab.userId).toBeTruthy;
-  //   });
-  // });
+  describe('Association: User', () => {
+    test('Tab is associated with a user', () => {
+      expect(tab.userId).toBeTruthy;
+    });
+  });
   describe('Association: Venue', () => {
     test('Tab is associated with a venue', () => {
       expect(tab.venueId).toBeTruthy;

@@ -9,6 +9,7 @@ const Drink = require('./models/Drink');
 const Tab = require('./models/Tab');
 const PickUpLocation = require('./models/PickUpLocation');
 const Venue = require('./models/Venue');
+const User = require('./models/User');
 
 //model associations
 
@@ -25,8 +26,8 @@ Drink.belongsTo(Menu);
 Menu.hasMany(Drink);
 Tab.belongsTo(Venue);
 Venue.hasMany(Tab);
-// Tab.belongsTo(User);
-// User.hasMany(Tab);
+Tab.belongsTo(User);
+User.hasMany(Tab);
 PickUpLocation.belongsTo(Venue);
 Venue.hasMany(PickUpLocation);
 
@@ -40,5 +41,6 @@ module.exports = {
     Drink,
     Tab,
     PickUpLocation,
+    User,
   },
 };
