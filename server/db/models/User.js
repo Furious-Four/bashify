@@ -37,6 +37,16 @@ class User extends Model {
       throw error;
     }
   };
+  currentOrder = async () => {
+    const {
+      models: { orders },
+    } = db;
+    orders.findOne({
+      where: { userId: this.id },
+      limit: 1,
+      order: ['createdAt'],
+    });
+  };
 }
 
 //add beforeCreate hook to hash password when a user signs up using bcrypt.hash

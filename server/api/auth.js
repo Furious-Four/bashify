@@ -2,18 +2,24 @@
 const { Router } = require('express');
 const {
   models: { User, Venue },
-} = require('../db/index');
+} = require('../db/index.js');
 
-// create two routers, one for user authentication and another for venue authentication
-const [userAuth, venueAuth] = Array(2)
-  .fill('')
-  .map(() => Router());
+const userAuth = {
+  modelName: 'user',
+  router: Router(),
+  Model: User,
+  requireToken: () => {},
+};
+
+const venueAuth = {
+  modelName: 'venue',
+  router: Router(),
+  Model: Venue,
+  requireToken: () => {},
+};
 
 // map over a two-dimensional array of arrays like [router, Model], creating a post route
-[
-  [userAuth, User],
-  [venueAuth, Venue],
-].map(([router, Model]) => {
+[userAuth, venueAuth].forEach(({ modelName, router, Model, requireToken }) => {
   router.post('/', async (req, res, next) => {
     try {
       const {
@@ -27,6 +33,18 @@ const [userAuth, venueAuth] = Array(2)
       next(err);
     }
   });
+  requireToken = async (req, res, next) => {
+    const {
+      headers: { authorization: token },
+    } = req;
+    try {
+      const instance = Model.byToken(token);
+      req[modelName] = instance; // either req.user or req.venue
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };
 });
 
 module.exports = { userAuth, venueAuth };
