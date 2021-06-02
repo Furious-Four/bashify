@@ -12,23 +12,23 @@ class Tab extends Model {
     return (this.tax = stateTaxTable[stateVal]);
   }
 
-  getSubTotal() {
-    const {
-      models: { tabDrinks },
-    } = db;
-    return new Promise((res, rej) => {
-      tabDrinks
-        .findAll({ where: { tabId: this.id } })
-        .then((drinks) => {
-          res(
-            drinks.reduce((acc, { quantity, price }) => {
-              acc += quantity * price;
-            }, 0)
-          );
-        })
-        .catch(rej);
-    });
-  }
+  //   getSubTotal() {
+  //     const {
+  //       models: { tabDrinks },
+  //     } = db;
+  //     return new Promise((res, rej) => {
+  //       tabDrinks
+  //         .findAll({ where: { tabId: this.id } })
+  //         .then((drinks) => {
+  //           res(
+  //             drinks.reduce((acc, { quantity, price }) => {
+  //               return (acc += quantity * price);
+  //             }, 0)
+  //           );
+  //         })
+  //         .catch(rej);
+  //     });
+  //   }
 
   getTotal() {
     const subTotal = this.subTotal;
@@ -57,6 +57,3 @@ Tab.init(
 );
 
 module.exports = Tab;
-
-//LOGIC: If it is your order, it will go on your tab. I think assigning drinks to others will happen at the order level.
-// If you create an order, and choose to pay right away (aka not keep a running tab), your order still goes to a tab, the tab is closed and reset to 0 upon payment.
