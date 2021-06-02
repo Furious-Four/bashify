@@ -9,6 +9,7 @@ PickUpLocation.init(
   {
     name: {
       type: STRING,
+      allowNull: false,
     },
     instructions: {
       type: STRING,

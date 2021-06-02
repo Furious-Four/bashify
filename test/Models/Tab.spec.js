@@ -2,18 +2,23 @@ const { test, expect, beforeAll, beforeEach } = require('@jest/globals');
 const { DatabaseError } = require('sequelize');
 
 const {
-  models: { Tab },
+  models: { Tab, TabDrink },
 } = require('../../server/db/index.js');
 const Venue = require('../../server/db/models/Venue.js');
 
 beforeAll(async () => {
-  await Tab.create({ subTotal: 10.0 });
+  await Tab.create({ subTotal: 10 });
+  await TabDrink.create({ price: 8.0 });
 });
 
 describe('Tab Attributes', () => {
   let tab;
+  let drink;
   beforeEach(async () => {
     tab = await Tab.findOne();
+    drink = await TabDrink.findOne();
+    drink.tabId = tab.id;
+    drink.save();
   });
   describe('Attribute: status', () => {
     test('default status is open', () => {
@@ -35,9 +40,25 @@ describe('Tab Attributes', () => {
       expect(tab.getTotal()).toEqual(12.9);
     });
   });
+  describe('Method: getSubTotal', () => {
+    test('calculates Subtotal', () => {
+      expect(tab.getSubTotal()).toEqual(8.0);
+    });
+  });
+
   describe('Association: User', () => {
     test('Tab is associated with a user', () => {
       expect(tab.userId).toBeTruthy;
+    });
+  });
+  describe('Association: TabDrinks', () => {
+    test('Tab is associated with tabDrinks', () => {
+      expect(tab.tabDrinkId).toBeTruthy;
+    });
+  });
+  describe('Association: TabDrinks', () => {
+    test('TabDrinks belong to a Tab', () => {
+      expect(drink.tabId).toEqual(tab.id);
     });
   });
   describe('Association: Venue', () => {

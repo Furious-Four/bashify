@@ -4,25 +4,32 @@ const {
   Model,
   DataTypes: { ENUM, FLOAT },
 } = require('sequelize');
-const {
-  models: { Order },
-} = db;
 
 class Tab extends Model {
   getTax() {
-    const venue = Venue.findAll({ where: { venueId: id } });
+    const venue = Venue.findOne({ where: { id: this.venueId } });
     const stateVal = venue.state;
     return (this.tax = stateTaxTable[stateVal]);
   }
+
   getSubTotal() {
-    const drinks = Order.findAll({ where: { userId: id } });
-    let drinksArray = [];
-    drinks.forEach(drinksArray.push(Order.getSubTotal()));
-    const subTotal = drinksArray.reduce((accum, orderTotal) => {
-      accum + orderTotal;
-    }, 0);
-    return (this.subTotal = subTotal);
+    const {
+      models: { tabDrinks },
+    } = db;
+    return new Promise((res, rej) => {
+      tabDrinks
+        .findAll({ where: { tabId: this.id } })
+        .then((drinks) => {
+          res(
+            drinks.reduce((acc, { quantity, price }) => {
+              acc += quantity * price;
+            }, 0)
+          );
+        })
+        .catch(rej);
+    });
   }
+
   getTotal() {
     const subTotal = this.subTotal;
     const tabTotal = subTotal * this.tax + subTotal * this.tip + this.subTotal;

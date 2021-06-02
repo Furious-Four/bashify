@@ -7,7 +7,7 @@ const {
 const Venue = require('../../server/db/models/Venue.js');
 
 beforeAll(async () => {
-  await PickUpLocation.create();
+  await PickUpLocation.create({ name: 'testName' });
 });
 
 describe('PickUpLocation Attributes', () => {
