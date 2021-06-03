@@ -1,6 +1,6 @@
 const {
   Model,
-  DataTypes: { STRING, VIRTUAL, NUMBER },
+  DataTypes: { STRING, VIRTUAL },
 } = require('sequelize');
 
 const db = require('../db');
@@ -9,44 +9,76 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 class User extends Model {
-  authenticate = async function ({ email, password }) {
-    const user = await User.findOne({
-      where: {
-        email,
-      },
+  static authenticate({ email, password }) {
+    let id;
+    return new Promise((res, rej) => {
+      User.findOne({
+        where: {
+          email,
+        },
+      })
+        .then((user) => {
+          if (user) {
+            id = user.id;
+            return bcrypt.compare(password, user.password);
+          }
+          throw new Error('bad credentials');
+        })
+        .then((comparison) => {
+          if (comparison) {
+            const token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
+            res(token);
+          }
+          throw new Error('bad credentials');
+        })
+        .catch(() => {
+          const error = new Error('bad credentials');
+          error.status = 401;
+          rej(error);
+        });
     });
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign({ id: user.id }, process.env.ACCESS_TOKEN_SECRET);
-      return token;
-    }
-    const error = Error('bad credentials');
-    error.status = 401;
-    throw error;
-  };
-  byToken = async function (token) {
-    try {
-      const { id } = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      const user = await User.findByPk(id);
-      if (user) return user;
-      const error = Error('bad credentials');
-      error.status = 401;
-      throw error;
-    } catch (ex) {
-      const error = Error('bad credentials');
-      error.status = 401;
-      throw error;
-    }
-  };
-  currentOrder = async () => {
+  }
+
+  static byToken(token) {
+    return new Promise((res, rej) => {
+      jwt
+        .verify(token, process.env.ACCESS_TOKEN_SECRET)
+        .then(({ id }) => {
+          return User.findByPk(id);
+        })
+        .then((user) => {
+          if (user) res(user);
+          throw new Error('bad credentials');
+        })
+        .catch(() => {
+          const error = new Error('bad credentials');
+          error.status = 401;
+          rej(error);
+        });
+    });
+  }
+
+  currentOrder() {
     const {
       models: { orders },
     } = db;
-    orders.findOne({
-      where: { userId: this.id },
-      limit: 1,
-      order: ['createdAt'],
+    return new Promise((res, rej) => {
+      orders
+        .findOne({
+          where: { userId: this.id },
+          limit: 1,
+          order: ['createdAt'],
+          attributes: {
+            include: ['id'],
+          },
+        })
+        .then(([mostRecentOrder]) => {
+          return order.getWithDrinks(mostRecentOrder.id);
+        })
+        .then((orderWithDrinks) => res(orderWithDrinks))
+        .catch(rej);
     });
-  };
+  }
 }
 
 //add beforeCreate hook to hash password when a user signs up using bcrypt.hash
@@ -98,5 +130,11 @@ User.init(
   },
   { sequelize: db, modelName: 'users' }
 );
+
+User.addHook('beforeSave', async (user) => {
+  if (user._changed.has('password')) {
+    user.password = await bcrypt.hash(user.password, 5);
+  }
+});
 
 module.exports = User;

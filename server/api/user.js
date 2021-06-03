@@ -11,6 +11,6 @@ const {
 } = require('./auth');
 router.use('/auth', userRouter);
 router.use('/order', require('./user/order'));
-router.use('/tab', require('./user/tab'));
+// router.use('/tab', require('./user/tab'));
 
 module.exports = router;

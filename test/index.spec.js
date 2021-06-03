@@ -16,4 +16,6 @@ describe('Model Tests', () => {
   require('./Models/Employee.spec');
   require('./Models/Drink.spec');
 });
-
+describe('Route Tests', () => {
+  require('./routes/user.spec');
+});
