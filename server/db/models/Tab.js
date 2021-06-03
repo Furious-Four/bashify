@@ -12,23 +12,23 @@ class Tab extends Model {
     return (this.tax = stateTaxTable[stateVal]);
   }
 
-  //   getSubTotal() {
-  //     const {
-  //       models: { tabDrinks },
-  //     } = db;
-  //     return new Promise((res, rej) => {
-  //       tabDrinks
-  //         .findAll({ where: { tabId: this.id } })
-  //         .then((drinks) => {
-  //           res(
-  //             drinks.reduce((acc, { quantity, price }) => {
-  //               return (acc += quantity * price);
-  //             }, 0)
-  //           );
-  //         })
-  //         .catch(rej);
-  //     });
-  //   }
+  getSubTotal() {
+    const {
+      models: { tabDrinks },
+    } = db;
+    return new Promise((res, rej) => {
+      tabDrinks
+        .findAll({ where: { tabId: this.id } })
+        .then((drinks) => {
+          res(
+            drinks.reduce((acc, { quantity, price }) => {
+              return (this.subTotal = acc += quantity * price);
+            }, 0)
+          );
+        })
+        .catch(rej);
+    });
+  }
 
   getTotal() {
     const subTotal = this.subTotal;

@@ -18,7 +18,8 @@ describe('Tab Attributes', () => {
     tab = await Tab.findOne();
     drink = await TabDrink.findOne();
     drink.tabId = tab.id;
-    drink.save();
+    await drink.save();
+    await tab.getSubTotal();
   });
   describe('Attribute: status', () => {
     test('default status is open', () => {
@@ -37,14 +38,15 @@ describe('Tab Attributes', () => {
   });
   describe('Method: getTotal', () => {
     test('calculates total', () => {
-      expect(tab.getTotal()).toEqual(12.9);
+      expect(tab.getTotal()).toEqual(10.32);
     });
   });
-  // describe('Method: getSubTotal', () => {
-  //   test('calculates Subtotal', () => {
-  //     expect(tab.getSubTotal()).toEqual(8.0);
-  //   });
-  // });
+
+  describe('Method: getSubTotal', () => {
+    test('updates the subTotal property', async () => {
+      expect(tab.subTotal).toEqual(8.0);
+    });
+  });
 
   describe('Association: User', () => {
     test('Tab is associated with a user', () => {
