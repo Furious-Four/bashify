@@ -14,6 +14,8 @@ const TabDrink = require('./models/TabDrink');
 
 //model associations
 
+//model associations
+
 // OrderDrink is a connection table that connects a Drink to an Order and keeps the quantity and price at the time of order
 // Order.belongsToMany(Drink, { through: OrderDrink });
 // Drink.belongsToMany(Order, { through: OrderDrink });
@@ -33,6 +35,12 @@ PickUpLocation.belongsTo(Venue);
 Venue.hasMany(PickUpLocation);
 TabDrink.belongsTo(Tab);
 Tab.hasMany(TabDrink);
+
+// the below 2 through associations are causing an error
+// Tab.belongsToMany(Drink, { through: TabDrink });
+// Drink.belongsToMany(Tab, { through: TabDrink });
+Drink.hasMany(TabDrink);
+TabDrink.belongsTo(Drink);
 
 module.exports = {
   db,
