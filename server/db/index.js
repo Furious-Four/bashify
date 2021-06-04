@@ -4,10 +4,11 @@ const db = require('./db');
 const Drink = require('./models/Drink');
 const Employee = require('./models/Employee');
 const Menu = require('./models/Menu');
-const OrderDrink = require('./models/Order_Drink');
 const Order = require('./models/Order');
-// const PickUpLocation = require('./models/PickUpLocation');
-// const Tab = require('./models/Tab');
+const OrderDrink = require('./models/OrderDrink');
+const PickUpLocation = require('./models/PickUpLocation');
+const Tab = require('./models/Tab');
+const TabDrink = require('./models/TabDrink');
 const User = require('./models/User');
 const Venue = require('./models/Venue');
 
@@ -21,14 +22,34 @@ OrderDrink.belongsTo(Order);
 Drink.hasMany(OrderDrink);
 OrderDrink.belongsTo(Drink);
 
+// the below 2 through associations are causing an error
+Tab.belongsToMany(Drink, { through: TabDrink });
+Drink.belongsToMany(Tab, { through: TabDrink });
+Tab.hasMany(TabDrink);
+TabDrink.belongsTo(Tab);
+Drink.hasMany(TabDrink);
+TabDrink.belongsTo(Drink);
+
 User.hasMany(Order);
 Order.belongsTo(User);
 
-Employee.belongsTo(Venue);
-Venue.hasMany(Employee);
+User.hasMany(Tab);
+Tab.belongsTo(User);
 
-Menu.belongsTo(Venue);
+Venue.hasMany(Order);
+Order.belongsTo(Venue);
+
+Venue.hasMany(Tab);
+Tab.belongsTo(Venue);
+
+Venue.hasMany(Employee);
+Employee.belongsTo(Venue);
+
+Venue.hasMany(PickUpLocation);
+PickUpLocation.belongsTo(Venue);
+
 Venue.hasMany(Menu);
+Menu.belongsTo(Venue);
 
 Menu.hasMany(Drink);
 Drink.belongsTo(Menu);
@@ -41,8 +62,9 @@ module.exports = {
     Menu,
     OrderDrink,
     Order,
-    // PickUpLocation,
-    // Tab,
+    PickUpLocation,
+    Tab,
+    TabDrink,
     User,
     Venue,
   },
