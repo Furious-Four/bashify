@@ -10,6 +10,30 @@ const {
 
 // This router is mounted at /api/user/order
 
+// GET /api/user/order/all
+router.get('/all', requireUserToken, async (req, res, next) => {
+  try {
+    const {
+      user: { id: userId },
+    } = req;
+    const orders = await Order.findAll({ where: { userId } });
+    res.send(orders);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/user/order/current
+router.get('/current', requireUserToken, async (req, res, next) => {
+  try {
+    const { user } = req;
+    const order = await user.currentOrder();
+    res.send(order);
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /api/user/order/:orderId
 router.get('/:orderId', requireUserToken, async (req, res, next) => {
   try {
@@ -24,23 +48,13 @@ router.get('/:orderId', requireUserToken, async (req, res, next) => {
       res.sendStatus(401);
     }
   } catch (err) {
+    console.error(err);
     next(err);
   }
 });
 
-// GET /api/user/currentOrder
-router.get('/currentOrder', requireUserToken, async (req, res, next) => {
-  try {
-    const { user } = req;
-    const order = await user.currentOrder();
-    res.send(order);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// POST /api/user/currentOrder
-router.post('/currentOrder', requireUserToken, async (req, res, next) => {
+// POST /api/user/order/current
+router.post('/current', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
     const order = await user.currentOrder();
@@ -59,9 +73,9 @@ router.post('/currentOrder', requireUserToken, async (req, res, next) => {
   }
 });
 
-// PUT /api/user/currentOrder/modify-drink
+// PUT /api/user/order/current/modify-drink
 router.put(
-  '/currentOrder/modify-drink',
+  '/current/modify-drink',
   requireUserToken,
   async (req, res, next) => {
     const {
@@ -72,7 +86,7 @@ router.put(
       const drink = await Drink.findByPk(drinkId);
       let order = await user.currentOrder();
       await order.removeDrink(drink);
-      if (quantity) {
+      if (quantity > 0) {
         await order.addDrink(drink, { through: { quantity } });
       }
       order = await Order.getWithDrinks(order.id);

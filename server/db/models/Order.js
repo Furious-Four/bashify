@@ -3,8 +3,6 @@ const {
   DataTypes: { ENUM, UUID, UUIDV4, VIRTUAL },
 } = require('sequelize');
 const db = require('../db');
-const Drink = require('./Drink');
-const OrderDrink = require('./Order_Drink');
 
 class Order extends Model {
   getSubtotal() {
@@ -24,17 +22,18 @@ class Order extends Model {
         .catch(rej);
     });
   }
+
   static getWithDrinks(orderId) {
     const {
-      models: { drinks, orderDrinks },
+      models: { drink, orderDrinks },
     } = db;
     return new Promise((res, rej) => {
       this.findByPk(orderId, {
         include: {
           model: orderDrinks,
-          include: drinks,
+          include: { model: drink },
           separate: true,
-          order: [[Drink, 'name', 'ASC']],
+          order: [[drink, 'name', 'ASC']],
         },
       })
         .then((order) => res(order))

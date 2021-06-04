@@ -21,6 +21,9 @@ OrderDrink.belongsTo(Order);
 Drink.hasMany(OrderDrink);
 OrderDrink.belongsTo(Drink);
 
+User.hasMany(Order);
+Order.belongsTo(User);
+
 Employee.belongsTo(Venue);
 Venue.hasMany(Employee);
 

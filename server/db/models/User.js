@@ -41,11 +41,8 @@ class User extends Model {
 
   static byToken(token) {
     return new Promise((res, rej) => {
-      jwt
-        .verify(token, process.env.ACCESS_TOKEN_SECRET)
-        .then(({ id }) => {
-          return User.findByPk(id);
-        })
+      const { id } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      User.findByPk(id)
         .then((user) => {
           if (user) res(user);
           throw new Error('bad credentials');
@@ -64,19 +61,20 @@ class User extends Model {
     } = db;
     return new Promise((res, rej) => {
       orders
-        .findOne({
+        .findAll({
           where: { userId: this.id },
           limit: 1,
-          order: ['createdAt'],
-          attributes: {
-            include: ['id'],
-          },
+          order: [['createdAt', 'DESC']],
+          attributes: ['id'],
         })
         .then(([mostRecentOrder]) => {
-          return order.getWithDrinks(mostRecentOrder.id);
+          return orders.getWithDrinks(mostRecentOrder.id);
         })
         .then((orderWithDrinks) => res(orderWithDrinks))
-        .catch(rej);
+        .catch((err) => {
+          console.error(err);
+          rej(err);
+        });
     });
   }
 }
