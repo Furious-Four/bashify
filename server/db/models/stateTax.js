@@ -1,0 +1,35 @@
+//note washington DC is listed as DC
+//missing states where restaurant tax is not different than sales tax
+const stateTaxTable = {
+  NY: 8.875,
+  CA: 8.75,
+  IL: 10.75,
+  TX: 8.25,
+  PA: 8,
+  AZ: 9.3,
+  FL: 9,
+  IN: 9,
+  OH: 6.75,
+  KY: 6,
+  NC: 9,
+  MI: 6,
+  TN: 9.25,
+  MD: 6,
+  MA: 7,
+  WA: 10,
+  DC: 10,
+  CO: 8.1,
+  WI: 5.65,
+  OR: 0,
+  NV: 8.1,
+  OK: 8.37,
+  NM: 6.99,
+  MO: 9.07,
+  VA: 10.5,
+  GA: 8,
+  NE: 9.5,
+  MN: 10.77,
+  KS: 9.3,
+};
+
+module.exports = stateTaxTable;

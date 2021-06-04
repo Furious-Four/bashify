@@ -15,5 +15,6 @@ describe('Model Tests', () => {
   require('./Models/Menu.spec');
   require('./Models/Employee.spec');
   require('./Models/Drink.spec');
+  require('./Models/Tab.spec');
+  require('./Models/PickUpLocation.spec');
 });
-
