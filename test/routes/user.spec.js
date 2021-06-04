@@ -20,23 +20,25 @@ afterAll(async () => {
   await newUser.destroy();
 });
 describe('user routes', () => {
-  describe('POST /api/users/auth', () => {
-    test('with valid credentials, it returns a token', async () => {
-      const response = await app
-        .post('/api/user/auth')
-        .send({ email: 'jdoe@test.com', password: '1234' });
-      const { id } = await User.findOne({
-        where: { lastName: 'Doe', firstName: 'John' },
+  describe('/api/user/auth', () => {
+    describe('POST /api/users/auth', () => {
+      test('with valid credentials, it returns a token', async () => {
+        const response = await app
+          .post('/api/user/auth')
+          .send({ email: 'jdoe@test.com', password: '1234' });
+        const { id } = await User.findOne({
+          where: { lastName: 'Doe', firstName: 'John' },
+        });
+        const token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
+        expect(response.status).toBe(200);
+        expect(response.body.token).toBe(token);
       });
-      const token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
-      expect(response.status).toBe(200);
-      expect(response.body.token).toBe(token);
-    });
-    test('with invalid credentials, it throws an error', async () => {
-      const response = await app
-        .post('/api/user/auth')
-        .send({ email: 'notRight', password: 'alsoWrong' });
-      expect(response.status).toBe(401);
+      test('with invalid credentials, it throws an error', async () => {
+        const response = await app
+          .post('/api/user/auth')
+          .send({ email: 'notRight', password: 'alsoWrong' });
+        expect(response.status).toBe(401);
+      });
     });
   });
   describe('/api/user/order', () => {
