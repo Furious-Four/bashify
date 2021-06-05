@@ -6,9 +6,9 @@ beforeAll(async () => {
   await db.sync({ force: true });
   await seed();
 });
-// afterAll(async () => {
-//   await db.close();
-// });
+afterAll(async () => {
+  await db.close();
+});
 test('init test', () => {
   expect(1 + 1).toBe(2);
 });
