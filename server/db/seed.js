@@ -30,28 +30,28 @@ const seed = async () => {
       firstName: 'Eric P.',
       lastName: 'Katz',
       role: 'Manager',
-      pin: 0000,
+      pin: 0,
       venueId: furiousFourPub.id,
     });
     const stanley = await Employee.create({
       firstName: 'Stanley',
       lastName: 'Lim',
       role: 'Bartender',
-      pin: 0001,
+      pin: 1,
       venueId: furiousFourPub.id,
     });
     const zaina = await Employee.create({
       firstName: 'Zaina',
       lastName: 'Rodney',
       role: 'Bartender',
-      pin: 0002,
+      pin: 2,
       venueId: furiousFourPub.id,
     });
     const thompson = await Employee.create({
       firstName: 'Thompson',
       lastName: 'Harris',
       role: 'Bartender',
-      pin: 0003,
+      pin: 3,
       venueId: furiousFourPub.id,
     });
 
@@ -196,4 +196,4 @@ const init = async () => {
   }
 };
 
-module.exports = init;
+module.exports = { init, seed };
