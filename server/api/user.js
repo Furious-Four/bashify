@@ -23,8 +23,15 @@ router.get('/', requireUserToken, async (req, res, next) => {
 // POST /api/user
 router.post('/', async (req, res, next) => {
   try {
-    const { firstName, lastName, email, password, phone } = req.body;
-    let newUser = new User({ firstName, lastName, email, password, phone });
+    const { firstName, lastName, username, email, password, phone } = req.body;
+    let newUser = new User({
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      phone,
+    });
     await newUser.save();
     newUser = await User.findByPk(newUser.id, {
       attributes: { exclude: ['password'] },

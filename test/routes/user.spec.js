@@ -17,6 +17,7 @@ beforeAll(async () => {
   newUser = new User({
     firstName: 'John',
     lastName: 'Doe',
+    username: 'jdoe',
     email: 'jdoe@test.com',
     password: '1234',
     phone: '1234567890',
@@ -50,6 +51,7 @@ describe('user routes', () => {
         const response = await app.post('/api/user').send({
           firstName: 'Jane',
           lastName: 'Shepard',
+          username: 'CommanderShepard',
           email: 'jshep@alliance.net',
           password: 'spectre123',
           phone: '9876543210',
