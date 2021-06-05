@@ -7,7 +7,7 @@ const {
 } = require('@jest/globals');
 const jwt = require('jsonwebtoken');
 const {
-  models: { Drink, Order, User },
+  models: { Drink, Order, OrderDrink, User },
 } = require('../../server/db/index.js');
 const app = require('supertest')(require('../../server/app.js'));
 
@@ -27,7 +27,7 @@ afterAll(async () => {
   await newUser.destroy();
 });
 describe('user routes', () => {
-  describe.only('/api/user', () => {
+  describe('/api/user', () => {
     let token;
     beforeAll(() => {
       const { id } = newUser;
@@ -99,7 +99,7 @@ describe('user routes', () => {
           .post('/api/user/auth')
           .send({ email: 'jdoe@test.com', password: '1234' });
         const { id } = await User.findOne({
-          where: { lastName: 'Doe', firstName: 'John' },
+          where: { lastName: 'Doe' },
         });
         const token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
         expect(response.status).toBe(200);
@@ -226,8 +226,9 @@ describe('user routes', () => {
             quantity: orderDrink.quantity + 1,
           });
         expect(response.status).toBe(200);
-        const { orderDrinks: newOrderDrinks } = response.body;
-        const newOrderDrink = newOrderDrinks[0];
+        const newOrderDrink = await OrderDrink.findOne({
+          where: { drinkId: orderDrink.drinkId, orderId: orderDrink.orderId },
+        });
         expect(newOrderDrink.quantity).toBe(orderDrink.quantity + 1);
       });
       test('passing a quantity of 0 removes a drink from the order', async () => {
