@@ -8,16 +8,7 @@ const {
 
 // This router is mounted at /api/drinks
 
-// router.get('/', async(req, res, next) => {
-//     try {
-//         const drinks = await Drink.findAll()
-//         res.send(drinks)
-//     }
-//     catch (ex) {
-//         next(ex)
-//     }
-// });
-
+// update single drink
 router.put('/:id', async(req, res, next) => {
     try {
         const drinkId = req.params.id
@@ -39,14 +30,17 @@ router.put('/:id', async(req, res, next) => {
     }
 });
 
+// add a drink
 router.post('/', async(req, res, next) => {
+    console.log(req)
+    const name = req.body.name
+    const brand = req.body.brand
+    const type = req.body.type
+    const price = req.body.price
+    const amount = req.body.amount
     try {
-        const name = req.body.name
-        const brand = req.body.brand
-        const type = req.body.type
-        const price = req.body.price
-        const amount = req.body.amount
         const drinkToCreate = await Drink.create(name, brand, type, price, amount)
+        console.log(drinkToCreate)
         res.send(drinkToCreate)
     }
     catch (ex) {
@@ -54,6 +48,7 @@ router.post('/', async(req, res, next) => {
     }
 });
 
+// delete drink
 router.delete('/:id', async(req, res, next) => {
     try {
         const drinkId = req.params.id

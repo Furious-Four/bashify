@@ -4,9 +4,10 @@ const {
   models: { Menu },
 } = require('../../server/db/index.js');
 
-beforeAll(async () => {
+beforeEach(async () => {
   await Menu.create({
-      name: 'Dive Bar'
+      name: 'Dive Bar Lunch',
+      status: 'ACTIVE'
   });
 });
 
@@ -16,8 +17,13 @@ describe('Menu properties', () => {
         menu = await Menu.findOne()
     })
     describe('property: name', ()=> {
-        test('menu name is Dive Bar', () => {
-            expect(menu.name).toEqual('Dive Bar')
+        test('menu name is Dive Bar Lunch', () => {
+            expect(menu.name).toEqual('Dive Bar Lunch')
+        })
+    })
+    describe('property: status', ()=> {
+        test('menu status is ACTIVE', () => {
+            expect(menu.status).toEqual('ACTIVE')
         })
     })
 })
