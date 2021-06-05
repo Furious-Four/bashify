@@ -36,6 +36,12 @@ Venue.hasMany(PickUpLocation);
 TabDrink.belongsTo(Tab);
 Tab.hasMany(TabDrink);
 
+Venue.hasMany(Employee);
+Employee.belongsTo(Venue);
+
+Venue.hasMany(Menu);
+Menu.belongsTo(Venue);
+
 // the below 2 through associations are causing an error
 // Tab.belongsToMany(Drink, { through: TabDrink });
 // Drink.belongsToMany(Tab, { through: TabDrink });
@@ -54,5 +60,6 @@ module.exports = {
     PickUpLocation,
     User,
     TabDrink,
+    Venue,
   },
 };

@@ -71,6 +71,13 @@ User.init(
         notEmpty: true,
       },
     },
+    username: {
+      type: STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
     password: {
       type: STRING,
       allowNull: false,

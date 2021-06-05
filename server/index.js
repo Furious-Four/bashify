@@ -1,9 +1,14 @@
-const { db } = require('./db');
-const app = require('./app.js');
+const express = require('express');
+const app = express();
+const path = require('path');
+const morgan = require('morgan');
+const { init } = require('./db/seed');
 
 const port = process.env.port || 3000;
 
-db.sync().then(() => {
-  app.listen(port, () => console.log('listening on port', port));
-});
+init();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 

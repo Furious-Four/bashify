@@ -1,6 +1,6 @@
 const {
   Model,
-  DataTypes: { STRING, VIRTUAL, NUMBER, TEXT },
+  DataTypes: { STRING, VIRTUAL, INTEGER, TEXT },
 } = require('sequelize');
 
 const db = require('../db');
@@ -56,7 +56,7 @@ Venue.init(
       },
     },
     rating: {
-      type: STRING,
+      type: INTEGER,
     },
   },
   { sequelize: db, modelName: 'venues' }

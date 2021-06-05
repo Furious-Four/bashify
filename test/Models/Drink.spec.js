@@ -1,62 +1,30 @@
 const { test, expect, beforeAll, beforeEach } = require('@jest/globals');
 const { DatabaseError } = require('sequelize');
-//const request = require('supertest')
 const {
   models: { Drink },
 } = require('../../server/db/index.js');
 const app = require('supertest')(require('../../server/app.js'));
 
-
-// beforeAll(async () => {
-//   await Drink.create({
-    // name: 'cocktail',
-    // price: 12.00,
-    // brand: null,
-    // type: null,
-    // amount: null,
-//   });
-// });
-
-// let drink;
-
-// beforeEach(async () => {
-//   drink = await Drink.findOne();
-// });
-
-// afterAll(async () => {
-//   await drink.destroy();
-// });
-
-let drink;
-
-beforeAll(async () => {
-  drink = new Drink({
-    name: 'cocktail',
-    price: 12.00,
-    brand: null,
-    type: null,
-    amount: null,
-  });
-  await drink.save();
-});
-afterAll(async () => {
-  await drink.destroy();
-});
-
 describe('Drink properties', () => {
+  let drink;
+  beforeEach(async () => {
+    drink = await Drink.findOne();
+  });
   describe('property: name', () => {
-    test('cocktail', () => {
-      expect(drink.name).toEqual('cocktail');
+    test('Glenlivet', () => {
+      expect(drink.name).toEqual(
+        "The Glenlivet Founder's Reserve Scotch Whisky - Single Shot"
+      );
     });
   });
   describe('property: price', () => {
-    test('price is $12', () => {
-      expect(drink.price).toEqual(12.0);
+    test('price is $7', () => {
+      expect(drink.price).toEqual(7.0);
     });
   });
   describe('property: brand', () => {
-    test('brand can be null', () => {
-      expect(drink.brand).toEqual(null);
+    test('brand is Glenlivet', () => {
+      expect(drink.brand).toEqual('Glenlivet');
     });
   });
 });
