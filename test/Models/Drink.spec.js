@@ -1,25 +1,46 @@
 const { test, expect, beforeAll, beforeEach } = require('@jest/globals');
 const { DatabaseError } = require('sequelize');
-const request = require('supertest')
+//const request = require('supertest')
 const {
   models: { Drink },
 } = require('../../server/db/index.js');
-const router = require('../../server/api/drink') 
+const app = require('supertest')(require('../../server/app.js'));
 
+
+// beforeAll(async () => {
+//   await Drink.create({
+    // name: 'cocktail',
+    // price: 12.00,
+    // brand: null,
+    // type: null,
+    // amount: null,
+//   });
+// });
+
+// let drink;
+
+// beforeEach(async () => {
+//   drink = await Drink.findOne();
+// });
+
+// afterAll(async () => {
+//   await drink.destroy();
+// });
+
+let drink;
 
 beforeAll(async () => {
-  await Drink.create({
+  drink = new Drink({
     name: 'cocktail',
     price: 12.00,
     brand: null,
     type: null,
     amount: null,
   });
+  await drink.save();
 });
-
-let drink;
-beforeEach(async () => {
-  drink = await Drink.findOne();
+afterAll(async () => {
+  await drink.destroy();
 });
 
 describe('Drink properties', () => {
@@ -42,11 +63,11 @@ describe('Drink properties', () => {
 
 
 describe('Drink routes', () => {
-  describe('POST /api/drinks', () => {
-    it('creates new drink', async() => {
+  describe('POST /api/drink', () => {
+    test('creates new drink', async() => {
       try {
-        const res = await request(router)
-          .post('/')
+        const response = await app
+          .post('/api/drink')
           .send({
             name: 'mojito',
             price: 15.00,
@@ -54,13 +75,43 @@ describe('Drink routes', () => {
             type: null,
             ammount: null
           })
-          console.log(res)
-        expect(res.statusCode).toEqual(201);
-        expect(res.body).toHaveProperty('post')
+        console.log(response.body)
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty('post')
       }
       catch (ex) {
         console.log(ex)
       }
     });
   });
+    // describe('PUT /api/drinks/:id', () => {
+  //   test('updates single drink by id', async() => {
+  //     try {
+  //       const res = await app
+  //         .put(`/api/drink/${drink.id}`)
+  //         .send({
+
+  //         })
+  //       expect().toEqual();
+  //     }
+  //     catch (ex) {
+  //       console.log(ex)
+  //     }
+  //   });
+  // });
+    // describe('DELETE /api/drinks/:id', () => {
+  //   test('deletes single drink by id', async() => {
+  //     try {
+  //       const res = await app
+  //         .destroy(`/api/drink/${drink.id}`)
+  //         .send({
+
+  //         })
+  //       expect().toEqual();
+  //     }
+  //     catch (ex) {
+  //       console.log(ex)
+  //     }
+  //   });
+  // });
 });
