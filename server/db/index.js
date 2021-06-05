@@ -3,6 +3,7 @@ const db = require('./db');
 //import all models
 const Drink = require('./models/Drink');
 const Employee = require('./models/Employee');
+const Friendship = require('./models/Friendship');
 const Menu = require('./models/Menu');
 const Order = require('./models/Order');
 const OrderDrink = require('./models/OrderDrink');
@@ -60,14 +61,28 @@ Menu.belongsTo(Venue);
 Menu.hasMany(Drink);
 Drink.belongsTo(Menu);
 
+User.belongsToMany(User, {
+  through: Friendship,
+  as: 'friend1',
+  foreignKey: 'friend2',
+});
+User.belongsToMany(User, {
+  through: Friendship,
+  as: 'friend2',
+  foreignKey: 'friend1',
+});
+Friendship.belongsTo(User, { foreignKey: 'friend1' });
+Friendship.belongsTo(User, { foreignKey: 'friend2' });
+
 module.exports = {
   db,
   models: {
     Drink,
     Employee,
+    Friendship,
     Menu,
-    OrderDrink,
     Order,
+    OrderDrink,
     PickUpLocation,
     Tab,
     TabDrink,

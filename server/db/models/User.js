@@ -55,6 +55,80 @@ class User extends Model {
     });
   }
 
+  addFriend(friend) {
+    const {
+      models: { friendships },
+    } = db;
+    return friendships
+      .findOne({ where: { friend1: this.id, friend2: friend.id } })
+      .then((friendship) => {
+        if (friendship) {
+          switch (friendship.status) {
+            case 'PENDING':
+              throw new Error('already requested');
+              break;
+            case 'ACCEPTED':
+              throw new Error('already a friend');
+              break;
+            case 'REJECTED':
+              throw new Error('rejected already');
+              break;
+          }
+        }
+        friendship = new friendships();
+        friendship.friend1 = this.id;
+        friendship.friend2 = friend.id;
+        return friendship.save();
+      });
+  }
+
+  acceptFriend(friend) {
+    const {
+      models: { friendships },
+    } = db;
+    return friendships
+      .findOne({
+        where: { friend2: this.id, friend1: friend.id },
+      })
+      .then((friendship) => {
+        if (!friendship) throw new Error('no pending request');
+        if (friendship.status !== 'PENDING')
+          throw new Error('not a pending request');
+        friendship.status = 'ACCEPTED';
+        return friendship.save();
+      })
+      .then(() => {
+        return friendships.findOrCreate({
+          where: { friend1: this.id, friend2: friend.id },
+        });
+      })
+      .then(([friendship, bool]) => {
+        if (bool) {
+          friendship.friend1 = this.id;
+          friendship.friend2 = friend.id;
+        }
+        friendship.status = 'ACCEPTED';
+        return friendship.save();
+      });
+  }
+
+  rejectFriend(friend) {
+    const {
+      models: { friendships },
+    } = db;
+    return friendships
+      .findOne({
+        where: { friend2: this.id, friend1: friend.id },
+      })
+      .then((friendship) => {
+        if (!friendship) throw new Error('no pending request');
+        if (friendship.status !== 'PENDING')
+          throw new Error('not a pending request');
+        friendship.status = 'REJECTED';
+        return friendship.save();
+      });
+  }
+
   currentOrder() {
     const {
       models: { orders },

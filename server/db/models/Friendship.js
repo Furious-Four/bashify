@@ -4,13 +4,16 @@ const {
 } = require('sequelize');
 const db = require('../db');
 
-class Friend extends Model {}
+class Friendship extends Model {}
 
-Friend.init(
+Friendship.init(
   {
     status: {
       type: ENUM('PENDING', 'ACCEPTED', 'REJECTED'),
+      defaultValue: 'PENDING',
     },
   },
-  { sequelize: db, modelName: 'friends' }
+  { sequelize: db, modelName: 'friendships' }
 );
+
+module.exports = Friendship;
