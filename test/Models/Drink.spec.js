@@ -5,13 +5,13 @@ const {
 } = require('../../server/db/index.js');
 
 beforeAll(async () => {
-  await Drink.create({
-    name: 'cocktail',
-    price: 12.0,
-    brand: null,
-    type: null,
-    amount: null,
-  });
+  // await Drink.create({
+  //   name: 'cocktail',
+  //   price: 12.0,
+  //   brand: null,
+  //   type: null,
+  //   amount: null,
+  // });
 });
 
 describe('Drink properties', () => {
@@ -20,18 +20,20 @@ describe('Drink properties', () => {
     drink = await Drink.findOne();
   });
   describe('property: name', () => {
-    test('cocktail', () => {
-      expect(drink.name).toEqual('cocktail');
+    test('Glenlivet', () => {
+      expect(drink.name).toEqual(
+        "The Glenlivet Founder's Reserve Scotch Whisky - Single Shot"
+      );
     });
   });
   describe('property: price', () => {
-    test('price is $12', () => {
-      expect(drink.price).toEqual(12.0);
+    test('price is $7', () => {
+      expect(drink.price).toEqual(7.0);
     });
   });
   describe('property: brand', () => {
-    test('brand can be null', () => {
-      expect(drink.brand).toEqual(null);
+    test('brand is Glenlivet', () => {
+      expect(drink.brand).toEqual('Glenlivet');
     });
   });
 });
