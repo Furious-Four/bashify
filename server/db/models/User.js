@@ -2,10 +2,10 @@ const {
   Model,
   DataTypes: { STRING, VIRTUAL },
 } = require('sequelize');
-
-const db = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
+const db = require('../db');
 require('dotenv').config();
 
 class User extends Model {
@@ -106,6 +106,7 @@ User.init(
     email: {
       type: STRING,
       allowNull: false,
+      unique: true,
       validate: {
         isEmail: true,
         notEmpty: true,

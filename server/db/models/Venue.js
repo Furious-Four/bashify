@@ -1,40 +1,58 @@
 const {
   Model,
-  DataTypes: { STRING, VIRTUAL, NUMBER, TEXT },
+  DataTypes: { STRING, TEXT },
 } = require('sequelize');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const db = require('../db');
-const { sequelize } = require('./Order');
 
 class Venue extends Model {
-  authenticate = async function ({ email, password }) {
-    const venue = await Venue.findOne({
-      where: {
-        email,
-      },
+  static authenticate({ email, password }) {
+    let id;
+    return new Promise((res, rej) => {
+      Venue.findOne({
+        where: {
+          email,
+        },
+      })
+        .then((venue) => {
+          if (venue) {
+            id = venue.id;
+            return bcrypt.compare(password, user.password);
+          }
+          throw new Error('bad credentials');
+        })
+        .then((comparison) => {
+          if (comparison) {
+            const token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
+            res(token);
+          }
+          throw new Error('bad credentials');
+        })
+        .catch(() => {
+          const error = new Error('bad credentials');
+          error.status = 401;
+          rej(error);
+        });
     });
-    if (venue && (await bcrypt.compare(password, venue.password))) {
-      const token = jwt.sign({ id: venue.id }, process.env.ACCESS_TOKEN_SECRET);
-      return token;
-    }
-    const error = Error('bad credentials');
-    error.status = 401;
-    throw error;
-  };
-  byToken = async function (token) {
-    try {
-      const { id } = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      const venue = await Venue.findByPk(id);
-      if (venue) return venue;
-      const error = Error('bad credentials');
-      error.status = 401;
-      throw error;
-    } catch (ex) {
-      const error = Error('bad credentials');
-      error.status = 401;
-      throw error;
-    }
-  };
+  }
+
+  static byToken(token) {
+    return new Promise((res, rej) => {
+      const { id } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+      Venue.findByPk(id)
+        .then((venue) => {
+          if (venue) res(venue);
+          throw new Error('bad credentials');
+        })
+        .catch(() => {
+          const error = Error('bad credentials');
+          error.status = 401;
+          rej(error);
+        });
+    });
+  }
 }
 
 Venue.init(
@@ -90,5 +108,11 @@ Venue.init(
   },
   { sequelize: db, modelName: 'venues' }
 );
+
+Venue.addHook('beforeSave', async (venue) => {
+  if (venue._changed.has('password')) {
+    user.password = await bcrypt.hash(user.password, 5);
+  }
+});
 
 module.exports = Venue;

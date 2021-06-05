@@ -1,3 +1,10 @@
+const {
+  describe,
+  test,
+  expect,
+  beforeAll,
+  afterAll,
+} = require('@jest/globals');
 const jwt = require('jsonwebtoken');
 const {
   models: { Drink, Order, User },
@@ -20,6 +27,71 @@ afterAll(async () => {
   await newUser.destroy();
 });
 describe('user routes', () => {
+  describe.only('/api/user', () => {
+    let token;
+    beforeAll(() => {
+      const { id } = newUser;
+      token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
+    });
+    describe('GET /api/user', () => {
+      test('with a valid token, it returns a user', async () => {
+        const user = await User.findByPk(newUser.id);
+        const response = await app.get('/api/user').set('authorization', token);
+        expect(response.status).toBe(200);
+        expect(response.body.fullName).toBe(user.fullName);
+      });
+      test('without a valid token, it returns a 401', async () => {
+        const response = await app.get('/api/user');
+        expect(response.status).toBe(401);
+      });
+    });
+    describe('POST /api/user', () => {
+      test('with all required fields, creates and returns a user', async () => {
+        const response = await app.post('/api/user').send({
+          firstName: 'Jane',
+          lastName: 'Shepard',
+          email: 'jshep@alliance.net',
+          password: 'spectre123',
+          phone: '9876543210',
+        });
+        expect(response.status).toBe(201);
+        const user = await User.findOne({ where: { firstName: 'Jane' } });
+        expect(response.body.fullName).toBe(user.fullName);
+      });
+      test('requires a unique email not already in the database', async () => {
+        const response = await app.post('/api/user').send({
+          firstName: 'Jane',
+          lastName: 'Shepard',
+          email: 'jshep@alliance.net',
+          password: 'spectre123',
+          phone: '9876543210',
+        });
+        const user = await User.findOne({ where: { firstName: 'Jane' } });
+        await user.destroy();
+        expect(response.status).toBe(401);
+      });
+    });
+    describe('PUT /api/user', () => {
+      test('with a valid token, updates the current user', async () => {
+        const response = await app
+          .put('/api/user')
+          .set('authorization', token)
+          .send({ firstName: 'Jane' });
+        const user = await User.findByPk(newUser.id);
+        expect(response.status).toBe(200);
+        expect(response.body.fullName).toBe(user.fullName);
+      });
+      test('without a valid token, does nothing to the user', async () => {
+        const userBefore = await User.findByPk(newUser.id);
+        const response = await app.put('/api/user').send({ firstName: 'John' });
+        const userAfter = await User.findByPk(newUser.id);
+        expect(response.status).toBe(401);
+        expect(Date.parse(userAfter.updatedAt)).toBe(
+          Date.parse(userBefore.updatedAt)
+        );
+      });
+    });
+  });
   describe('/api/user/auth', () => {
     describe('POST /api/users/auth', () => {
       test('with valid credentials, it returns a token', async () => {
