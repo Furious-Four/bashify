@@ -60,7 +60,7 @@ class User extends Model {
       models: { friendships },
     } = db;
     return friendships
-      .findOne({ where: { friend1: this.id, friend2: friend.id } })
+      .findOne({ where: { userId: this.id, friendId: friend.id } })
       .then((friendship) => {
         if (friendship) {
           switch (friendship.status) {
@@ -76,8 +76,8 @@ class User extends Model {
           }
         }
         friendship = new friendships();
-        friendship.friend1 = this.id;
-        friendship.friend2 = friend.id;
+        friendship.userId = this.id;
+        friendship.friendId = friend.id;
         return friendship.save();
       });
   }
@@ -88,7 +88,7 @@ class User extends Model {
     } = db;
     return friendships
       .findOne({
-        where: { friend2: this.id, friend1: friend.id },
+        where: { friendId: this.id, userId: friend.id },
       })
       .then((friendship) => {
         if (!friendship) throw new Error('no pending request');
@@ -99,13 +99,13 @@ class User extends Model {
       })
       .then(() => {
         return friendships.findOrCreate({
-          where: { friend1: this.id, friend2: friend.id },
+          where: { userId: this.id, friendId: friend.id },
         });
       })
       .then(([friendship, bool]) => {
         if (bool) {
-          friendship.friend1 = this.id;
-          friendship.friend2 = friend.id;
+          friendship.userId = this.id;
+          friendship.friendId = friend.id;
         }
         friendship.status = 'ACCEPTED';
         return friendship.save();
@@ -118,7 +118,7 @@ class User extends Model {
     } = db;
     return friendships
       .findOne({
-        where: { friend2: this.id, friend1: friend.id },
+        where: { friendId: this.id, userId: friend.id },
       })
       .then((friendship) => {
         if (!friendship) throw new Error('no pending request');
@@ -127,6 +127,14 @@ class User extends Model {
         friendship.status = 'REJECTED';
         return friendship.save();
       });
+  }
+
+  getFriends() {
+    // TO DO
+  }
+
+  getFriendRequests() {
+    // TO DO
   }
 
   currentOrder() {

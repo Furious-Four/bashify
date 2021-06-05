@@ -63,16 +63,18 @@ Drink.belongsTo(Menu);
 
 User.belongsToMany(User, {
   through: Friendship,
-  as: 'friend1',
-  foreignKey: 'friend2',
+  as: 'user',
+  foreignKey: 'userId',
 });
 User.belongsToMany(User, {
   through: Friendship,
-  as: 'friend2',
-  foreignKey: 'friend1',
+  as: 'friends',
+  foreignKey: 'friendId',
 });
-Friendship.belongsTo(User, { foreignKey: 'friend1' });
-Friendship.belongsTo(User, { foreignKey: 'friend2' });
+// User.hasMany(Friendship, { as: 'friend1' });
+Friendship.belongsTo(User, { foreignKey: 'userId' });
+// User.hasMany(Friendship, { as: 'friend2' });
+Friendship.belongsTo(User, { foreignKey: 'friendId' });
 
 module.exports = {
   db,
