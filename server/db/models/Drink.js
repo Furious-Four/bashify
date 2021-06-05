@@ -33,6 +33,9 @@ Drink.init(
     amount: {
       type: DataTypes.INTEGER,
     },
+    image: {
+      type: DataTypes.STRING,
+    },
   },
   { sequelize: db, modelName: 'drink' }
 );

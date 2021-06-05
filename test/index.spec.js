@@ -1,8 +1,10 @@
 const { test, expect, beforeAll, afterAll } = require('@jest/globals');
 const { db } = require('../server/db/index.js');
+const { seed } = require('../server/db/seed');
 
 beforeAll(async () => {
-  await db.sync();
+  await db.sync({ force: true });
+  await seed();
 });
 // afterAll(async () => {
 //   await db.close();
@@ -17,6 +19,8 @@ describe('Model Tests', () => {
   require('./Models/Drink.spec');
   require('./Models/Tab.spec');
   require('./Models/PickUpLocation.spec');
+  require('./Models/Venue.spec');
+  require('./Models/User.spec');
 });
 describe('Route Tests', () => {
   require('./routes/user.spec');

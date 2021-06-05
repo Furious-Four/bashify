@@ -1,6 +1,6 @@
 const {
   Model,
-  DataTypes: { STRING, TEXT },
+  DataTypes: { STRING, VIRTUAL, INTEGER, TEXT },
 } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -103,7 +103,7 @@ Venue.init(
       },
     },
     rating: {
-      type: STRING,
+      type: INTEGER,
     },
   },
   { sequelize: db, modelName: 'venues' }
