@@ -47,10 +47,11 @@ router.post('/', async (req, res, next) => {
 router.put('/', requireUserToken, async (req, res, next) => {
   try {
     let { user } = req;
-    const { firstName, lastName, email, password, phone } = req.body;
+    const { firstName, lastName, username, email, password, phone } = req.body;
     user.firstName = firstName || user.firstName;
     user.lastName = lastName || user.lastName;
     user.email = email || user.email;
+    user.username = username || user.username;
     user.password = password || user.password;
     user.phone = phone || user.phone;
     await user.save();
