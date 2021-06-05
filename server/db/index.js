@@ -60,5 +60,6 @@ module.exports = {
     PickUpLocation,
     User,
     TabDrink,
+    Venue,
   },
 };

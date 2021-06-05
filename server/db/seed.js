@@ -2,7 +2,9 @@ const { db } = require('./index');
 const Drink = require('./models/Drink');
 const Employee = require('./models/Employee');
 const Menu = require('./models/Menu');
+const User = require('./models/User');
 const Venue = require('./models/Venue');
+const PickUpLocation = require('./models/PickUpLocation');
 
 const seed = async () => {
   try {
@@ -15,6 +17,12 @@ const seed = async () => {
       state: 'NY',
       website: 'www.furiousfourpub.com',
       rating: 5,
+    });
+
+    //pickuplocation data
+    const pickupA = await PickUpLocation.create({
+      name: 'Main Bar',
+      venueId: furiousFourPub.id,
     });
 
     //employee data
@@ -45,6 +53,43 @@ const seed = async () => {
       role: 'Bartender',
       pin: 0003,
       venueId: furiousFourPub.id,
+    });
+
+    //user data
+    const arjan = await User.create({
+      firstName: 'Arjan',
+      lastName: 'Mitra',
+      email: 'arjanmitra@email.com',
+      username: 'arjanmitra',
+      password: 'test',
+      phone: '647-999-9999',
+    });
+
+    const justin = await User.create({
+      firstName: 'Justin',
+      lastName: 'Mattos',
+      email: 'justinmattos@email.com',
+      username: 'justinmattos',
+      password: 'test',
+      phone: '000-000-0000',
+    });
+
+    const dominique = await User.create({
+      firstName: 'Dominique',
+      lastName: 'Sobieski',
+      email: 'domisobi@email.com',
+      username: 'domisobi',
+      password: 'test',
+      phone: '201-203-0000',
+    });
+
+    const michelle = await User.create({
+      firstName: 'Michelle',
+      lastName: 'Martin',
+      email: 'michellemartin@email.com',
+      username: 'michellemartin',
+      password: 'test',
+      phone: '907-039-1111',
     });
 
     //menu data
