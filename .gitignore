@@ -109,3 +109,6 @@ public/bundle.js.map
 
 #env variables
 .env
+
+#package-lock bc it's annoying as hell
+package-lock.json

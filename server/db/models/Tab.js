@@ -21,9 +21,9 @@ class Tab extends Model {
         .findAll({ where: { tabId: this.id } })
         .then((drinks) => {
           res(
-            drinks.reduce((acc, { quantity, price }) => {
-              return (this.subTotal = acc += quantity * price);
-            }, 0)
+            (this.subTotal = drinks.reduce((acc, { quantity, price }) => {
+              return (acc += quantity * price);
+            }, 0))
           );
         })
         .catch(rej);
