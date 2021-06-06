@@ -4,7 +4,7 @@ const {
 } = require('../../server/db/index.js');
 
 describe.only('Friendship properties', () => {
-  let user, friend;
+  let user, friend, friend2;
   beforeAll(async () => {
     user = await User.create({
       firstName: 'Garrus',
@@ -22,6 +22,15 @@ describe.only('Friendship properties', () => {
       password: 'asdnAA3!w4j1!lkn51345',
       phone: '2345245678',
     });
+    friend2 = await User.create({
+      firstName: 'Chloe',
+      lastName: 'Michel',
+      username: 'drMichel',
+      email: 'michelMD@citadel.gov',
+      password: '!w4j1!lkn51345asdf',
+      phone: '5568985423',
+    });
+    await friend2.addFriend(user);
   });
   describe('User methods related to friendships', () => {
     describe('addFriend()', () => {
@@ -67,18 +76,6 @@ describe.only('Friendship properties', () => {
       });
     });
     describe('rejectFriend()', () => {
-      let friend2;
-      beforeAll(async () => {
-        friend2 = await User.create({
-          firstName: 'Chloe',
-          lastName: 'Michel',
-          username: 'drMichel',
-          email: 'michelMD@citadel.gov',
-          password: '!w4j1!lkn51345asdf',
-          phone: '5568985423',
-        });
-        await friend2.addFriend(user);
-      });
       test('Can reject a friend request that is pending', async () => {
         let friendship;
         try {
@@ -109,6 +106,35 @@ describe.only('Friendship properties', () => {
         }
       });
     });
+    describe('getFriends()', () => {
+      let friends;
+      beforeAll(async () => {
+        friends = await user.getFriends();
+      });
+      test('returns an array of friends', async () => {
+        expect(Array.isArray(friends)).toBe(true);
+        expect(friends[0] instanceof User).toBe(true);
+        expect(friends[0].friendships.friendId).toBe(user.id);
+      });
+      test('returns only friends that have accepted the request', async () => {
+        expect(friends.length).toBe(1);
+        expect(friends[0].friendships.status).toBe('ACCEPTED');
+      });
+    });
+    describe('getFriendRequests', () => {
+      let friendRequests;
+      beforeAll(async () => {
+        friendRequests = await friend2.getFriendRequests();
+      });
+      test('returns an array of friend requests', async () => {
+        expect(Array.isArray(friendRequests)).toBe(true);
+        expect(friendRequests[0] instanceof User).toBe(true);
+      });
+      test('returns only pending friend requests', async () => {
+        expect(friendRequests.length).toBe(1);
+        expect(friendRequests[0].friendships.status).toBe('PENDING');
+      });
+    });
   });
   describe('User <-> User assocations via Friendship table', () => {
     test('Users can be eager loaded with friendships', async () => {
@@ -118,9 +144,7 @@ describe.only('Friendship properties', () => {
           as: 'friends',
         },
       });
-      // console.log(testUser);
       const { friends } = testUser;
-      // console.log(friends);
       expect(friends[0].id === testUser.id).toBe(false);
       expect(friends.length).toBe(2);
     });

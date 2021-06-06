@@ -71,9 +71,9 @@ User.belongsToMany(User, {
   as: 'friends',
   foreignKey: 'friendId',
 });
-// User.hasMany(Friendship, { as: 'friend1' });
+// User.hasMany(Friendship, { as: 'user' });
 Friendship.belongsTo(User, { foreignKey: 'userId' });
-// User.hasMany(Friendship, { as: 'friend2' });
+// User.hasMany(Friendship, { as: 'friends' });
 Friendship.belongsTo(User, { foreignKey: 'friendId' });
 
 module.exports = {

@@ -130,11 +130,40 @@ class User extends Model {
   }
 
   getFriends() {
-    // TO DO
+    const {
+      models: { users },
+    } = db;
+    return users
+      .findByPk(this.id, {
+        include: {
+          model: users,
+          as: 'friends',
+        },
+      })
+      .then((user) => {
+        return user.friends.filter(({ friendships }) => {
+          return friendships.status === 'ACCEPTED';
+        });
+      });
   }
 
   getFriendRequests() {
-    // TO DO
+    const {
+      models: { users },
+    } = db;
+    return users
+      .findByPk(this.id, {
+        include: {
+          model: users,
+          as: 'friends',
+        },
+      })
+      .then((user) => {
+        // console.log(user.friends);
+        return user.friends.filter(({ friendships }) => {
+          return friendships.status === 'PENDING';
+        });
+      });
   }
 
   currentOrder() {
