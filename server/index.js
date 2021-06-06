@@ -1,18 +1,6 @@
-const express = require('express');
-const app = express();
-const path = require('path');
-const morgan = require('morgan');
-
+const { db } = require('./db');
+const app = require('./app.js');
 const port = process.env.port || 3000;
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev'));
-
-app.use('/public', express.static(path.join(__dirname, '..', 'public')));
-
-//routers
-app.use('/api/user', require('./api/user'));
-app.use('/api/venue', require('./api/venue'));
-
-app.listen(port, () => console.log('listening on port', port));
+db.sync().then(() => {
+  app.listen(port, () => console.log('listening on port', port));
+});

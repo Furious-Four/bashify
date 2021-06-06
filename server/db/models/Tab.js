@@ -35,7 +35,26 @@ class Tab extends Model {
     const tabTotal = subTotal * this.tax + subTotal * this.tip + this.subTotal;
     return (this.total = tabTotal);
   }
+
+  static getWithDrinks(tabId) {
+    const {
+      models: { drink, orderDrinks },
+    } = db;
+    return new Promise((res, rej) => {
+      this.findByPk(tabId, {
+        include: {
+          model: orderDrinks,
+          include: { model: drink },
+          separate: true,
+          order: [[drink, 'name', 'ASC']],
+        },
+      })
+        .then((tab) => res(tab))
+        .catch(rej);
+    });
+  }
 }
+
 Tab.init(
   {
     status: {

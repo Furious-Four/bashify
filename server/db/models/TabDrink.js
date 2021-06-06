@@ -1,6 +1,6 @@
 const {
   Model,
-  DataTypes: { INTEGER, FLOAT },
+  DataTypes: { INTEGER, FLOAT, BOOLEAN },
 } = require('sequelize');
 const db = require('../db');
 
@@ -12,6 +12,14 @@ TabDrink.init(
     },
     price: {
       type: FLOAT,
+    },
+    pending: {
+      type: BOOLEAN,
+      defaultValue: false,
+    },
+    accepted: {
+      type: BOOLEAN,
+      defaultValue: false,
     },
   },
   { sequelize: db, modelName: 'tabDrinks' }

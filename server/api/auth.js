@@ -4,6 +4,8 @@ const {
   models: { User, Venue },
 } = require('../db/index');
 
+const router = Router();
+
 // create two routers, one for user authentication and another for venue authentication
 const [userAuth, venueAuth] = Array(2)
   .fill('')
@@ -29,4 +31,4 @@ const [userAuth, venueAuth] = Array(2)
   });
 });
 
-module.exports = { userAuth, venueAuth };
+module.exports = { venueAuth, userAuth };
