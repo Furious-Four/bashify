@@ -1,5 +1,6 @@
 const { test, expect, beforeAll, beforeEach } = require('@jest/globals');
 const { DatabaseError } = require('sequelize');
+const bcrypt = require('bcrypt');
 const {
   models: { User },
 } = require('../../server/db/index.js');
@@ -27,8 +28,8 @@ describe('User properties', () => {
   });
 
   describe('property: password', () => {
-    test('password is valid test password', () => {
-      expect(user.password).toEqual('test');
+    test('password is valid test password', async () => {
+      expect(await bcrypt.compare('test', user.password)).toBe(true);
     });
   });
   describe('property: phone', () => {

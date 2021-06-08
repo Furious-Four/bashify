@@ -22,3 +22,6 @@ describe('Model Tests', () => {
   require('./Models/Venue.spec');
   require('./Models/User.spec');
 });
+describe('Route Tests', () => {
+  require('./routes/user.spec');
+});

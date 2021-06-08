@@ -29,7 +29,7 @@ describe('Attributes', () => {
       }
     });
   });
-  describe('Attribute: confirmation', () => {
+  describe('Attribute: confirmationId', () => {
     test('is a string', () => {
       expect(order.confirmationId).toBeTruthy();
       expect(typeof order.confirmationId).toBe('string');

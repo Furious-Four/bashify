@@ -2,25 +2,28 @@ const { test, expect, beforeAll, beforeEach } = require('@jest/globals');
 const { DatabaseError } = require('sequelize');
 
 const {
-  models: { Tab, TabDrink },
+  models: { Drink, Tab, TabDrink },
 } = require('../../server/db/index.js');
 const Venue = require('../../server/db/models/Venue.js');
-
-beforeAll(async () => {
-  await Tab.create({ subTotal: 10 });
-  await TabDrink.create({ price: 8.0, quantity: 1 });
-});
 
 describe('Tab Attributes', () => {
   let tab;
   let drink;
-  beforeEach(async () => {
-    tab = await Tab.findOne();
-    drink = await TabDrink.findOne();
-    drink.tabId = tab.id;
-    await drink.save();
+  beforeAll(async () => {
+    tab = await Tab.create({ subTotal: 10 });
+    drink = await Drink.findOne();
+    await tab.addDrink(drink, { through: { price: 8.0, quantity: 1 } });
     await tab.getSubTotal();
   });
+  // beforeEach(async () => {
+  //   tab = await Tab.findOne();
+  //   drink = await TabDrink.findOne();
+  //   console.log(drink);
+  //   // drink.tabId = tab.id;
+  //   // await drink.save();
+  //   await tab.getSubTotal();
+  //   tab = await Tab.findByPk(tab.id);
+  // });
   describe('Attribute: status', () => {
     test('default status is open', () => {
       expect(tab.status).toEqual('open');
@@ -54,13 +57,18 @@ describe('Tab Attributes', () => {
     });
   });
   describe('Association: TabDrinks', () => {
-    test('Tab is associated with tabDrinks', () => {
-      expect(tab.tabDrinkId).toBeTruthy;
+    let tabDrink;
+    beforeAll(async () => {
+      const { tabDrinks } = await Tab.findByPk(tab.id, {
+        include: { model: TabDrink },
+      });
+      tabDrink = tabDrinks[0];
     });
-  });
-  describe('Association: TabDrinks', () => {
+    test('TabDrinks belong to a Drink', () => {
+      expect(tabDrink.drinkId).toBe(drink.id);
+    });
     test('TabDrinks belong to a Tab', () => {
-      expect(drink.tabId).toEqual(tab.id);
+      expect(tabDrink.tabId).toBe(tab.id);
     });
   });
   describe('Association: Venue', () => {
