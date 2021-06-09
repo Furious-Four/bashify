@@ -40,6 +40,7 @@ router.put('/:id', async(req, res, next) => {
         drinkToUpdate.type = type
         drinkToUpdate.price = price
         drinkToUpdate.amount = amount
+        drinkToUpdate.save()
         res.send(drinkToUpdate)
     }
     catch (ex) {
