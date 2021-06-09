@@ -11,12 +11,13 @@ const {
 // add a drink
 router.post('/', async(req, res, next) => {
     const name = req.body.name
-    const brand = req.body.brand
-    const type = req.body.type
+    // const brand = req.body.brand
+    // const type = req.body.type
     const price = req.body.price
-    const amount = req.body.amount
+    // const amount = req.body.amount
     try {
-        const drinkToCreate = await Drink.create(name, brand, type, price, amount)
+        const drinkToCreate = await Drink.create({name, price})
+        drinkToCreate.save()
         res.send(drinkToCreate)
     }
     catch (ex) {
