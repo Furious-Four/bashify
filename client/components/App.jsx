@@ -4,8 +4,19 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 const App = () => {
   return (
     <Router>
-      <Route></Route>
-      <Switch></Switch>
+      {/* MainNav */}
+      <Switch>
+        {/*
+        AllDrinks
+        SingleDrink
+        Login
+        SignUp
+        Profile
+        CurrentTab
+        CurrentOrder
+        VenueLandingPage
+      */}
+      </Switch>
     </Router>
   );
 };
