@@ -13,14 +13,15 @@ test('init test', () => {
   expect(1 + 1).toBe(2);
 });
 describe('Model Tests', () => {
-  require('./Models/Order.spec');
-  require('./Models/Menu.spec');
-  require('./Models/Employee.spec');
   require('./Models/Drink.spec');
-  require('./Models/Tab.spec');
+  require('./Models/Employee.spec');
+  require('./Models/Friend.spec');
+  require('./Models/Menu.spec');
+  require('./Models/Order.spec');
   require('./Models/PickUpLocation.spec');
-  require('./Models/Venue.spec');
+  require('./Models/Tab.spec');
   require('./Models/User.spec');
+  require('./Models/Venue.spec');
 });
 describe('Route Tests', () => {
   require('./routes/user.spec');
