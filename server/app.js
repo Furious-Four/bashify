@@ -12,5 +12,6 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 //routers
 app.use('/api/user', require('./api/user'));
 app.use('/api/venue', require('./api/venue'));
+app.use('/api/drink', require('./api/drink'));
 
 module.exports = app;
