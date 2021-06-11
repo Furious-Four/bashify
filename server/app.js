@@ -12,5 +12,14 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 //routers
 app.use('/api/user', require('./api/user'));
 app.use('/api/venue', require('./api/venue'));
+app.use('/api/drink', require('./api/drink'));
+
+app.get('/', async (req, res, next) => {
+  try {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = app;

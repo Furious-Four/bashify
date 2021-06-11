@@ -20,6 +20,11 @@ name: {
         notEmpty: true,
     },
 }, 
+status: {
+    type: DataTypes.ENUM('ACTIVE', 'INACTIVE'),
+    defaultValue: 'ACTIVE',
+    allowNull: false
+}
 },
 { sequelize: db, modelName: 'menu' }
 );

@@ -33,10 +33,11 @@ router.post('/', async (req, res, next) => {
       phone,
     });
     await newUser.save();
-    newUser = await User.findByPk(newUser.id, {
-      attributes: { exclude: ['password'] },
-    });
-    res.status(201).send(newUser);
+    // newUser = await User.findByPk(newUser.id, {
+    //   attributes: { exclude: ['password'] },
+    // });
+    const token = await User.authenticate({ email, password });
+    res.status(201).send({ token });
   } catch (err) {
     err.status = 401;
     next(err);
