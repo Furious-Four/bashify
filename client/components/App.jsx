@@ -1,16 +1,53 @@
-import React from 'react';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import {
+  HashRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
+import axios from 'axios';
+
+import MainNav from './MainNav.jsx';
+import Login from './authentication/Login.jsx';
+import Register from './authentication/Register.jsx';
 
 const App = () => {
+  const [user, setUser] = useState({});
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const fetchUserDetails = async (token) => {
+    try {
+      const { data: user } = await axios.get('/api/user', {
+        headers: { authorization: token },
+      });
+      setUser(user);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    // Like componentDidMount and componentDidUpdate all in one
+    const token = window.localStorage.getItem('token');
+    if (token && !loggedIn) {
+      setLoggedIn(true);
+      fetchUserDetails(token);
+    }
+  });
+
   return (
     <Router>
-      {/* MainNav */}
+      <MainNav user={user} />
       <Switch>
+        <Route path="/login">
+          {loggedIn ? <Redirect to="/" /> : <Login />}
+        </Route>
+        <Route path="/register">
+          {loggedIn ? <Redirect to="/" /> : <Register />}
+        </Route>
         {/*
         AllDrinks
         SingleDrink
-        Login
-        SignUp
         Profile
         CurrentTab
         CurrentOrder

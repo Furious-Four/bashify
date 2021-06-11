@@ -11,47 +11,34 @@ require('dotenv').config();
 class User extends Model {
   static authenticate({ email, password }) {
     let id;
-    return new Promise((res, rej) => {
-      User.findOne({
-        where: {
-          email,
-        },
+    return User.findOne({
+      where: {
+        email,
+      },
+    })
+      .then((user) => {
+        if (user) {
+          id = user.id;
+          return bcrypt.compare(password, user.password);
+        }
+        throw new Error('bad credentials');
       })
-        .then((user) => {
-          if (user) {
-            id = user.id;
-            return bcrypt.compare(password, user.password);
-          }
-          throw new Error('bad credentials');
-        })
-        .then((comparison) => {
-          if (comparison) {
-            const token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
-            res(token);
-          }
-          throw new Error('bad credentials');
-        })
-        .catch(() => {
-          const error = new Error('bad credentials');
-          error.status = 401;
-          rej(error);
-        });
-    });
+      .then((comparison) => {
+        if (comparison) {
+          const token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
+          return token;
+        }
+        throw new Error('bad credentials');
+      });
   }
 
   static byToken(token) {
-    return new Promise((res, rej) => {
-      const { id } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-      User.findByPk(id)
-        .then((user) => {
-          if (user) res(user);
-          throw new Error('bad credentials');
-        })
-        .catch(() => {
-          const error = new Error('bad credentials');
-          error.status = 401;
-          rej(error);
-        });
+    const { id } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    return User.findByPk(id, {
+      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
+    }).then((user) => {
+      if (user) return user;
+      throw new Error('bad credentials');
     });
   }
 
@@ -159,7 +146,6 @@ class User extends Model {
         },
       })
       .then((user) => {
-        // console.log(user.friends);
         return user.friends.filter(({ friendships }) => {
           return friendships.status === 'PENDING';
         });
