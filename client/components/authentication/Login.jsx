@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 
 import { LoginPage, LoginForm, LoginLabel } from '../../styles/LoginForm';
 
 const Login = () => {
+  const history = useHistory();
+
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -21,6 +23,7 @@ const Login = () => {
         data: { token },
       } = await axios.post('/api/user/auth', form);
       window.localStorage.setItem('token', token);
+      history.push('/');
     } catch (err) {
       if (err.status === 401) {
         window.alert('That email and password did not match');
@@ -43,6 +46,9 @@ const Login = () => {
         </LoginLabel>
         <button onClick={handleSubmit}>Submit</button>
       </LoginForm>
+      <div>
+        Don't have an account? <Link to="/register">Register</Link>
+      </div>
     </LoginPage>
   );
 };

@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 
+import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
 
@@ -36,19 +37,17 @@ const App = () => {
 
   return (
     <Router>
-      {/* MainNav */}
+      <MainNav user={user} />
       <Switch>
         <Route path="/login">
-          {loggedIn ? <Redirect to="/dashboard" /> : <Login />}
+          {loggedIn ? <Redirect to="/" /> : <Login />}
         </Route>
         <Route path="/register">
-          {loggedIn ? <Redirect to="/dashboard" /> : <Register />}
+          {loggedIn ? <Redirect to="/" /> : <Register />}
         </Route>
         {/*
         AllDrinks
         SingleDrink
-        Login
-        SignUp
         Profile
         CurrentTab
         CurrentOrder
