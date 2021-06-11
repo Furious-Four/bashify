@@ -15,7 +15,8 @@ router.get('/all', requireUserToken, async (req, res, next) => {
       user: { id: userId },
     } = req;
     const tabs = await Tab.findAll({ where: { userId } });
-    res.send(tabs);
+    console.log(tabs)
+    res.send(tabs)
   } catch (err) {
     next(err);
   }
@@ -40,18 +41,18 @@ router.get('/:tabId', requireUserToken, async (req, res, next) => {
   }
 });
 
-// // GET /api/user/tab/current - returns single open tab without drinks
-router.get('/current', requireUserToken, async (req, res, next) => {
-  try {
-    const {
-      user: { id: userId },
-    } = req;
-    const tab = await Tab.findOne({ where: { userId }, status: 'open' });
-    res.send(tab);
-  } catch (err) {
-    next(err);
-  }
-});
+// // // GET /api/user/tab/current - returns single open tab without drinks
+// router.get('/current', requireUserToken, async (req, res, next) => {
+//   try {
+//     const {
+//       user: { id: userId },
+//     } = req;
+//     const tab = await Tab.findOne({ where: { userId }, status: 'open' });
+//     res.send(tab);
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 // // GET /api/user/tab/current - returns current open tab with drinks
 router.get('/current', requireUserToken, async (req, res, next) => {

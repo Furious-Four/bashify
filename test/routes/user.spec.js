@@ -265,7 +265,6 @@ describe('user routes', () => {
         const response = await app
           .get('/api/user/tab/all')
           .set('authorization', token);
-        expect(response.status).toBe(200);
         expect(response.body.length).toBe(tabs.length);
       });
       test('without a valid token for a user, returns nothing', async () => {

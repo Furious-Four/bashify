@@ -5,6 +5,8 @@ const Menu = require('./models/Menu');
 const User = require('./models/User');
 const Venue = require('./models/Venue');
 const PickUpLocation = require('./models/PickUpLocation');
+const Tab = require('./models/Tab');
+const TabDrink = require('./models/TabDrink');
 
 const seed = async () => {
   try {
@@ -18,6 +20,11 @@ const seed = async () => {
       website: 'www.furiousfourpub.com',
       rating: 5,
     });
+  //tab data 
+  const michelleTab = await Tab.create({userId = michelle.id
+  })
+  //tabDrink data 
+  const michelleTabDrink = await Tabdrink.create({userId: michelle.id, tabId: michelleTab.id, drinkId: donJulioShot.id}  )
 
     //pickuplocation data
     const pickupA = await PickUpLocation.create({
