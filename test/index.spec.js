@@ -25,4 +25,5 @@ describe('Model Tests', () => {
 });
 describe('Route Tests', () => {
   require('./routes/user.spec');
+  require('./routes/drink.spec');
 });

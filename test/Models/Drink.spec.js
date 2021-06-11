@@ -4,15 +4,6 @@ const {
   models: { Drink },
 } = require('../../server/db/index.js');
 
-beforeAll(async () => {
-  // await Drink.create({
-  //   name: 'cocktail',
-  //   price: 12.0,
-  //   brand: null,
-  //   type: null,
-  //   amount: null,
-  // });
-});
 
 describe('Drink properties', () => {
   let drink;
@@ -37,3 +28,4 @@ describe('Drink properties', () => {
     });
   });
 });
+
