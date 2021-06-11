@@ -76,9 +76,10 @@ describe('Tab Attributes', () => {
       expect(tab.venueId).toBeTruthy;
     });
   });
-  // describe('Method: Tab getWithDrinks', () => {
+  // describe('Method: Tab getDrinks', () => {
   //   test('Tab is returned with drinks', () => {
-  //     expect(tab.getWithDrinks(this.id)).toEqual(1);
+  //     const result = tab.getDrinks(tab.id);
+  //     expect(result).toEqual(drink2);
   //   });
   // });
 });

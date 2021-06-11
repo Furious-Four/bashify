@@ -7,7 +7,7 @@ const {
 } = require('@jest/globals');
 const jwt = require('jsonwebtoken');
 const {
-  models: { Drink, Order, OrderDrink, User },
+  models: { Drink, Order, OrderDrink, User, Tab, TabDrink },
 } = require('../../server/db/index.js');
 const app = require('supertest')(require('../../server/app.js'));
 
@@ -246,6 +246,45 @@ describe('user routes', () => {
         expect(response.status).toBe(200);
         const { orderDrinks: newOrderDrinks } = response.body;
         expect(newOrderDrinks.length).toBe(orderDrinks.length - 1);
+      });
+    });
+  });
+
+  describe('/api/user/tab', () => {
+    let token, newTab;
+    beforeAll(async () => {
+      const { id } = newUser;
+      token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
+      newTab = new Tab();
+      newTab.userId = id;
+      await newTab.save();
+    });
+    describe('GET /api/user/tab/all', () => {
+      test('with a valid token for a user, returns their tabs', async () => {
+        const tabs = await Tab.findAll({ where: { userId: newUser.id } });
+        const response = await app
+          .get('/api/user/tab/all')
+          .set('authorization', token);
+        expect(response.status).toBe(200);
+        expect(response.body.length).toBe(tabs.length);
+      });
+      test('without a valid token for a user, returns nothing', async () => {
+        const tabs = await Tab.findAll({ where: { userId: newUser.id } });
+        const response = await app.get('/api/user/tab/all');
+        expect(response.status).toBe(401);
+      });
+    });
+    describe('GET /api/user/tab/current', () => {
+      test('with a valid token for associated user, return the users open tab', async () => {
+        newTab.userId = newUser.id;
+        await newTab.save();
+        const tab = await Tab.findAll({
+          where: { userId: newUser.id },
+        });
+        const response = await app
+          .get('/api/user/tab/current')
+          .set('authorization', token);
+        expect(response.body.userId).toBe(newUser.id);
       });
     });
   });

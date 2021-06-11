@@ -36,23 +36,24 @@ class Tab extends Model {
     return (this.total = tabTotal);
   }
 
-  static getWithDrinks(tabId) {
-    const {
-      models: { drink, orderDrinks },
-    } = db;
-    return new Promise((res, rej) => {
-      this.findByPk(tabId, {
-        include: {
-          model: orderDrinks,
-          include: { model: drink },
-          separate: true,
-          order: [[drink, 'name', 'ASC']],
-        },
-      })
-        .then((tab) => res(tab))
-        .catch(rej);
-    });
-  }
+  //unsure why this is not working; we may not need it
+  //   static getDrinks(tabId) {
+  //     const {
+  //       models: { drink, tabDrinks },
+  //     } = db;
+  //     return new Promise((res, rej) => {
+  //       this.findByPk(tabId, {
+  //         include: {
+  //           model: tabDrinks,
+  //           include: { model: drink },
+  //           separate: true,
+  //           order: [[drink, 'name', 'ASC']],
+  //         },
+  //       })
+  //         .then((tab) => res(tab))
+  //         .catch(rej);
+  //     });
+  //   }
 }
 
 Tab.init(
