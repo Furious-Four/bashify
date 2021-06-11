@@ -15,8 +15,8 @@ router.get('/all', requireUserToken, async (req, res, next) => {
       user: { id: userId },
     } = req;
     const tabs = await Tab.findAll({ where: { userId } });
-    console.log(tabs)
-    res.send(tabs)
+    console.log(tabs);
+    res.send(tabs);
   } catch (err) {
     next(err);
   }
@@ -130,7 +130,7 @@ router.put(
       const newDrink = TabDrink.create({
         price: drink.price,
         quantity: drink.quantity,
-        drinkId = user.drinkId
+        drinkId: user.drinkId,
       });
       await tab.addDrink(newDrink, { through: { quantity: quantity } });
       tab = await Tab.findByPk(user.tabId);

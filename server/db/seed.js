@@ -20,11 +20,6 @@ const seed = async () => {
       website: 'www.furiousfourpub.com',
       rating: 5,
     });
-  //tab data 
-  const michelleTab = await Tab.create({userId = michelle.id
-  })
-  //tabDrink data 
-  const michelleTabDrink = await Tabdrink.create({userId: michelle.id, tabId: michelleTab.id, drinkId: donJulioShot.id}  )
 
     //pickuplocation data
     const pickupA = await PickUpLocation.create({
@@ -97,6 +92,15 @@ const seed = async () => {
       username: 'michellemartin',
       password: 'test',
       phone: '907-039-1111',
+    });
+    //tab data
+    const michelleTab = await Tab.create({ userId: michelle.id });
+
+    //tabDrink data
+    const michelleTabDrink = await Tabdrink.create({
+      userId: michelle.id,
+      tabId: michelleTab.id,
+      drinkId: donJulioShot.id,
     });
 
     //menu data
