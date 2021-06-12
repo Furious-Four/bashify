@@ -3,6 +3,7 @@ import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 
 import { LoginPage, LoginForm, LoginLabel } from '../../styles/LoginForm';
+import { Button } from '../../styles/GlobalStyle';
 
 const Login = () => {
   const history = useHistory();
@@ -44,10 +45,10 @@ const Login = () => {
           Password:
           <input name="password" type="password" onChange={updateForm}></input>
         </LoginLabel>
-        <button onClick={handleSubmit}>Submit</button>
       </LoginForm>
+      <Button onClick={handleSubmit}>Log In</Button>
       <div>
-        Don't have an account? <Link to="/register">Register</Link>
+        Need an account? <Link to="/register">Register</Link>
       </div>
     </LoginPage>
   );

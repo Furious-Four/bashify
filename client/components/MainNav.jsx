@@ -7,10 +7,13 @@ const MainNav = ({ user }) => {
   console.log(user);
   return (
     <MainNavDiv>
-      <div>bashify</div>
+      <div>
+        <img src="/public/menu.svg" width="20em" />
+      </div>
+      <Link to="/">bashify</Link>
       <div>
         {user.id ? (
-          <div>`Welcome, ${user.firstName}`</div>
+          <div>Welcome, {user.firstName}</div>
         ) : (
           <Link to="/login">Login</Link>
         )}
