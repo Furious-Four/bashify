@@ -7,10 +7,10 @@ const MainNav = ({ user }) => {
   console.log(user);
   return (
     <MainNavDiv>
-      <div>Bashify</div>
+      <div>bashify</div>
       <div>
         {user.id ? (
-          `Welcome, ${user.firstName}`
+          <div>`Welcome, ${user.firstName}`</div>
         ) : (
           <Link to="/login">Login</Link>
         )}
