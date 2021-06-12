@@ -9,7 +9,7 @@ import {
   SlideoutOpt,
 } from '../styles/MainNav';
 
-const MainNav = ({ user }) => {
+const MainNav = ({ user, setLoggedIn }) => {
   const [isExpanded, setExpanded] = useState(false);
   const history = useHistory();
   const location = useLocation().pathname.split('/')[1];
@@ -25,11 +25,11 @@ const MainNav = ({ user }) => {
 
   const logout = () => {
     window.localStorage.removeItem('token');
+    setLoggedIn(false);
     history.push('/');
     collapseMenu();
   };
 
-  console.log(location);
   return (
     <MainNavDiv>
       <NavTopbar>
@@ -42,17 +42,19 @@ const MainNav = ({ user }) => {
           </div>
         ) : (
           <div>
-            <div onClick={expandMenu}>
-              <img src="/public/menu.svg" width="20em" />
-            </div>
+            {user.id ? (
+              <div onClick={expandMenu}>
+                <img src="/public/menu.svg" width="20em" />
+              </div>
+            ) : (
+              <Link to="/menu">Menu</Link>
+            )}
             <Link to="/">bashify</Link>
-            <div>
-              {user.id ? (
-                <div>Welcome, {user.firstName}</div>
-              ) : (
-                <Link to="/login">Login</Link>
-              )}
-            </div>
+            {user.id ? (
+              <Link to="/tab">Tab</Link>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
           </div>
         )}
       </NavTopbar>

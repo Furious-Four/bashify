@@ -5,7 +5,7 @@ import axios from 'axios';
 import { LoginPage, LoginForm, LoginLabel } from '../../styles/LoginForm';
 import { Button } from '../../styles/GlobalStyle';
 
-const Login = () => {
+const Login = ({ setLoggedIn }) => {
   const history = useHistory();
 
   const [form, setForm] = useState({
@@ -24,6 +24,7 @@ const Login = () => {
         data: { token },
       } = await axios.post('/api/user/auth', form);
       window.localStorage.setItem('token', token);
+      setLoggedIn(true);
       history.push('/');
     } catch (err) {
       if (err.status === 401) {

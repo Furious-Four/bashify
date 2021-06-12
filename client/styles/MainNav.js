@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const MainNavDiv = styled.div`
+  color: var(--white);
   a {
     color: var(--white);
     text-decoration: none;
