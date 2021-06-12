@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     margin: 0;
     padding: 0;
     background: var(--blue);

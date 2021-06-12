@@ -10,6 +10,7 @@ import axios from 'axios';
 import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
+import CurrentOrder from './orders/CurrentOrder.jsx'
 
 const App = () => {
   const [user, setUser] = useState({});
@@ -39,12 +40,15 @@ const App = () => {
     <Router>
       <MainNav user={user} />
       <Switch>
-        <Route path="/login">
+        <Route path="/">
+          <CurrentOrder/>
+        </Route>
+        {/* <Route path="/login">
           {loggedIn ? <Redirect to="/" /> : <Login />}
         </Route>
         <Route path="/register">
           {loggedIn ? <Redirect to="/" /> : <Register />}
-        </Route>
+        </Route> */}
         {/*
         AllDrinks
         SingleDrink
