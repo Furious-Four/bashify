@@ -14,10 +14,24 @@ const CurrentOrder = () => {
         <CurrentOrderCard>
             <h3>Status: Ready to Order</h3>
             <CurrentOrderForm>
-                <ul>
-                  <li>Mojito - $15.92 <Button>x</Button></li>
-                  <li>Moscow Mule - $16.00 <Button>x</Button></li>  
-                </ul>
+                <table>
+                    <tr>
+                        <td>Mojito</td>
+                        <td>$15.92</td>
+                        <td></td>
+                        <Button>-</Button>
+                        <td>1</td>
+                        <Button>+</Button>
+                    </tr>
+                    <tr>
+                        <td>Moscow Mule</td>
+                        <td>$16.92</td>
+                        <td></td>
+                        <Button>-</Button>
+                        <td>1</td>
+                        <Button>+</Button>
+                    </tr>
+                </table>
             </CurrentOrderForm>
             <h3 id='subtotal'>subtotal $56.98</h3>
         </CurrentOrderCard>

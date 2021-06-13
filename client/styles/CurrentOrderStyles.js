@@ -7,16 +7,10 @@ export const CurrentOrderPage = styled.div`
 `;
 
 export const Button = styled.button`
- display:inline-block;
- border:0.16em solid black;
- margin:0 0.3em 0.3em 0;
- box-sizing: border-box;
- text-decoration:none;
- font-weight:400;
  color: var(--blue);
- text-align:center;
+ text-align: center;
  transition: all 0.15s;
- background: var(--orange)
+ background: var(--orange);
 `
 
 export const CurrentOrderHeader = styled.div`
@@ -37,8 +31,10 @@ export const CurrentOrderCard = styled.div`
 
 export const CurrentOrderForm = styled.div`
   display: flex;
-  justify-content: right;
   margin: 1rem;
   padding: 1rem;
+  td {
+     padding: .5rem;
+  }
 `;
 

@@ -40,15 +40,15 @@ const App = () => {
     <Router>
       <MainNav user={user} />
       <Switch>
-        <Route path="/">
+        <Route path="/"> {/* needs to be user/order/current */}
           <CurrentOrder/>
         </Route>
-        {/* <Route path="/login">
+        <Route path="/login">
           {loggedIn ? <Redirect to="/" /> : <Login />}
         </Route>
         <Route path="/register">
           {loggedIn ? <Redirect to="/" /> : <Register />}
-        </Route> */}
+        </Route>
         {/*
         AllDrinks
         SingleDrink
