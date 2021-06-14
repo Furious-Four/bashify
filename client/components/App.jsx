@@ -28,19 +28,21 @@ const App = () => {
 
   useEffect(() => {
     // Like componentDidMount and componentDidUpdate all in one
-    const token = window.localStorage.getItem('token');
-    if (token && !loggedIn) {
-      setLoggedIn(true);
+    if (!user.id && loggedIn) {
+      const token = window.localStorage.getItem('token');
       fetchUserDetails(token);
+    }
+    if (user.id && !loggedIn) {
+      setUser({});
     }
   });
 
   return (
     <Router>
-      <MainNav user={user} />
+      <MainNav user={user} setLoggedIn={setLoggedIn} />
       <Switch>
         <Route path="/login">
-          {loggedIn ? <Redirect to="/" /> : <Login />}
+          {loggedIn ? <Redirect to="/" /> : <Login setLoggedIn={setLoggedIn} />}
         </Route>
         <Route path="/register">
           {loggedIn ? <Redirect to="/" /> : <Register />}
