@@ -1,7 +1,6 @@
 const { db } = require('./db/index');
 const { init } = require('./db/seed');
 const app = require('./app.js');
-const { init } = require('./db/seed');
 
 const port = process.env.port || 3000;
 

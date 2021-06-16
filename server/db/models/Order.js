@@ -27,17 +27,13 @@ class Order extends Model {
     const {
       models: { drink, orderDrinks },
     } = db;
-    return new Promise((res, rej) => {
-      this.findByPk(orderId, {
-        include: {
-          model: orderDrinks,
-          include: { model: drink },
-          separate: true,
-          order: [[drink, 'name', 'ASC']],
-        },
-      })
-        .then((order) => res(order))
-        .catch(rej);
+    return this.findByPk(orderId, {
+      include: {
+        model: orderDrinks,
+        include: { model: drink },
+        separate: true,
+        order: [[drink, 'name', 'ASC']],
+      },
     });
   }
 }

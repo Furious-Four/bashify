@@ -93,15 +93,6 @@ const seed = async () => {
       password: 'test',
       phone: '907-039-1111',
     });
-    //tab data
-    const michelleTab = await Tab.create({ userId: michelle.id });
-
-    //tabDrink data
-    const michelleTabDrink = await Tabdrink.create({
-      userId: michelle.id,
-      tabId: michelleTab.id,
-      drinkId: donJulioShot.id,
-    });
 
     //menu data
     const nightMenu = await Menu.create({
@@ -188,6 +179,15 @@ const seed = async () => {
       amount: 25,
       menuId: nightMenu.id,
     });
+    //tab data
+    const michelleTab = await Tab.create({ userId: michelle.id });
+
+    //tabDrink data
+    const michelleTabDrink = await TabDrink.create({
+      userId: michelle.id,
+      tabId: michelleTab.id,
+      drinkId: donJulioShot.id,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -203,7 +203,7 @@ const init = async () => {
     //results in connection issues when serving data
   } catch (error) {
     console.log(error);
-    db.close();
+    // db.close();
   }
 };
 

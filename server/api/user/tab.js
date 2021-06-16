@@ -15,9 +15,22 @@ router.get('/all', requireUserToken, async (req, res, next) => {
       user: { id: userId },
     } = req;
     const tabs = await Tab.findAll({ where: { userId } });
-    console.log(tabs);
     res.send(tabs);
   } catch (err) {
+    next(err);
+  }
+});
+
+// // GET /api/user/tab/current - returns current open tab with drinks
+router.get('/current', requireUserToken, async (req, res, next) => {
+  try {
+    const { user } = req;
+    console.log(user);
+    const tab = await user.currentTab();
+    console.log('this is the route current tab!!!', tab);
+    res.send(tab);
+  } catch (err) {
+    // console.log(err);
     next(err);
   }
 });
@@ -26,11 +39,13 @@ router.get('/all', requireUserToken, async (req, res, next) => {
 router.get('/:tabId', requireUserToken, async (req, res, next) => {
   try {
     const {
-      user: { id: userId },
+      user,
       params: { tabId },
     } = req;
-    const tab = await Tab.findByPk({ id, include: Drink, TabDrink });
-    if (tab.userId === userId) {
+    console.log(user.id);
+    const tab = await Tab.findByPk(tabId);
+
+    if (tab.userId === user.id) {
       res.send(tab);
     } else {
       res.sendStatus(401);
@@ -41,121 +56,99 @@ router.get('/:tabId', requireUserToken, async (req, res, next) => {
   }
 });
 
-// // // GET /api/user/tab/current - returns single open tab without drinks
-// router.get('/current', requireUserToken, async (req, res, next) => {
-//   try {
-//     const {
-//       user: { id: userId },
-//     } = req;
-//     const tab = await Tab.findOne({ where: { userId }, status: 'open' });
-//     res.send(tab);
-//   } catch (err) {
-//     next(err);
-//   }
-// });
-
-// // GET /api/user/tab/current - returns current open tab with drinks
-router.get('/current', requireUserToken, async (req, res, next) => {
-  try {
-    const {
-      user: { id: userId },
-    } = req;
-    const tab = await Tab.findOne({
-      where: userId,
-      status: 'open',
-      include: TabDrink,
-      Drink,
-    });
-    res.send(tab);
-  } catch (err) {
-    next(err);
-  }
-});
-
 // // POST /api/user/tab/current - creates a new tab for the user
 router.post('/current', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
-    const tab = await Tab.findByPk(user.tabId);
+    const tab = await user.currentTab();
     // check that the user does not have an open tab
-    if (tab.status === 'closed') {
+    if (tab) {
+      res.sendStatus(409);
+    } else {
       let newTab = new Tab();
       await newtab.save();
       await user.addTab(newTab);
       res.send(newTab);
-    } else {
-      res.sendStatus(409);
     }
   } catch (err) {
     next(err);
   }
 });
 
-// PUT /api/user/tab/current/split - changes the tabDrink status to 'pending' on the user's tab who initated the split request
-router.put('/current/split', requireUserToken, async (req, res, next) => {
-  const {
-    user,
-    body: { tabDrinkId, quantity },
-  } = req;
-  try {
-    const drink = await TabDrink.findByPk(tabDrinkId);
-    drink.status = 'pending';
-    drink.save();
-    const tab = await Tab.findOne({
-      where: userId,
-      status: 'open',
-      include: TabDrink,
-      Drink,
-    });
-    res.send(tab);
-  } catch (err) {
-    next(err);
-  }
-});
-
-//PUT /api/user/tab/current/split/accept - accepting an incoming split request
+// PUT /api/user/tab/current/request-split - changes the tabDrink status to 'pending' on the user's tab who initated the split request
 router.put(
-  '/current/split/accept',
+  '/current/request-split',
   requireUserToken,
   async (req, res, next) => {
     const {
       user,
-      body: { tabDrinkId, drinkId, quantity },
+      body: { tabDrinkId, requestUserId },
     } = req;
     try {
-      const tab = await Tab.findByPk(user.tabId);
-      const drink = await TabDrink.findByPk(tabDrinkId);
-      drink.status = 'accepted';
-      drink.save();
-      const newDrink = TabDrink.create({
-        price: drink.price,
-        quantity: drink.quantity,
-        drinkId: user.drinkId,
+      const outboundDrink = await TabDrink.findByPk(tabDrinkId);
+      outboundDrink.status = 'REQUESTED-OUTBOUND';
+      await outboundDrink.save();
+      const incomingDrink = await TabDrink.create({
+        status: 'REQUESTED-INCOMING',
+        quantity: outboundDrink.quantity,
+        price: outboundDrink.price,
+        drinkId: outboundDrink.drinkId,
+        userId: requestUserId,
+        associatedTabDrinkId: outboundDrink.id,
       });
-      await tab.addDrink(newDrink, { through: { quantity: quantity } });
-      tab = await Tab.findByPk(user.tabId);
-      res.send(tab);
+      res.sendStatus(201);
     } catch (err) {
       next(err);
     }
   }
 );
 
-//PUT /api/user/tab/current/split/remove - after the new owner accepts, the drink status is changed to accepted and no longer shows up on this users tab
-router.put('/current/split', requireUserToken, async (req, res, next) => {
-  const {
-    user,
-    body: { tabDrinkId, quantity },
-  } = req;
-  try {
-    const drink = await TabDrink.findByPk(tabDrinkId);
-    drink.status = 'accepted';
-    drink.save();
-    tab = await Tab.findByPk(user.tabId);
-    res.send(tab);
-  } catch (err) {
-    next(err);
+//PUT /api/user/tab/current/split/accept-split - accepting an incoming split request
+router.put(
+  '/current/accept-split',
+  requireUserToken,
+  async (req, res, next) => {
+    const {
+      user,
+      body: { tabDrinkId },
+    } = req;
+    try {
+      const incomingDrink = await TabDrink.findByPk(tabDrinkId);
+      incomingDrink.status = 'NO REQUEST';
+      await incomingDrink.save();
+      const { associatedTabDrinkId } = incomingDrink;
+      const outboundDrink = await TabDrink.findByPk(associatedTabDrinkId);
+      outboundDrink.status = 'ACCEPTED';
+      outboundDrink.price = 0;
+      await outboundDrink.save();
+      res.sendStatus(201);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
+
+//PUT /api/user/tab/current/reject-split -
+router.put(
+  '/current/reject-split',
+  requireUserToken,
+  async (req, res, next) => {
+    const {
+      user,
+      body: { tabDrinkId },
+    } = req;
+    try {
+      const incomingDrink = await TabDrink.findByPk(tabDrinkId);
+      const { associatedTabDrinkId } = incomingDrink;
+      await incomingDrink.destroy();
+      const outboundDrink = await TabDrink.findByPk(associatedTabDrinkId);
+      outboundDrink.status = 'REJECTED';
+      await outboundDrink.save();
+      res.sendStatus(201);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 module.exports = router;

@@ -8,8 +8,8 @@ const {
 class Tab extends Model {
   getTax() {
     const venue = Venue.findOne({ where: { id: this.venueId } });
-    const stateVal = venue.state;
-    return (this.tax = stateTaxTable[stateVal]);
+    const state = venue.state;
+    return (this.tax = stateTaxTable[state]);
   }
 
   getSubTotal() {
@@ -36,24 +36,19 @@ class Tab extends Model {
     return (this.total = tabTotal);
   }
 
-  //unsure why this is not working; we may not need it
-  //   static getDrinks(tabId) {
-  //     const {
-  //       models: { drink, tabDrinks },
-  //     } = db;
-  //     return new Promise((res, rej) => {
-  //       this.findByPk(tabId, {
-  //         include: {
-  //           model: tabDrinks,
-  //           include: { model: drink },
-  //           separate: true,
-  //           order: [[drink, 'name', 'ASC']],
-  //         },
-  //       })
-  //         .then((tab) => res(tab))
-  //         .catch(rej);
-  //     });
-  //   }
+  static getWithDrinks(tabId) {
+    const {
+      models: { tabDrinks, drink },
+    } = db;
+    return this.findByPk(tabId, {
+      include: {
+        model: tabDrinks,
+        include: { model: drink },
+        separate: true,
+        order: [[drink, 'name', 'ASC']],
+      },
+    });
+  }
 }
 
 Tab.init(

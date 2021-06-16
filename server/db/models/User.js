@@ -156,23 +156,35 @@ class User extends Model {
     const {
       models: { orders },
     } = db;
-    return new Promise((res, rej) => {
-      orders
-        .findAll({
-          where: { userId: this.id },
-          limit: 1,
-          order: [['createdAt', 'DESC']],
-          attributes: ['id'],
-        })
-        .then(([mostRecentOrder]) => {
-          return orders.getWithDrinks(mostRecentOrder.id);
-        })
-        .then((orderWithDrinks) => res(orderWithDrinks))
-        .catch((err) => {
-          console.error(err);
-          rej(err);
-        });
-    });
+
+    return orders
+      .findAll({
+        where: { userId: this.id },
+        limit: 1,
+        order: [['createdAt', 'DESC']],
+        attributes: ['id'],
+      })
+      .then(([mostRecentOrder]) => {
+        return orders.getWithDrinks(mostRecentOrder.id);
+      });
+  }
+
+  currentTab() {
+    const {
+      models: { tabs },
+    } = db;
+
+    return tabs
+      .findAll({
+        where: { userId: this.id, status: 'open' },
+        limit: 1,
+        order: [['createdAt', 'DESC']],
+        attributes: ['id'],
+      })
+      .then((_tabs) => {
+        const mostRecentTab = _tabs[0];
+        return tabs.getWithDrinks(mostRecentTab.id);
+      });
   }
 }
 

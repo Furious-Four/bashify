@@ -1,25 +1,37 @@
 const {
   Model,
-  DataTypes: { INTEGER, FLOAT, BOOLEAN },
+  DataTypes: { INTEGER, FLOAT, UUID, UUIDV4 },
+  ENUM,
 } = require('sequelize');
 const db = require('../db');
 
 class TabDrink extends Model {}
 TabDrink.init(
   {
+    id: {
+      type: UUID,
+      defaultValue: UUIDV4,
+      primaryKey: true,
+    },
     quantity: {
       type: INTEGER,
     },
     price: {
       type: FLOAT,
     },
-    pending: {
-      type: BOOLEAN,
-      defaultValue: false,
+    status: {
+      type: ENUM(
+        'REQUESTED-OUTBOUND',
+        'REQUESTED-INCOMING',
+        'REJECTED',
+        'ACCEPTED',
+        'NO REQUEST'
+      ),
+      defaultValue: 'NO REQUEST',
     },
-    accepted: {
-      type: BOOLEAN,
-      defaultValue: false,
+    associatedTabDrinkId: {
+      type: UUID,
+      defaultValue: null,
     },
   },
   { sequelize: db, modelName: 'tabDrinks' }

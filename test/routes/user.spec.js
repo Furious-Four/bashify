@@ -250,7 +250,7 @@ describe('user routes', () => {
     });
   });
 
-  describe('/api/user/tab', () => {
+  describe.only('/api/user/tab', () => {
     let token, newTab;
     beforeAll(async () => {
       const { id } = newUser;
@@ -273,17 +273,40 @@ describe('user routes', () => {
         expect(response.status).toBe(401);
       });
     });
+
+    describe('GET /api/user/tab/:tabId', () => {
+      test('with a valid token for associated user, returns the tab by Id', async () => {
+        const { id } = newTab;
+        const tab = await Tab.findByPk(id);
+        const response = await app
+          .get(`/api/user/tab/${id}`)
+          .set('authorization', token);
+        expect(response.status).toBe(200);
+        expect(response.body.id).toBe(tab.id);
+      });
+      test('without a valid token for associated user, returns nothing', async () => {
+        const anotherTab = new Tab();
+        await anotherTab.save();
+        const { id } = anotherTab;
+        const response = await app
+          .get(`/api/user/tab/${id}`)
+          .set('authorization', token);
+        expect(response.status).toBe(401);
+      });
+    });
+
     describe('GET /api/user/tab/current', () => {
       test('with a valid token for associated user, return the users open tab', async () => {
-        newTab.userId = newUser.id;
-        await newTab.save();
-        const tab = await Tab.findAll({
-          where: { userId: newUser.id },
+        const tab = await Tab.findOne({
+          where: { userId: newUser.id, status: 'open' },
         });
+
         const response = await app
           .get('/api/user/tab/current')
           .set('authorization', token);
-        expect(response.body.userId).toBe(newUser.id);
+        console.log(response.body);
+        expect(response.body.id).toBe(tab.id);
+        expect(response.body.status).toEqual(tab.status);
       });
     });
   });

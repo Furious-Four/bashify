@@ -63,7 +63,18 @@ describe('Tab Attributes', () => {
         include: { model: TabDrink },
       });
       tabDrink = tabDrinks[0];
+      console.log(tabDrinks);
+      console.log(tabDrink);
     });
+
+    // test('GetDrinks Method: returns associated tabDrinks', () => {
+    //   const result = tabDrink.getDrinks();
+    //   console.log('RESULT', result);
+    //   console.log(tabDrink.id);
+    //   console.log(result.id);
+    //   expect(result.id).toBe(tabDrink.id);
+    // });
+
     test('TabDrinks belong to a Drink', () => {
       expect(tabDrink.drinkId).toBe(drink.id);
     });
@@ -76,10 +87,4 @@ describe('Tab Attributes', () => {
       expect(tab.venueId).toBeTruthy;
     });
   });
-  // describe('Method: Tab getDrinks', () => {
-  //   test('Tab is returned with drinks', () => {
-  //     const result = tab.getDrinks(tab.id);
-  //     expect(result).toEqual(drink2);
-  //   });
-  // });
 });
