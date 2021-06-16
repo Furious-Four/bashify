@@ -5,6 +5,8 @@ const Menu = require('./models/Menu');
 const User = require('./models/User');
 const Venue = require('./models/Venue');
 const PickUpLocation = require('./models/PickUpLocation');
+const Order = require('./models/Order');
+const OrderDrink = require('./models/OrderDrink')
 
 const seed = async () => {
   try {
@@ -177,10 +179,26 @@ const seed = async () => {
       amount: 25,
       menuId: nightMenu.id,
     });
+
+    // added test order
+const testOrder = await Order.create({
+  status: 'ORDERING',
+  userId: 3,
+  venueId: 1
+})
+
+const testOrderDrink = await OrderDrink.create({
+  quantity: 1,
+  price: donJulioShot.price,
+  orderId: testOrder.id,
+  drinkId: donJulioShot.id
+})
+
   } catch (error) {
     console.log(error);
   }
 };
+
 
 const init = async () => {
   try {
