@@ -10,6 +10,7 @@ import axios from 'axios';
 import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
+import SocketTest from './SocketTest.jsx';
 
 const App = () => {
   const [user, setUser] = useState({});
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/register">
           {loggedIn ? <Redirect to="/" /> : <Register />}
         </Route>
+        <Route path="/socketTest" component={SocketTest} />
         {/*
         AllDrinks
         SingleDrink
