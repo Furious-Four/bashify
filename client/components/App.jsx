@@ -10,6 +10,7 @@ import axios from 'axios';
 import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
+import AllDrinks from './drinks/AllDrinks.jsx';
 
 const App = () => {
   const [user, setUser] = useState({});
@@ -41,6 +42,7 @@ const App = () => {
     <Router>
       <MainNav user={user} setLoggedIn={setLoggedIn} />
       <Switch>
+        <Route path="/" exact component={AllDrinks} />
         <Route path="/login">
           {loggedIn ? <Redirect to="/" /> : <Login setLoggedIn={setLoggedIn} />}
         </Route>
