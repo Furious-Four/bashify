@@ -183,7 +183,9 @@ class User extends Model {
       })
       .then((_tabs) => {
         const mostRecentTab = _tabs[0];
-        return tabs.getWithDrinks(mostRecentTab.id);
+        if (!mostRecentTab) {
+          return null;
+        } else return tabs.getWithDrinks(mostRecentTab.id);
       });
   }
 }

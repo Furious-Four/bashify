@@ -25,12 +25,12 @@ router.get('/all', requireUserToken, async (req, res, next) => {
 router.get('/current', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
-    console.log(user);
+    // console.log(user);
     const tab = await user.currentTab();
-    console.log('this is the route current tab!!!', tab);
+    // console.log('this is the route current tab!!!', tab);
     res.send(tab);
   } catch (err) {
-    // console.log(err);
+    console.log(err);
     next(err);
   }
 });
@@ -42,7 +42,7 @@ router.get('/:tabId', requireUserToken, async (req, res, next) => {
       user,
       params: { tabId },
     } = req;
-    console.log(user.id);
+    // console.log(user.id);
     const tab = await Tab.findByPk(tabId);
 
     if (tab.userId === user.id) {
@@ -62,20 +62,22 @@ router.post('/current', requireUserToken, async (req, res, next) => {
     const { user } = req;
     const tab = await user.currentTab();
     // check that the user does not have an open tab
+    console.log(tab);
     if (tab) {
       res.sendStatus(409);
     } else {
       let newTab = new Tab();
-      await newtab.save();
+      await newTab.save();
       await user.addTab(newTab);
-      res.send(newTab);
+      await user.save();
+      res.status(200).send(newTab);
     }
   } catch (err) {
     next(err);
   }
 });
 
-// PUT /api/user/tab/current/request-split - changes the tabDrink status to 'pending' on the user's tab who initated the split request
+// PUT /api/user/tab/current/request-split - changes the tabDrink status to "REQUESTED-OUTBOUND" and creates a new TabDrink to be asssigned to another user.
 router.put(
   '/current/request-split',
   requireUserToken,
@@ -96,7 +98,9 @@ router.put(
         userId: requestUserId,
         associatedTabDrinkId: outboundDrink.id,
       });
-      res.sendStatus(201);
+      // console.log('outbound is', outboundDrink);
+      // console.log('incoming is', incomingDrink);
+      res.status(201).send(outboundDrink);
     } catch (err) {
       next(err);
     }
@@ -121,14 +125,14 @@ router.put(
       outboundDrink.status = 'ACCEPTED';
       outboundDrink.price = 0;
       await outboundDrink.save();
-      res.sendStatus(201);
+      res.status(201).send(outboundDrink);
     } catch (err) {
       next(err);
     }
   }
 );
 
-//PUT /api/user/tab/current/reject-split -
+//PUT /api/user/tab/current/reject-split - user can reject a drink someone has allocated to them. Destroys the incoming tabDrink and changes outbound tabDrink status to REJECTED
 router.put(
   '/current/reject-split',
   requireUserToken,
@@ -144,7 +148,7 @@ router.put(
       const outboundDrink = await TabDrink.findByPk(associatedTabDrinkId);
       outboundDrink.status = 'REJECTED';
       await outboundDrink.save();
-      res.sendStatus(201);
+      res.status(201).send(outboundDrink);
     } catch (err) {
       next(err);
     }
