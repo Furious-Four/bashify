@@ -3,8 +3,9 @@ import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 
 import { LoginPage, LoginForm, LoginLabel } from '../../styles/LoginForm';
+import { Button } from '../../styles/GlobalStyle';
 
-const Login = () => {
+const Login = ({ setLoggedIn }) => {
   const history = useHistory();
 
   const [form, setForm] = useState({
@@ -23,6 +24,7 @@ const Login = () => {
         data: { token },
       } = await axios.post('/api/user/auth', form);
       window.localStorage.setItem('token', token);
+      setLoggedIn(true);
       history.push('/');
     } catch (err) {
       if (err.status === 401) {
@@ -44,10 +46,10 @@ const Login = () => {
           Password:
           <input name="password" type="password" onChange={updateForm}></input>
         </LoginLabel>
-        <button onClick={handleSubmit}>Submit</button>
       </LoginForm>
+      <Button onClick={handleSubmit}>Log In</Button>
       <div>
-        Don't have an account? <Link to="/register">Register</Link>
+        Need an account? <Link to="/register">Register</Link>
       </div>
     </LoginPage>
   );

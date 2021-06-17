@@ -7,6 +7,7 @@ import {
   RegisterForm,
   RegisterLabel,
 } from '../../styles/RegisterForm';
+import { Button } from '../../styles/GlobalStyle';
 
 const Register = () => {
   const history = useHistory();
@@ -156,10 +157,11 @@ const Register = () => {
             value={form.phone}
           ></input>
         </RegisterLabel>
-        <button onClick={handleSubmit}>Submit</button>
       </RegisterForm>
+      <Button onClick={handleSubmit}>Register</Button>
       <div>
-        Already have an account? <Link to="/login">Login</Link>
+        <span>Have an account? </span>
+        <Link to="/login">Login</Link>
       </div>
     </RegisterPage>
   );
