@@ -11,10 +11,12 @@ import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
 import SocketTest from './SocketTest.jsx';
+import { connectUserSocket } from './utils/Socket.js';
 
 const App = () => {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [token, setToken] = useState(null);
 
   const fetchUserDetails = async (token) => {
     try {
@@ -27,16 +29,31 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     // Like componentDidMount and componentDidUpdate all in one
+    if (!token) {
+      const localToken = window.localStorage.getItem('token');
+      console.log(localToken);
+      if (localToken) {
+        setToken(localToken);
+        setLoggedIn(true);
+      }
+    }
     if (!user.id && loggedIn) {
-      const token = window.localStorage.getItem('token');
-      fetchUserDetails(token);
+      try {
+        await fetchUserDetails(token);
+        connectUserSocket(token, 'test');
+      } catch (err) {
+        console.error(err);
+        window.localStorage.removeItem('token');
+        setToken(null);
+        setLoggedIn(false);
+      }
     }
     if (user.id && !loggedIn) {
       setUser({});
     }
-  });
+  }, [loggedIn, token]);
 
   return (
     <Router>
