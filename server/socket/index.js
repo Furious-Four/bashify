@@ -5,6 +5,12 @@ const socketServer = (server) => {
 
   io.on('connection', (socket) => {
     console.log('a user connected');
+
+    socket.on('message', (message) => {
+      console.log(message);
+      io.emit('message', message);
+    });
+
     socket.on('disconnect', () => {
       console.log('user disconnected');
     });
