@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
+import { AllDrinksPage, SingleDrink } from '../../styles/AllDrinks';
 
 const AllDrinks = () => {
   const [drinks, setDrinks] = useState([]);
@@ -26,11 +27,19 @@ const AllDrinks = () => {
   });
 
   return (
-    <div>
+    <AllDrinksPage animate={{ scale: [0, 1] }}>
       {drinks.map((drink) => {
-        return <div>{drink.name}</div>;
+        return (
+          <SingleDrink
+            key={drink.id}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            {drink.name}
+          </SingleDrink>
+        );
       })}
-    </div>
+    </AllDrinksPage>
   );
 };
 

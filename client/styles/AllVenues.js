@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-
 import { motion } from 'framer-motion';
 
-export const AllDrinksPage = styled(motion.div)`
+export const AllVenuesPage = styled(motion.div)`
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
   align-items: center;
 `;
 
-export const SingleDrink = styled(motion.a)`
+export const SingleVenue = styled(motion.a)`
   margin: 4rem;
   text-decoration: none;
   font-weight: 500;

@@ -11,6 +11,7 @@ import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
 import AllDrinks from './drinks/AllDrinks.jsx';
+import AllVenues from './venues/AllVenues.jsx';
 
 const App = () => {
   const [user, setUser] = useState({});
@@ -42,13 +43,14 @@ const App = () => {
     <Router>
       <MainNav user={user} setLoggedIn={setLoggedIn} />
       <Switch>
-        <Route path="/" exact component={AllDrinks} />
+        <Route path="/" exact component={AllVenues} />
         <Route path="/login">
           {loggedIn ? <Redirect to="/" /> : <Login setLoggedIn={setLoggedIn} />}
         </Route>
         <Route path="/register">
           {loggedIn ? <Redirect to="/" /> : <Register />}
         </Route>
+        <Route exact path="/venue/:id" component={AllDrinks}></Route>
         {/*
         AllDrinks
         SingleDrink
