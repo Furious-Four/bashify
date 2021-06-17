@@ -10,13 +10,13 @@ import axios from 'axios';
 import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
-import SocketTest from './SocketTest.jsx';
 import { connectUserSocket } from './utils/Socket.js';
 
 const App = () => {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState(null);
+  const [socket, setSocket] = useState(null);
 
   const fetchUserDetails = async (token) => {
     try {
@@ -42,7 +42,8 @@ const App = () => {
     if (!user.id && loggedIn) {
       try {
         await fetchUserDetails(token);
-        connectUserSocket(token, 'test');
+        const socket = connectUserSocket(token, 'test');
+        setSocket(socket);
       } catch (err) {
         console.error(err);
         window.localStorage.removeItem('token');
@@ -52,6 +53,8 @@ const App = () => {
     }
     if (user.id && !loggedIn) {
       setUser({});
+      socket.disconnect();
+      setSocket(null);
     }
   }, [loggedIn, token]);
 
@@ -65,7 +68,6 @@ const App = () => {
         <Route path="/register">
           {loggedIn ? <Redirect to="/" /> : <Register />}
         </Route>
-        <Route path="/socketTest" component={SocketTest} />
         {/*
         AllDrinks
         SingleDrink
@@ -78,13 +80,5 @@ const App = () => {
     </Router>
   );
 };
-
-// const App = () => {
-//   const [venue, setVenue] = useState();
-//   const fetchVenueDetails = async (id) => {
-//     const response = await axios.get(`/api/venue/${id}`);
-//     setVenue(response);
-//   };
-// };
 
 export default App;

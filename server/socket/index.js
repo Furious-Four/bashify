@@ -24,7 +24,6 @@ const socketServer = (server) => {
     console.log('User', user.id, 'connected');
 
     socket.join(venue);
-
     usersNamespace.to(venue).emit('message', `User ${user.id} connected`);
 
     socket.on('disconnect', () => {
