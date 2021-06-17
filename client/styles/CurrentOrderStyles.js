@@ -11,6 +11,8 @@ export const Button = styled.button`
  text-align: center;
  transition: all 0.15s;
  background: var(--orange);
+ height: 25%;
+ margin: 0.25rem;
 `
 
 export const CurrentOrderHeader = styled.div`
@@ -21,7 +23,7 @@ export const CurrentOrderHeader = styled.div`
 
 export const CurrentOrderCard = styled.div`
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: column;
   align-items: center;
   background: var(--white);
   color: var(--blue);
@@ -31,10 +33,12 @@ export const CurrentOrderCard = styled.div`
 
 export const CurrentOrderForm = styled.div`
   display: flex;
-  margin: 1rem;
-  padding: 1rem;
-  td {
-     padding: .5rem;
+  .formDiv {
+    display: flex;
+    align-items: center;
+  }
+  div { 
+    padding: 1rem;
   }
 `;
 

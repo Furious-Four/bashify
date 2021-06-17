@@ -187,12 +187,19 @@ const testOrder = await Order.create({
   venueId: 1
 })
 
-const testOrderDrink = await OrderDrink.create({
+const testOrderDrink1 = await OrderDrink.create({
   quantity: 1,
   price: donJulioShot.price,
   orderId: testOrder.id,
   drinkId: donJulioShot.id
 })
+
+const testOrderDrink2 = await OrderDrink.create({
+  quantity: 1,
+  price: patronShot.price,
+  orderId: testOrder.id,
+  drinkId: patronShot.id
+}) 
 
   } catch (error) {
     console.log(error);

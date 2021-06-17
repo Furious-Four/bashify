@@ -7,54 +7,73 @@ import { CurrentOrderCard, CurrentOrderHeader, CurrentOrderPage, CurrentOrderFor
 const CurrentOrder = () => {
 
   const [order, setOrder] = useState({})
-  const [drinks, setDrinks] = useState({})
+  const [drinks, setDrinks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [subtotal, setSubTotal] = useState(0)
 
-  const getOrder = async() => {
-      try {
+  useEffect(async() => {
+    try {
         const token = window.localStorage.getItem('token')
         const {data: order} = await axios.get(`/api/user/order/current`, 
         { headers: { authorization: token } }
         )
-        return order
+        setOrder(order)
+        setLoading(false)
+        console.log(order)
+
+        const {data} = await axios.get(`/api/user/order/${order.id}`, 
+            { headers: { authorization: token } }
+            )
+            const drinks = data.orderDrinks 
+            setDrinks(drinks)
+            console.log(drinks)
       }
       catch (ex) {
         console.log(ex)
       } 
+  }, [])
+
+  useEffect(() => {
+    if (drinks.length) {
+        const prices = []
+        drinks.map(drink => {
+            prices.push(drink.price)
+        })
+        const subtotal = prices.reduce((acc, cum) => acc + cum)
+
+        setSubTotal(subtotal)
+    }
+  })
+
+  const increment = (id, subtotal) => {
+    let newSubtotal; 
+    const newDrinks = drinks.map((drink) => {
+      if (drink.drink.id === id) {
+        drink.quantity++
+        newSubtotal  = subtotal + drink.drink.price
+      }
+      return drink
+    })
+    setDrinks(newDrinks)
+    setSubTotal(newSubtotal)
   }
 
-  useEffect(()=> {
-    getOrder()
-    .then((order) => {
-        setOrder(order)
-        setLoading(false)
-    })
-  }, [])
-
-  const getOrderDrinks = async() => {
-    try {
-        if (!loading) {
-            const token = window.localStorage.getItem('token')
-            const {data: drinks} = await axios.get(`/api/user/order/${order.id}`, 
-            { headers: { authorization: token } }
-            )
-            //const drinks = data.orderDrinks
-            return drinks
+   const decrement = async(id, subtotal) => {
+    let newSubtotal;
+    const newDrinks = drinks.map((drink) => {
+      if (drink.drink.id === id) {
+        if (drink.quantity > 0) {
+          drink.quantity--
+          newSubtotal  = subtotal - drink.drink.price
         }
-    }
-    catch (ex) {
-      console.log(ex)
-    } 
-}
+      }
+      return drink
+    }).filter(drink => drink.quantity !== 0)
+    // update drink here with put route?
+    setDrinks(newDrinks)
+    setSubTotal(newSubtotal)
+  }
 
-  useEffect(()=> {
-    getOrderDrinks()
-    .then((drinks) => {
-        setDrinks(drinks)
-        console.log(drinks)
-        //setLoading(false)
-    })
-  }, [])
 
   if (loading) {
     return (
@@ -72,20 +91,27 @@ const CurrentOrder = () => {
         <CurrentOrderCard>
             <h3>Status: {order.status}</h3>
             <CurrentOrderForm>
-                <ul>
-                    {/* {
-                        drinks.orderDrinks.map(element => {
+                <div>
+                    {
+                        drinks.map((drink) => {
                             return (
-                                <li>
-                                    {element.drink.name}
-                                    {element.drink.price}
-                                </li>
+                                <div className='formDiv' key={drink.drink.id}>
+                                    <div key={drink.drink.name}>
+                                        {drink.drink.name}
+                                    </div>
+                                    <div key={drink.drink.price}>
+                                        ${drink.drink.price}
+                                    </div>
+                                    <Button onClick={() => decrement(drink.drink.id, subtotal)}>-</Button>
+                                        {drink.quantity}
+                                    <Button onClick={() => increment(drink.drink.id, subtotal)}>+</Button>
+                                </div>
                             )
                         })
-                    } */}
-                </ul>
+                    }
+                </div>
             </CurrentOrderForm>
-            <h3 id='subtotal'>subtotal</h3>
+                <h3 id='subtotal'>subtotal ${subtotal}</h3>
         </CurrentOrderCard>
         <Button>submit order</Button>
     </CurrentOrderPage>
