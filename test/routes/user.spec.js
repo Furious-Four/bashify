@@ -7,11 +7,12 @@ const {
 } = require('@jest/globals');
 const jwt = require('jsonwebtoken');
 const {
-  models: { Drink, Order, OrderDrink, User },
+  models: { Drink, Order, OrderDrink, User, Tab, TabDrink },
 } = require('../../server/db/index.js');
 const app = require('supertest')(require('../../server/app.js'));
 
 let newUser;
+let drink;
 
 beforeAll(async () => {
   newUser = new User({
@@ -23,6 +24,8 @@ beforeAll(async () => {
     phone: '1234567890',
   });
   await newUser.save();
+  newDrink = await Drink.findOne();
+  await newDrink.save();
 });
 afterAll(async () => {
   await newUser.destroy();
@@ -246,6 +249,152 @@ describe('user routes', () => {
         expect(response.status).toBe(200);
         const { orderDrinks: newOrderDrinks } = response.body;
         expect(newOrderDrinks.length).toBe(orderDrinks.length - 1);
+      });
+    });
+  });
+
+  describe('/api/user/tab', () => {
+    let token, newTab, newTabDrink;
+    beforeAll(async () => {
+      const { id } = newUser;
+      token = jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET);
+      newTab = new Tab();
+      newTab.userId = id;
+      await newTab.save();
+      newTabDrink = new TabDrink({
+        quantity: 100,
+        price: 1.0,
+        drinkId: newDrink.id,
+        userId: newUser.id,
+      });
+      await newTabDrink.save();
+    });
+    describe('GET /api/user/tab/all', () => {
+      test('with a valid token for a user, returns their tabs', async () => {
+        const tabs = await Tab.findAll({ where: { userId: newUser.id } });
+        const response = await app
+          .get('/api/user/tab/all')
+          .set('authorization', token);
+        expect(response.body.length).toBe(tabs.length);
+      });
+      test('without a valid token for a user, returns nothing', async () => {
+        const tabs = await Tab.findAll({ where: { userId: newUser.id } });
+        const response = await app.get('/api/user/tab/all');
+        expect(response.status).toBe(401);
+      });
+    });
+
+    describe('GET /api/user/tab/:tabId', () => {
+      test('with a valid token for associated user, returns the tab by Id', async () => {
+        const { id } = newTab;
+        const tab = await Tab.findByPk(id);
+        const response = await app
+          .get(`/api/user/tab/${id}`)
+          .set('authorization', token);
+        expect(response.status).toBe(200);
+        expect(response.body.id).toBe(tab.id);
+      });
+      test('without a valid token for associated user, returns nothing', async () => {
+        const anotherTab = new Tab();
+        await anotherTab.save();
+        const { id } = anotherTab;
+        const response = await app
+          .get(`/api/user/tab/${id}`)
+          .set('authorization', token);
+        expect(response.status).toBe(401);
+      });
+    });
+
+    describe('GET /api/user/tab/current', () => {
+      test('with a valid token for associated user, return the users open tab', async () => {
+        const tab = await Tab.findOne({
+          where: { userId: newUser.id, status: 'open' },
+        });
+
+        const response = await app
+          .get('/api/user/tab/current')
+          .set('authorization', token);
+        console.log(response.body);
+        expect(response.body.id).toBe(tab.id);
+        expect(response.body.status).toEqual(tab.status);
+      });
+    });
+
+    describe('PUT /api/user/tab/request-split', () => {
+      test('with a valid token for associated user, allow the user send a request to allocate a TabDrink to another user', async () => {
+        const response = await app
+          .put('/api/user/tab/current/request-split')
+          .set('authorization', token)
+          .send({
+            tabDrinkId: newTabDrink.id,
+            requestUserId: newUser.id,
+          });
+        const incomingCreated = await TabDrink.findOne({
+          where: {
+            associatedTabDrinkId: newTabDrink.id,
+          },
+        });
+
+        expect(response.status).toBe(201);
+        expect(incomingCreated.status).toBe('REQUESTED-INCOMING');
+        expect(response.body.status).toBe('REQUESTED-OUTBOUND');
+      });
+    });
+
+    describe('PUT /api/user/tab/accept-split', () => {
+      test('with a valid token for associated user, allow the user send a request to allocate a TabDrink to another user', async () => {
+        const incomingCreated = await TabDrink.findOne({
+          where: {
+            associatedTabDrinkId: newTabDrink.id,
+          },
+        });
+        const response = await app
+          .put('/api/user/tab/current/accept-split')
+          .set('authorization', token)
+          .send({
+            tabDrinkId: incomingCreated.id,
+          });
+
+        expect(response.status).toBe(201);
+        expect(response.body.status).toBe('ACCEPTED');
+      });
+    });
+
+    describe('PUT /api/user/tab/reject-split', () => {
+      test('with a valid token for associated user, allow the user send a request to allocate a TabDrink to another user', async () => {
+        const incomingCreated = await TabDrink.findOne({
+          where: {
+            associatedTabDrinkId: newTabDrink.id,
+          },
+        });
+        const response = await app
+          .put('/api/user/tab/current/reject-split')
+          .set('authorization', token)
+          .send({
+            tabDrinkId: incomingCreated.id,
+          });
+
+        expect(response.status).toBe(201);
+        expect(response.body.status).toBe('REJECTED');
+      });
+    });
+    describe('POST /api/user/tab/current', () => {
+      test('with a valid token for associated user and no open tab, create a new tab for the user', async () => {
+        newTab.status = 'closed';
+        await newTab.save();
+        const response = await app
+          .post('/api/user/tab/current/')
+          .set('authorization', token);
+
+        expect(response.status).toBe(200);
+        expect(response.body.status).toBe('open');
+      });
+
+      test('with a valid token but a still open tab, does not create a new tab', async () => {
+        const response = await app
+          .post('/api/user/tab/current')
+          .set('authorization', token);
+        expect(response.status).toBe(409);
       });
     });
   });
