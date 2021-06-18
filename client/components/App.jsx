@@ -10,6 +10,7 @@ import axios from 'axios';
 import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
+import Profile from './profile/Profile.jsx';
 import { connectUserSocket } from './utils/Socket.js';
 
 const App = () => {
@@ -53,10 +54,11 @@ const App = () => {
     }
     if (user.id && !loggedIn) {
       setUser({});
+      setToken(null);
       socket.disconnect();
       setSocket(null);
     }
-  }, [loggedIn, token]);
+  }, [loggedIn, token, user]);
 
   return (
     <Router>
@@ -72,10 +74,12 @@ const App = () => {
             <Register setLoggedIn={setLoggedIn} />
           )}
         </Route>
+        <Route path="/profile">
+          <Profile user={user} />
+        </Route>
         {/*
         AllDrinks
         SingleDrink
-        Profile
         CurrentTab
         CurrentOrder
         VenueLandingPage

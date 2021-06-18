@@ -14,6 +14,8 @@ const {
 router.get('/', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
+    user.friends = await user.getFriends();
+    console.log(user.friends);
     res.send(user);
   } catch (err) {
     next();
