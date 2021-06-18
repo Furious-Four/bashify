@@ -66,7 +66,11 @@ const App = () => {
           {loggedIn ? <Redirect to="/" /> : <Login setLoggedIn={setLoggedIn} />}
         </Route>
         <Route path="/register">
-          {loggedIn ? <Redirect to="/" /> : <Register />}
+          {loggedIn ? (
+            <Redirect to="/" />
+          ) : (
+            <Register setLoggedIn={setLoggedIn} />
+          )}
         </Route>
         {/*
         AllDrinks
