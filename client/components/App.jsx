@@ -10,6 +10,7 @@ import axios from 'axios';
 import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
+import CurrentTab from './tabs/CurrentTab';
 
 const App = () => {
   const [user, setUser] = useState({});
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/register">
           {loggedIn ? <Redirect to="/" /> : <Register />}
         </Route>
+        <Route component={CurrentTab} path="/tab"></Route>
         {/*
         AllDrinks
         SingleDrink
