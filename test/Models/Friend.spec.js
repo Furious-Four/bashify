@@ -3,7 +3,7 @@ const {
   models: { Friendship, User },
 } = require('../../server/db/index.js');
 
-describe.only('Friendship properties', () => {
+describe('Friendship properties', () => {
   let user, friend, friend2;
   beforeAll(async () => {
     user = await User.create({
