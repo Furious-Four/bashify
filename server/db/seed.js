@@ -5,6 +5,8 @@ const Menu = require('./models/Menu');
 const User = require('./models/User');
 const Venue = require('./models/Venue');
 const PickUpLocation = require('./models/PickUpLocation');
+const Tab = require('./models/Tab');
+const TabDrink = require('./models/TabDrink');
 
 const seed = async () => {
   try {
@@ -182,6 +184,15 @@ const seed = async () => {
       amount: 25,
       menuId: nightMenu.id,
     });
+    //tab data
+    const michelleTab = await Tab.create({ userId: michelle.id });
+
+    //tabDrink data
+    const michelleTabDrink = await TabDrink.create({
+      userId: michelle.id,
+      tabId: michelleTab.id,
+      drinkId: donJulioShot.id,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -197,7 +208,7 @@ const init = async () => {
     //results in connection issues when serving data
   } catch (error) {
     console.log(error);
-    db.close();
+    // db.close();
   }
 };
 
