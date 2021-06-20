@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const CurrentTab = () => {
-  const [tab, setTab] = useState({});
+  const [tab, setTab] = useState([]);
+  //   const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     try {
@@ -11,16 +12,18 @@ const CurrentTab = () => {
         headers: { authorization: token },
       });
       setTab(tab);
-      setLoading(false);
+      //   setLoading(false);
       console.log(tab);
     } catch (ex) {
       console.log(ex);
     }
   }, []);
-
+  //   if (loading) {
+  //     return <div>...loading </div>;
+  //   } else {
   return (
     <div>
-      <h1> User's Current Tab </h1>
+      <h1> Current Tab </h1>
       <h2> Drinks </h2>
 
       <div> `tab is ${tab}` </div>
@@ -31,6 +34,7 @@ const CurrentTab = () => {
       <h4> Total </h4>
     </div>
   );
+  //   }
 };
 
 export default CurrentTab;
