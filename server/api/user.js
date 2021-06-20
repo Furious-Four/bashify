@@ -14,8 +14,6 @@ const {
 router.get('/', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
-    user.friends = await user.getFriends();
-    console.log(user.friends);
     res.send(user);
   } catch (err) {
     next();
@@ -71,6 +69,7 @@ router.put('/', requireUserToken, async (req, res, next) => {
 
 // Nested routers for the user api
 router.use('/auth', userRouter);
+router.use('/friend', require('./user/friend'));
 router.use('/order', require('./user/order'));
 // router.use('/tab', require('./user/tab'));
 
