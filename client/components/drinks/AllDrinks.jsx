@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AllDrinksPage, SingleDrink } from '../../styles/AllDrinks';
+import { incDrink } from '../utils/IncDrink';
 
-const AllDrinks = () => {
+const AllDrinks = (props) => {
   const [drinks, setDrinks] = useState([]);
 
-  const getAllDrinks = async (venueId) => {
+  const getAllDrinks = async (id) => {
     try {
-      const { data: venue } = await axios.get(`/api/venue/${venueId}`);
+      const { data: venue } = await axios.get(`/api/venue/${id}`);
       const activeMenu = venue[0].menus.filter(
         (menu) => menu.status === 'ACTIVE'
       );
@@ -21,18 +22,9 @@ const AllDrinks = () => {
 
   useEffect(() => {
     if (drinks.length === 0) {
-      getAllDrinks(1);
+      getAllDrinks(props.match.params.id);
     }
   });
-
-  incDrink = async (id) => {
-    try {
-      //check if user token exists, if not, redirect to login/register page. otherwise continue:
-      //check if active tab already exists. if not, create new tab and new order and add on drink. if so, add onto existing order
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <AllDrinksPage animate={{ scale: [0, 1] }}>
@@ -42,6 +34,8 @@ const AllDrinks = () => {
             key={drink.id}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            href={`/#/venue/${props.match.params.id}/drink/${drink.id}`}
+            //change 1 to venueId
           >
             <img src={drink.image} /> <hr />
             {drink.name} <br />$ {drink.price} | {drink.amount} mL

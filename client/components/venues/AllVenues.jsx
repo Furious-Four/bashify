@@ -9,7 +9,6 @@ const AllVenues = () => {
   const getAllVenues = async () => {
     try {
       const { data: venues } = await axios.get('/api/venue');
-      console.log(venues);
       setVenues(venues);
     } catch (error) {
       console.error(error);

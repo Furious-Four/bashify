@@ -105,7 +105,6 @@ const seed = async () => {
       type: 'Whiskey',
       price: 7,
       amount: 25,
-      image: '/../../public/assets/glenlivet-founders-reserve.png',
       menuId: nightMenu.id,
     });
     const glenlivetDoubleShot = await Drink.create({
@@ -114,7 +113,6 @@ const seed = async () => {
       type: 'Whiskey',
       price: 14,
       amount: 50,
-      image: '/../../public/assets/glenlivet-founders-reserve.png',
       menuId: nightMenu.id,
     });
     const redLabelShot = await Drink.create({
