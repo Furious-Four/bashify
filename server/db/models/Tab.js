@@ -57,7 +57,7 @@ Tab.init(
       type: ENUM('open', 'closed'),
       defaultValue: 'open',
     },
-    tip: { type: FLOAT(2), defaultValue: 0.2 },
+    tip: { type: FLOAT(2), defaultValue: 0.0 },
     tax: { type: FLOAT(2), defaultValue: 0.09 },
     subTotal: {
       type: FLOAT(2),
