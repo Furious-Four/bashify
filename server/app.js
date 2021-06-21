@@ -22,7 +22,7 @@ app.get('/', async (req, res, next) => {
   }
 });
 
-app.use((err, request, response, next) => {
+app.use((err, request, response) => {
   console.log(err);
   response.sendStatus(err.status || 500);
 });
