@@ -11,6 +11,10 @@ import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
 import Profile from './profile/Profile.jsx';
+import AllDrinks from './drinks/AllDrinks.jsx';
+import AllVenues from './venues/AllVenues.jsx';
+import SingleDrink from './drinks/SingleDrink.jsx';
+import CurrentOrder from './orders/CurrentOrder.jsx';
 import { connectUserSocket } from './utils/Socket.js';
 
 const App = () => {
@@ -64,7 +68,8 @@ const App = () => {
     <Router>
       <MainNav user={user} setLoggedIn={setLoggedIn} />
       <Switch>
-        <Route path="/login">
+        <Route path="/" exact component={AllVenues} />
+        <Route exact path="/login">
           {loggedIn ? <Redirect to="/" /> : <Login setLoggedIn={setLoggedIn} />}
         </Route>
         <Route path="/register">
@@ -77,6 +82,15 @@ const App = () => {
         <Route path="/profile">
           <Profile user={user} />
         </Route>
+        <Route path="/order">
+          <CurrentOrder user={user} setUser={setUser} />
+        </Route>
+        <Route exact path="/venue/:id" component={AllDrinks}></Route>
+        <Route
+          exact
+          path="/venue/:id/drink/:drinkid"
+          component={SingleDrink}
+        ></Route>
         {/*
         AllDrinks
         SingleDrink
