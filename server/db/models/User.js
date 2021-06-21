@@ -163,12 +163,17 @@ class User extends Model {
 
     return orders
       .findAll({
-        where: { userId: this.id },
+        where: { userId: this.id, status: 'ORDERING' },
         limit: 1,
         order: [['createdAt', 'DESC']],
         attributes: ['id'],
       })
-      .then(([mostRecentOrder]) => {
+      .then(async (_orders) => {
+        let mostRecentOrder = _orders[0];
+        if (!mostRecentOrder) {
+          mostRecentOrder = await orders.create();
+          await this.addOrder(mostRecentOrder);
+        }
         return orders.getWithDrinks(mostRecentOrder.id);
       });
   }
