@@ -93,7 +93,6 @@ const App = () => {
         SingleDrink
         Profile
         CurrentTab
-        CurrentOrder
         VenueLandingPage
       */}
       </Switch>

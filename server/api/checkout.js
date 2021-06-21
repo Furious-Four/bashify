@@ -15,5 +15,10 @@ router.post("/create-setup-intent", async (req, res) => {
     }));
 });
 
+// const paymentMethods = await stripe.paymentMethods.list({
+//     customer: '{{CUSTOMER_ID}}',
+//     type: 'card',
+//   }); 
+
 
 module.exports = router;

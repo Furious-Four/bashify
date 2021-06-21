@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
+import Checkout from '../utils/Checkout'
 
 import { CurrentOrderCard, CurrentOrderHeader, CurrentOrderPage, CurrentOrderForm, Button } from '../../styles/CurrentOrderStyles';
 
@@ -19,14 +20,12 @@ const CurrentOrder = () => {
         )
         setOrder(order)
         setLoading(false)
-        console.log(order)
 
         const {data} = await axios.get(`/api/user/order/${order.id}`, 
             { headers: { authorization: token } }
             )
             const drinks = data.orderDrinks 
             setDrinks(drinks)
-            console.log(drinks)
       }
       catch (ex) {
         console.log(ex)
@@ -113,7 +112,8 @@ const CurrentOrder = () => {
             </CurrentOrderForm>
                 <h3 id='subtotal'>subtotal ${subtotal}</h3>
         </CurrentOrderCard>
-        <Button>submit order</Button>
+        <Checkout />
+        {/* <Button>submit order</Button> */}
     </CurrentOrderPage>
   );
 }
