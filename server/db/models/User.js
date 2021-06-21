@@ -36,6 +36,10 @@ class User extends Model {
     const { id } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     return User.findByPk(id, {
       attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
+      include: {
+        model: User,
+        as: 'friends',
+      },
     }).then((user) => {
       if (user) return user;
       throw new Error('bad credentials');
