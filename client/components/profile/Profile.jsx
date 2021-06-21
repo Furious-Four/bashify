@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import AllTabs from './AllTabs.jsx';
 import ProfileDetail from './ProfileDetail.jsx';
 import Friends from './Friends.jsx';
 import { ProfilePage, ProfileTabs, TabOption } from '../../styles/Profile.js';
@@ -56,7 +57,7 @@ const Profile = ({ user }) => {
       </ProfileTabs>
       {tab === 'details' ? <ProfileDetail user={user} /> : ''}
       {tab === 'friends' ? <Friends user={user} /> : ''}
-      {tab === 'tabs' ? <div>TABS</div> : ''}
+      {tab === 'tabs' ? <AllTabs user={user} /> : ''}
     </ProfilePage>
   );
 };

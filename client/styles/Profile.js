@@ -15,16 +15,20 @@ export const ProfileTabs = styled.div`
 `;
 
 export const TabOption = styled.div`
-  width: calc(100% / 3);
+  width: calc((100% - 4px) / 3);
   text-align: center;
+  border-right: 2px solid var(--blue);
   padding: 1rem 0;
   ${(props) =>
     props.bold
       ? `
-    color: var(--white);
-    background-color: var(--red);
+    background-color: var(--white);
+    font-weight: bold;
   `
       : ''}
+  :last-child {
+    border: none;
+  }
 `;
 
 export const DetailTab = styled.div`
@@ -74,5 +78,40 @@ export const FriendSection = styled.div`
   }
   :first-child {
     padding-bottom: 1rem;
+  }
+`;
+
+export const RequestRow = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const FriendRequest = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+`;
+
+export const FriendRequestForm = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+`;
+
+export const TabTab = styled.div`
+  width: calc(100% - 2rem);
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 1rem 0;
+  margin: 0 1rem;
+  background-color: var(--white);
+  color: var(--blue);
+`;
+
+export const TabCard = styled.div`
+  display: flex;
+  padding: 0 1rem 1rem;
+  :last-child {
+    padding-bottom: 0;
   }
 `;

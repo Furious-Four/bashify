@@ -2,13 +2,20 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 import { Button } from '../../styles/GlobalStyle';
-import { FriendSection, FriendTab } from '../../styles/Profile';
+import {
+  FriendSection,
+  FriendTab,
+  RequestRow,
+  FriendRequest,
+  FriendRequestForm,
+} from '../../styles/Profile';
 
 const Friends = () => {
   const [friendList, setFriendList] = useState([]);
   const [requestList, setRequestList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [requestConfig, setRequestConfig] = useState(null);
+  const [requestForm, setRequestForm] = useState('');
 
   useEffect(async () => {
     if (loading) {
@@ -44,7 +51,26 @@ const Friends = () => {
       await axios.put('/api/user/friend/request', body, requestConfig);
       setLoading(true);
     } catch (err) {
-      window.alert('Failed to accept request');
+      window.alert('Failed to respond to request');
+    }
+  };
+
+  const changeForm = ({ target: { value } }) => {
+    setRequestForm(value);
+  };
+
+  const requestSubmit = async () => {
+    try {
+      await axios.post(
+        '/api/user/friend/request',
+        { username: requestForm },
+        requestConfig
+      );
+      // Something visual to let the user know the request was successful
+      setLoading(true);
+      setRequestForm('');
+    } catch (err) {
+      window.alert('Failed to create request');
     }
   };
 
@@ -58,19 +84,41 @@ const Friends = () => {
       </FriendSection>
 
       <FriendSection>
-        <h3>Requests</h3>
-        {requestList.map((friend) => (
-          <div key={friend.id}>
-            <div>{friend.fullName}</div>
-            <Button onClick={() => requestResponse(friend.id, 'ACCEPT')}>
-              Accept
-            </Button>
-            <Button onClick={() => requestResponse(friend.id, 'REJECT')}>
-              Reject
-            </Button>
-          </div>
-        ))}
+        {requestList.length ? (
+          <>
+            <h3>Requests</h3>
+            {requestList.map((friend) => (
+              <RequestRow key={friend.id}>
+                <div>{friend.fullName}</div>
+                <div>
+                  <Button onClick={() => requestResponse(friend.id, 'ACCEPT')}>
+                    <img src="/public/check.svg" width="15em" />
+                  </Button>
+                  <Button onClick={() => requestResponse(friend.id, 'REJECT')}>
+                    <img src="/public/exit.svg" width="15em" />
+                  </Button>
+                </div>
+              </RequestRow>
+            ))}
+          </>
+        ) : (
+          ''
+        )}
       </FriendSection>
+
+      <FriendRequest>
+        <h3>Add a Friend</h3>
+        <FriendRequestForm>
+          <input
+            type="text"
+            name="username"
+            value={requestForm}
+            placeholder="username"
+            onChange={changeForm}
+          />
+          <Button onClick={requestSubmit}>Request</Button>
+        </FriendRequestForm>
+      </FriendRequest>
     </FriendTab>
   );
 };

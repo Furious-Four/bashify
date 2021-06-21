@@ -35,9 +35,9 @@ router.post('/request', requireUserToken, async (req, res, next) => {
   try {
     const {
       user,
-      body: { friendId },
+      body: { username },
     } = req;
-    const friend = await User.findByPk(friendId);
+    const friend = await User.findOne({ where: { username } });
     await user.addFriend(friend);
     res.sendStatus(201);
   } catch (err) {
