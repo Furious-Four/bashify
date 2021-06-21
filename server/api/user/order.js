@@ -27,7 +27,7 @@ router.get('/all', requireUserToken, async (req, res, next) => {
 router.get('/current', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
-    const order = await user.currentOrder();
+    const order = await user.currentOrder(); // grab subtotal too?
     res.send(order);
   } catch (err) {
     next(err);

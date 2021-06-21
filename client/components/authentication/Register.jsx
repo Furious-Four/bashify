@@ -9,7 +9,7 @@ import {
 } from '../../styles/RegisterForm';
 import { Button } from '../../styles/GlobalStyle';
 
-const Register = () => {
+const Register = ({ setLoggedIn }) => {
   const history = useHistory();
 
   const [form, setForm] = useState({
@@ -109,6 +109,7 @@ const Register = () => {
         data: { token },
       } = await axios.post('/api/user', form);
       window.localStorage.setItem('token', token);
+      setLoggedIn(true);
       history.push('/');
     } catch (err) {
       console.error(err);

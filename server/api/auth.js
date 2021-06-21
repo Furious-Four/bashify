@@ -49,4 +49,4 @@ const venueAuth = {
   };
 });
 
-module.exports = { userAuth, venueAuth };
+module.exports = { venueAuth, userAuth };
