@@ -7,6 +7,7 @@ export const AllDrinksPage = styled(motion.div)`
   flex-flow: column wrap;
   justify-content: center;
   align-items: center;
+  text-align: center;
 `;
 
 export const SingleDrink = styled(motion.a)`
