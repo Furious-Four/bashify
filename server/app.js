@@ -13,6 +13,11 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 app.use('/api/user', require('./api/user'));
 app.use('/api/venue', require('./api/venue'));
 app.use('/api/drink', require('./api/drink'));
+app.use('/api/checkout', require('./api/checkout'));
+
+app.get("/public-key", (req, res) => {
+  res.send({ publicKey: process.env.STRIPE_PUBLISHABLE_KEY });
+});
 
 app.get('/', async (req, res, next) => {
   try {

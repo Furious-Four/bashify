@@ -10,6 +10,7 @@ import axios from 'axios';
 import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
+import CurrentOrder from './orders/CurrentOrder.jsx'
 import { connectUserSocket } from './utils/Socket.js';
 
 const App = () => {
@@ -71,6 +72,11 @@ const App = () => {
           ) : (
             <Register setLoggedIn={setLoggedIn} />
           )}
+        </Route>
+        <Route path="/order">
+          <CurrentOrder 
+          user={user} 
+          setUser={setUser}/>
         </Route>
         {/*
         AllDrinks
