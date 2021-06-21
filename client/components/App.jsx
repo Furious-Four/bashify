@@ -11,10 +11,13 @@ import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
 import CurrentOrder from './orders/CurrentOrder.jsx'
+import { connectUserSocket } from './utils/Socket.js';
 
 const App = () => {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
+  const [token, setToken] = useState(null);
+  const [socket, setSocket] = useState(null);
 
   const fetchUserDetails = async (token) => {
     try {
@@ -27,16 +30,34 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     // Like componentDidMount and componentDidUpdate all in one
+    if (!token) {
+      const localToken = window.localStorage.getItem('token');
+      console.log(localToken);
+      if (localToken) {
+        setToken(localToken);
+        setLoggedIn(true);
+      }
+    }
     if (!user.id && loggedIn) {
-      const token = window.localStorage.getItem('token');
-      fetchUserDetails(token);
+      try {
+        await fetchUserDetails(token);
+        const socket = connectUserSocket(token, 'test');
+        setSocket(socket);
+      } catch (err) {
+        console.error(err);
+        window.localStorage.removeItem('token');
+        setToken(null);
+        setLoggedIn(false);
+      }
     }
     if (user.id && !loggedIn) {
       setUser({});
+      socket.disconnect();
+      setSocket(null);
     }
-  });
+  }, [loggedIn, token]);
 
   return (
     <Router>
@@ -46,7 +67,11 @@ const App = () => {
           {loggedIn ? <Redirect to="/" /> : <Login setLoggedIn={setLoggedIn} />}
         </Route>
         <Route path="/register">
-          {loggedIn ? <Redirect to="/" /> : <Register />}
+          {loggedIn ? (
+            <Redirect to="/" />
+          ) : (
+            <Register setLoggedIn={setLoggedIn} />
+          )}
         </Route>
         <Route path="/order">
           <CurrentOrder 
@@ -65,13 +90,5 @@ const App = () => {
     </Router>
   );
 };
-
-// const App = () => {
-//   const [venue, setVenue] = useState();
-//   const fetchVenueDetails = async (id) => {
-//     const response = await axios.get(`/api/venue/${id}`);
-//     setVenue(response);
-//   };
-// };
 
 export default App;

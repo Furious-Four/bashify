@@ -15,15 +15,7 @@ describe('Tab Attributes', () => {
     await tab.addDrink(drink, { through: { price: 8.0, quantity: 1 } });
     await tab.getSubTotal();
   });
-  // beforeEach(async () => {
-  //   tab = await Tab.findOne();
-  //   drink = await TabDrink.findOne();
-  //   console.log(drink);
-  //   // drink.tabId = tab.id;
-  //   // await drink.save();
-  //   await tab.getSubTotal();
-  //   tab = await Tab.findByPk(tab.id);
-  // });
+
   describe('Attribute: status', () => {
     test('default status is open', () => {
       expect(tab.status).toEqual('open');
@@ -63,7 +55,10 @@ describe('Tab Attributes', () => {
         include: { model: TabDrink },
       });
       tabDrink = tabDrinks[0];
+      // console.log(tabDrinks);
+      // console.log(tabDrink);
     });
+
     test('TabDrinks belong to a Drink', () => {
       expect(tabDrink.drinkId).toBe(drink.id);
     });

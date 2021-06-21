@@ -9,35 +9,26 @@ class Order extends Model {
     const {
       models: { orderDrinks },
     } = db;
-    return new Promise((res, rej) => {
-      orderDrinks
-        .findAll({ where: { orderId: this.id } })
-        .then((drinks) => {
-          res(
-            drinks.reduce((acc, { quantity, price }) => {
-              acc += quantity * price;
-            }, 0)
-          );
-        })
-        .catch(rej);
-    });
+    return orderDrinks
+      .findAll({ where: { orderId: this.id } })
+      .then((drinks) => {
+        return drinks.reduce((acc, { quantity, price }) => {
+          acc += quantity * price;
+        }, 0);
+      });
   }
 
   static getWithDrinks(orderId) {
     const {
       models: { drink, orderDrinks },
     } = db;
-    return new Promise((res, rej) => {
-      this.findByPk(orderId, {
-        include: {
-          model: orderDrinks,
-          include: { model: drink },
-          separate: true,
-          order: [[drink, 'name', 'ASC']],
-        },
-      })
-        .then((order) => res(order))
-        .catch(rej);
+    return this.findByPk(orderId, {
+      include: {
+        model: orderDrinks,
+        include: { model: drink },
+        separate: true,
+        order: [[drink, 'name', 'ASC']],
+      },
     });
   }
 }
