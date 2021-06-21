@@ -42,4 +42,7 @@ export const SlideoutOpt = styled.div`
   padding: 0.5rem;
   background-color: ${(props) => (props.current ? 'var(--white)' : 'inherit')};
   border: ${(props) => (props.current ? 'solid 2px var(--blue)' : 'none')};
+  :hover {
+    cursor: pointer;
+  }
 `;

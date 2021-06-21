@@ -10,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
     margin: 0;
     padding: 0;
     background: var(--blue);
@@ -17,6 +18,7 @@ const GlobalStyle = createGlobalStyle`
     a {
       color: var(--orange);
     }
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 `;
 
