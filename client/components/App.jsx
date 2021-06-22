@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
   HashRouter as Router,
@@ -11,6 +12,7 @@ import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
 import CurrentTab from './tabs/CurrentTab';
+import Profile from './profile/Profile.jsx';
 import AllDrinks from './drinks/AllDrinks.jsx';
 import AllVenues from './venues/AllVenues.jsx';
 import SingleDrink from './drinks/SingleDrink.jsx';
@@ -58,10 +60,11 @@ const App = () => {
     }
     if (user.id && !loggedIn) {
       setUser({});
+      setToken(null);
       socket.disconnect();
       setSocket(null);
     }
-  }, [loggedIn, token]);
+  }, [loggedIn, token, user]);
 
   return (
     <Router>
@@ -78,6 +81,9 @@ const App = () => {
             <Register setLoggedIn={setLoggedIn} />
           )}
         </Route>
+        <Route path="/profile">
+          <Profile user={user} />
+        </Route>
         <Route path="/order">
           <CurrentOrder user={user} setUser={setUser} />
         </Route>
@@ -91,7 +97,6 @@ const App = () => {
         {/*
         AllDrinks
         SingleDrink
-        Profile
         CurrentTab
         CurrentOrder
         VenueLandingPage
