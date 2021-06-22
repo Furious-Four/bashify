@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios'
 import {useStripe, useElements, CardElement} from '@stripe/react-stripe-js';
 import CardSection from './CardSection.js';
 import { Form } from '../../styles/CheckoutStyles.js'
@@ -8,31 +9,31 @@ export default function CardSetupForm() {
   const elements = useElements();
 
   const handleSubmit = async (event) => {
-    // We don't want to let default form submission happen here,
-    // which would refresh the page.
     event.preventDefault();
 
     if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
-    const result = await stripe.confirmCardSetup('{{CLIENT_SECRET}}', {
+    const { data: client_secret } = await axios.get('/api/checkout/card-wallet')
+    const result = await stripe.confirmCardSetup(client_secret, {
       payment_method: {
         card: elements.getElement(CardElement),
-        billing_details: {
-          name: 'Jenny Rosen',
-        },
+        // billing_details: {
+        //   we can add billing details if we want
+        // },
       }
     });
 
     if (result.error) {
-      // Display result.error.message in your UI.
+      console.log('error!')
     } else {
       // The setup has succeeded. Display a success message and send
       // result.setupIntent.payment_method to your server to save the
       // card to a Customer
+      alert('order submitted')
+      console.log(result.setupIntent.payment_method)
+      
     }
   };
 
@@ -44,3 +45,5 @@ export default function CardSetupForm() {
     </Form>
   );
 }
+
+// can also add: "I authorize bashify to send instructions to the financial institution that issued my card to take payments from my card account in accordance with the terms of my agreement with you.""
