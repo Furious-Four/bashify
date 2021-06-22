@@ -69,6 +69,7 @@ router.put('/', requireUserToken, async (req, res, next) => {
 
 // Nested routers for the user api
 router.use('/auth', userRouter);
+router.use('/friend', require('./user/friend'));
 router.use('/order', require('./user/order'));
 router.use('/tab', require('./user/tab'));
 

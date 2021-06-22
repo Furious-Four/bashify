@@ -99,6 +99,11 @@ const seed = async () => {
       phone: '907-039-1111',
     });
 
+    await justin.addFriend(arjan);
+    await justin.addFriend(dominique);
+    await michelle.addFriend(justin);
+    await arjan.acceptFriend(justin);
+
     //menu data
     const nightMenu = await Menu.create({
       name: 'Night Menu',
