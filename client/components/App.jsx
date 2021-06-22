@@ -81,6 +81,7 @@ const App = () => {
         <Route path="/order">
           <CurrentOrder user={user} setUser={setUser} />
         </Route>
+        <Route path="/tab" component={CurrentTab}></Route>
         <Route exact path="/venue/:id" component={AllDrinks}></Route>
         <Route
           exact

@@ -5,7 +5,7 @@ const CurrentTab = () => {
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
-  const [total, setTotal] = useState(0);
+  let [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
@@ -24,6 +24,7 @@ const CurrentTab = () => {
       console.log(ex);
     }
   }, []);
+  const tip = 0;
 
   useEffect(() => {
     if (drinks.length) {
@@ -36,18 +37,12 @@ const CurrentTab = () => {
       setSubtotal(subtotal);
     }
   });
-  //   useEffect(() => {
-  //     if (this.tip) {
-  //       const drinks = [];
-  //       drinks.map((drink) => {
-  //         prices.push(drink.drink.price);
-  //       });
-
-  //       const drinkTotal = prices.reduce((acc, cum) => acc + cum);
-  //       const total = this.tax * drinkTotal + this.tip * drinkTotal + drinkTotal;
-  //       setTotal(total);
-  //     }
-  //   });
+  const handleClick = function (value) {
+    let tip = value;
+    let total = tab.tax * subtotal + tip * subtotal + subtotal;
+    total = total.toFixed(2);
+    setTotal(total);
+  };
 
   return (
     <div>
@@ -63,13 +58,30 @@ const CurrentTab = () => {
           );
         })}
       </div>
-      <h5> Tip </h5> <button> 20% </button> <button> 15% </button>{' '}
-      <button> 25% </button>
+      <h5> Select tip amount </h5>{' '}
+      <button value={0.2} onClick={(e) => handleClick(e.target.value)}>
+        {' '}
+        20%{' '}
+      </button>
+      <button> 15% </button> <button> 25% </button>
       <h3> Subtotal ${subtotal} </h3>
       <hr />
-      <h2> Total ${total} </h2>
+      <h2> Total ${total} </h2> <button> Checkout and Close Tab </button>
     </div>
   );
 };
 
 export default CurrentTab;
+
+{
+  /* <SingleDrinkView
+key={drink.id}
+whileHover={{ scale: 1.1 }}
+whileTap={{ scale: 0.9 }}
+>
+<img src={drink.image} /> <hr />
+{drink.name} <br />$ {drink.price} | {drink.amount} mL
+<br />
+<button onClick={() => incDrink(drink.id)}>Add to Order</button>
+</SingleDrinkView> */
+}
