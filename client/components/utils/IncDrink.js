@@ -10,6 +10,7 @@ export const incDrink = async (id) => {
       });
       if (activeOrder) {
         //create a new orderDrink row
+        //const updatedOrder
       } else {
         //create a new order row
         //create a new orderDrink row
@@ -18,6 +19,7 @@ export const incDrink = async (id) => {
     } else {
       alert('you need to login!');
     }
+    console.log(activeOrder);
   } catch (error) {
     console.error(error);
   }
