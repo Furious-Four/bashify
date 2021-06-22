@@ -5,7 +5,7 @@ const {
 } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const stripe = require('stripe')(process.env.STRIPE_PK);
+const stripe = require('stripe')(process.env.STRIPE_PUBLISHABLE_KEY);
 
 const db = require('../db');
 
