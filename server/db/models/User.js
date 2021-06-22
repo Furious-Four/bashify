@@ -269,7 +269,9 @@ User.addHook('beforeSave', async (user) => {
 });
 
 User.addHook('beforeCreate', async (user) => {
-  const customer = await stripe.customers.create();
+  const customer = await stripe.customers.create({
+    description: `Stripe customer for user ${user.id}`,
+  });
   user.stripeId = customer.id;
 });
 
