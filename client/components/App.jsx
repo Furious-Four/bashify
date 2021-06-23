@@ -98,7 +98,6 @@ const App = () => {
         AllDrinks
         SingleDrink
         CurrentTab
-        CurrentOrder
         VenueLandingPage
       */}
       </Switch>

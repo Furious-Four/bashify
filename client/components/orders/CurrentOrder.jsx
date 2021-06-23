@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
+import Checkout from '../utils/Checkout'
 
 import {
   CurrentOrderCard,
@@ -19,24 +20,23 @@ const CurrentOrder = () => {
 
   useEffect(async () => {
     try {
-      const token = window.localStorage.getItem('token');
-      const { data: order } = await axios.get(`/api/user/order/current`, {
-        headers: { authorization: token },
-      });
-      setOrder(order);
-      setLoading(false);
-      console.log(order);
+        const token = window.localStorage.getItem('token')
+        const {data: order} = await axios.get(`/api/user/order/current`, 
+        { headers: { authorization: token } }
+        )
+        setOrder(order)
+        setLoading(false)
 
-      const { data } = await axios.get(`/api/user/order/${order.id}`, {
-        headers: { authorization: token },
-      });
-      const drinks = data.orderDrinks;
-      setDrinks(drinks);
-      console.log(drinks);
-    } catch (ex) {
-      console.log(ex);
-    }
-  }, []);
+        const {data} = await axios.get(`/api/user/order/${order.id}`, 
+            { headers: { authorization: token } }
+            )
+            const drinks = data.orderDrinks 
+            setDrinks(drinks)
+      }
+      catch (ex) {
+        console.log(ex)
+      } 
+  }, [])
 
   useEffect(() => {
     if (drinks.length) {
@@ -112,7 +112,7 @@ const CurrentOrder = () => {
           </CurrentOrderForm>
           <h3 id="subtotal">subtotal ${subtotal}</h3>
         </CurrentOrderCard>
-        <Button>submit order</Button>
+        <Checkout />
       </CurrentOrderPage>
     );
   }

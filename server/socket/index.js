@@ -21,13 +21,13 @@ const socketServer = (server) => {
 
   usersNamespace.on('connection', (socket) => {
     const { user, venue } = socket;
-    console.log('User', user.id, 'connected');
+    //console.log('User', user.id, 'connected');
 
     socket.join(venue);
     usersNamespace.to(venue).emit('message', `User ${user.id} connected`);
 
     socket.on('disconnect', () => {
-      console.log('User', user.id, 'disconnected');
+      //console.log('User', user.id, 'disconnected');
       usersNamespace.to(venue).emit('message', `User ${user.id} disconnected`);
     });
   });
@@ -47,12 +47,12 @@ const socketServer = (server) => {
 
   venuesNamespace.on('connection', (socket) => {
     const { venue } = socket;
-    console.log('Venue', venue.id, 'connected');
+    //console.log('Venue', venue.id, 'connected');
 
     usersNamespace.to(venue.id).emit('message', `Venue ${venue.id} connected`);
 
     socket.on('disconnect', () => {
-      console.log('Venue disconnected');
+      //console.log('Venue disconnected');
       usersNamespace.to(venue.id).emit('message', `Venue disconnected`);
     });
   });

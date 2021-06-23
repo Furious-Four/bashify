@@ -1,12 +1,13 @@
+require('dotenv').config();
 const {
   Model,
   DataTypes: { STRING, VIRTUAL },
 } = require('sequelize');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const stripe = require('stripe')(process.env.STRIPE_PUBLISHABLE_KEY);
 
 const db = require('../db');
-require('dotenv').config();
 
 class User extends Model {
   static authenticate({ email, password }) {
@@ -254,6 +255,9 @@ User.init(
         notEmpty: true,
       },
     },
+    stripeId: {
+      type: STRING,
+    },
   },
   { sequelize: db, modelName: 'users' }
 );
@@ -262,6 +266,13 @@ User.addHook('beforeSave', async (user) => {
   if (user._changed.has('password')) {
     user.password = await bcrypt.hash(user.password, 5);
   }
+});
+
+User.addHook('beforeCreate', async (user) => {
+  const customer = await stripe.customers.create({
+    description: `Stripe customer for user ${user.id}`,
+  });
+  user.stripeId = customer.id;
 });
 
 module.exports = User;
