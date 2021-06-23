@@ -27,7 +27,8 @@ router.get('/all', requireUserToken, async (req, res, next) => {
 router.get('/current', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
-    const order = await user.currentOrder(); // grab subtotal too?
+    const order = await user.currentOrder();
+    //order.orderSubtotal = await order.getSubtotal()
     res.send(order);
   } catch (err) {
     next(err);
@@ -87,9 +88,10 @@ router.put(
       let order = await user.currentOrder();
       await order.removeDrink(drink);
       if (quantity > 0) {
-        await order.addDrink(drink, { through: { quantity } });
+        await order.addDrink(drink, { through: { price: drink.price, quantity } });
       }
       order = await Order.getWithDrinks(order.id);
+      order.orderSubtotal = await order.getSubtotal()
       res.send(order);
     } catch (err) {
       next(err);
