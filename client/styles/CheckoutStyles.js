@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
-export const CardSetupForm = styled.div`
+export const Form = styled.form`
 .StripeElement {
-    height: 40px;
+    height: 15px;
     padding: 10px 12px;
+    margin: .5rem;
     width: 100%;
     color: #32325d;
     background-color: white;
@@ -22,4 +23,13 @@ export const CardSetupForm = styled.div`
   .StripeElement--webkit-autofill {
     background-color: #fefde5 !important;
   }
+
+  button {
+    color: var(--blue);
+    text-align: center;
+    transition: all 0.15s;
+    background: var(--orange);
+    height: 25%;
+  }
+
 `;
