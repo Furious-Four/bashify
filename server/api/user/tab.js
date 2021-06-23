@@ -119,6 +119,7 @@ router.put(
     try {
       const incomingDrink = await TabDrink.findByPk(tabDrinkId);
       incomingDrink.status = 'NO REQUEST';
+      incomingDrink.tabId = user.tabId;
       await incomingDrink.save();
       const { associatedTabDrinkId } = incomingDrink;
       const outboundDrink = await TabDrink.findByPk(associatedTabDrinkId);
