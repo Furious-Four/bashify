@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import {
+  CurrentTabHeader,
+  CurrentTabCard,
+  CurrentTabPage,
+  CurrentTabForm,
+  Button,
+  Tip,
+} from '../../styles/Tab';
 
 const CurrentTab = () => {
   const [tab, setTab] = useState({});
@@ -45,43 +53,41 @@ const CurrentTab = () => {
   };
 
   return (
-    <div>
-      <h1> Current Tab </h1>
-      <div>
-        {drinks.map((drink) => {
-          return (
-            <div>
-              <div key={drink.drink.id}> {drink.drink.name} </div>
-              <div key={drink.drink.name}> ${drink.drink.price} </div>
-              <div key={drink.drink.tabId}>{drink.drink.amount} </div>
-            </div>
-          );
-        })}
-      </div>
-      <h5> Select tip amount </h5>{' '}
-      <button value={0.2} onClick={(e) => handleClick(e.target.value)}>
-        {' '}
-        20%{' '}
-      </button>
-      <button> 15% </button> <button> 25% </button>
-      <h3> Subtotal ${subtotal} </h3>
-      <hr />
-      <h2> Total ${total} </h2> <button> Checkout and Close Tab </button>
-    </div>
+    <CurrentTabPage>
+      <CurrentTabHeader>
+        <h1> your current tab </h1>
+      </CurrentTabHeader>
+      <CurrentTabCard>
+        <CurrentTabForm>
+          <div>
+            {drinks.map((drink) => {
+              return (
+                <div className="formDiv">
+                  <div key={drink.drink.id}> {drink.drink.name} </div>
+                  <div key={drink.drink.name}> ${drink.drink.price} </div>
+                  <div key={drink.drink.tabId}>{drink.drink.amount}ml </div>
+                </div>
+              );
+            })}
+          </div>
+        </CurrentTabForm>
+        <h5> select tip amount </h5>
+        <Tip>
+          <Button value={0.2} onClick={(e) => handleClick(e.target.value)}>
+            20%
+          </Button>
+          <Button value={0.15} onClick={(e) => handleClick(e.target.value)}>
+            15%
+          </Button>
+          <Button value={0.25} onClick={(e) => handleClick(e.target.value)}>
+            25%
+          </Button>
+        </Tip>
+        <h3> subtotal ${subtotal} </h3>
+        <h2> total ${total} </h2> <Button> checkout and close tab </Button>
+      </CurrentTabCard>
+    </CurrentTabPage>
   );
 };
 
 export default CurrentTab;
-
-{
-  /* <SingleDrinkView
-key={drink.id}
-whileHover={{ scale: 1.1 }}
-whileTap={{ scale: 0.9 }}
->
-<img src={drink.image} /> <hr />
-{drink.name} <br />$ {drink.price} | {drink.amount} mL
-<br />
-<button onClick={() => incDrink(drink.id)}>Add to Order</button>
-</SingleDrinkView> */
-}
