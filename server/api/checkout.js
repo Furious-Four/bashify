@@ -30,10 +30,10 @@ router.get('/card-wallet', async (req, res) => {
     res.send('card_wallet', { client_secret: intent.client_secret });
 });
 
-const paymentMethods = await stripe.paymentMethods.list({
-    customer: '{{CUSTOMER_ID}}',
-    type: 'card',
-}); 
+// const paymentMethods = await stripe.paymentMethods.list({
+//     customer: '{{CUSTOMER_ID}}',
+//     type: 'card',
+// }); 
 
 
 module.exports = router;
