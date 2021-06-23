@@ -16,26 +16,28 @@ export const incDrink = async (id) => {
       );
       if (orderExists.length > 0) {
         const orderExistsQuantity = orderExists[0].quantity;
-        const updateDrinkOnOrder = await axios.put(
+        const {data: updateDrinkOnOrder} = await axios.put(
           '/api/user/order/current/modify-drink',
           { drinkId: id, quantity: orderExistsQuantity + 1 },
           {
             headers: { authorization: tokenObj },
           }
         );
+        return updateDrinkOnOrder
       } else {
-        const newDrinkOnOrder = await axios.put(
+        const {data: newDrinkOnOrder} = await axios.put(
           '/api/user/order/current/modify-drink',
           { drinkId: id, quantity: 1 },
           {
             headers: { authorization: tokenObj },
           }
         );
+        return newDrinkOnOrder
       }
     } else {
       alert('you need to login!');
     }
-    console.log(activeOrder);
+    // console.log(activeOrder);
   } catch (error) {
     console.error(error);
   }
