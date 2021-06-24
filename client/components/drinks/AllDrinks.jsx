@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
-import { AllDrinksPage, SingleDrink, Image } from '../../styles/AllDrinks';
+import { AllDrinksPage, SingleDrinkParent,SingleDrink, Image } from '../../styles/AllDrinks';
 import { Button } from "../../styles/GlobalStyle";
 import { incDrink } from '../utils/IncDrink';
 
 const AllDrinks = (props) => {
+  //const history = useHistory();
   const [drinks, setDrinks] = useState([]);
 
   const getAllDrinks = async (id) => {
@@ -31,18 +32,30 @@ const AllDrinks = (props) => {
     <AllDrinksPage animate={{ scale: [0, 1] }}>
       {drinks.map((drink) => {
         return (
+          <SingleDrinkParent
+          key={drink.id}>
           <SingleDrink
-            key={drink.id}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             href={`/#/venue/${props.match.params.id}/drink/${drink.id}`}
-            //change 1 to venueId
           >
-            <Image src={drink.image} /> <hr />
+            <Image src={drink.image} />
+            </SingleDrink>
+          <div>
+            <hr />
             <h3 style={{fontWeight:200}}>{drink.name} <br />$ {drink.price}</h3>
             {drink.amount} mL
             <br />
             <Button whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }} onClick={() => incDrink(drink.id)}>Add to Order</Button>
-          </SingleDrink>
+            whileTap={{ scale: 0.9 }} onClick={() => {
+              if (window.localStorage.token){
+                incDrink(drink.id)
+              } else {
+                props.history.push('/login')
+              }
+            }}>Add to Order</Button>
+          </div>
+          </SingleDrinkParent>
         );
       })}
     </AllDrinksPage>

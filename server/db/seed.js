@@ -25,6 +25,33 @@ const seed = async () => {
       website: 'www.furiousfourpub.com',
       rating: 5,
     });
+    const fullstack = await Venue.create({
+      name: 'Fullstack Academy of Alcohol',
+      type: 'Bar',
+      email: 'erickats@alsoknownasprof.com',
+      address: '100 Code Ave, NY, 00001',
+      state: 'NY',
+      website: 'www.fullstackalcohol.com',
+      rating: 3,
+    });
+    const crocodilebar = await Venue.create({
+      name: 'Crocodile Bar',
+      type: 'Bar',
+      email: 'crocodilebar@NYU.com',
+      address: '999 Crocodile Ave, NY, 10293',
+      state: 'NY',
+      website: 'www.crocodilebar.com',
+      rating: 4,
+    });
+    const alligatorbar = await Venue.create({
+      name: 'Alligator Bar',
+      type: 'Bar',
+      email: 'alligatorbar@grr.com',
+      address: '198 Alligator Pkwy, NY, 03993',
+      state: 'NY',
+      website: 'www.alligatorbar.com',
+      rating: 3,
+    });
 
     //pickuplocation data
     const pickupA = await PickUpLocation.create({

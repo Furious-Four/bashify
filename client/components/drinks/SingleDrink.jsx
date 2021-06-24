@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 import { SingleDrinkPage, SingleDrinkView } from '../../styles/SingleDrink';
+import { Button } from "../../styles/GlobalStyle";
 import { incDrink } from '../utils/IncDrink';
 
 const SingleDrink = (props) => {
@@ -34,13 +35,19 @@ const SingleDrink = (props) => {
         return (
           <SingleDrinkView
             key={drink.id}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
           >
             <img src={drink.image} /> <hr />
-            {drink.name} <br />$ {drink.price} | {drink.amount} mL
+            <h3 style={{fontWeight:200}}>{drink.name} <br />$ {drink.price}</h3>
+            {drink.amount} mL
             <br />
-            <button onClick={() => incDrink(drink.id)}>Add to Order</button>
+            <Button whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }} onClick={() => {
+              if (window.localStorage.token){
+                incDrink(drink.id)
+              } else {
+                props.history.push('/login')
+              }
+            }}>Add to Order</Button>
           </SingleDrinkView>
         );
       })}
