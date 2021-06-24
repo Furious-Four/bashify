@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
-import { AllDrinksPage, SingleDrink } from '../../styles/AllDrinks';
+import { AllDrinksPage, SingleDrink, Image } from '../../styles/AllDrinks';
+import { Button } from "../../styles/GlobalStyle";
 import { incDrink } from '../utils/IncDrink';
 
 const AllDrinks = (props) => {
@@ -32,15 +33,15 @@ const AllDrinks = (props) => {
         return (
           <SingleDrink
             key={drink.id}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
             href={`/#/venue/${props.match.params.id}/drink/${drink.id}`}
             //change 1 to venueId
           >
-            <img src={drink.image} /> <hr />
-            {drink.name} <br />$ {drink.price} | {drink.amount} mL
+            <Image src={drink.image} /> <hr />
+            <h3 style={{fontWeight:200}}>{drink.name} <br />$ {drink.price}</h3>
+            {drink.amount} mL
             <br />
-            <button onClick={() => incDrink(drink.id)}>Add to Order</button>
+            <Button whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }} onClick={() => incDrink(drink.id)}>Add to Order</Button>
           </SingleDrink>
         );
       })}

@@ -15,3 +15,8 @@ export const SingleDrink = styled(motion.a)`
   text-decoration: none;
   font-weight: 500;
 `;
+
+export const Image = styled.img`
+  height: 300px;
+  width: 200px;
+`;

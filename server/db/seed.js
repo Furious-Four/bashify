@@ -117,6 +117,7 @@ const seed = async () => {
       type: 'Whiskey',
       price: 7,
       amount: 25,
+      image: "../../public/assets/glenlivetfoundersreserve.png",
       menuId: nightMenu.id,
     });
     const glenlivetDoubleShot = await Drink.create({
@@ -125,22 +126,25 @@ const seed = async () => {
       type: 'Whiskey',
       price: 14,
       amount: 50,
+      image: "../../public/assets/glenlivetfoundersreserve.png",
       menuId: nightMenu.id,
     });
     const redLabelShot = await Drink.create({
       name: 'Johnnie Walker Red Label Scotch Whisky - Single Shot',
       brand: 'Johnnie Walker',
       type: 'Whiskey',
-      price: 5,
+      price: 10,
       amount: 25,
+      image: "../../public/assets/johnniewalker.png",
       menuId: nightMenu.id,
     });
     const redLabelDoubleShot = await Drink.create({
       name: 'Johnnie Walker Red Label Scotch Whisky - Double Shot',
       brand: 'Johnnie Walker',
       type: 'Whiskey',
-      price: 10,
+      price: 15,
       amount: 50,
+      image: "../../public/assets/johnniewalker.png",
       menuId: nightMenu.id,
     });
 
@@ -149,16 +153,18 @@ const seed = async () => {
       name: 'Bacardi Superior White Rum - Single Shot',
       brand: 'Bacardi',
       type: 'Rum',
-      price: 4,
+      price: 9,
       amount: 25,
+      image: "../../public/assets/bacardirum.png",
       menuId: nightMenu.id,
     });
     const captainMorganShot = await Drink.create({
       name: 'Captain Morgan White Rum - Single Shot',
       brand: 'Captain Morgan',
       type: 'Rum',
-      price: 5,
+      price: 10,
       amount: 25,
+      image: "../../public/assets/captainmorgan.png",
       menuId: nightMenu.id,
     });
 
@@ -167,8 +173,9 @@ const seed = async () => {
       name: 'Hennessy VS Cognac - Single Shot',
       brand: 'Hennessy',
       type: 'Cognac',
-      price: 10,
+      price: 15,
       amount: 25,
+      image: "../../public/assets/hennessy.png",
       menuId: nightMenu.id,
     });
 
@@ -177,16 +184,18 @@ const seed = async () => {
       name: 'Patron Silver Tequila - Single Shot',
       brand: 'Patron',
       type: 'Tequila',
-      price: 5,
+      price: 15,
       amount: 25,
+      image: "../../public/assets/patron.png",
       menuId: nightMenu.id,
     });
     const donJulioShot = await Drink.create({
       name: 'Don Julio Blanco Tequila - Single Shot',
       brand: 'Don Julio',
       type: 'Tequila',
-      price: 7,
+      price: 15,
       amount: 25,
+      image: "../../public/assets/donjulio.png",
       menuId: nightMenu.id,
     });
     // added test order
@@ -208,7 +217,7 @@ const testOrderDrink2 = await OrderDrink.create({
   price: patronShot.price,
   orderId: testOrder.id,
   drinkId: patronShot.id
-}) 
+})
 
 
     //tab data
