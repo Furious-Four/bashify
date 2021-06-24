@@ -29,7 +29,10 @@ const AllDrinks = (props) => {
   });
 
   return (
-    <AllDrinksPage animate={{ scale: [0, 1] }}>
+    <AllDrinksPage
+    transition={{ ease: 'easeOut', duration: 1 }}
+    initial={{ opacity: 0 }}
+    animate={{ x: [100, 0], opacity: 1 }}>
       {drinks.map((drink) => {
         return (
           <SingleDrinkParent

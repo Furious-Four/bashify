@@ -30,7 +30,10 @@ const SingleDrink = (props) => {
   });
 
   return (
-    <SingleDrinkPage animate={{ scale: [0, 1] }}>
+    <SingleDrinkPage
+    transition={{ ease: 'easeOut', duration: 1 }}
+    initial={{ opacity: 0 }}
+    animate={{ x: [100, 0], opacity: 1 }}>
       {drink.map((drink) => {
         return (
           <SingleDrinkView
