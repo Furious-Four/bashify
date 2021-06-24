@@ -11,6 +11,7 @@ import axios from 'axios';
 import MainNav from './MainNav.jsx';
 import Login from './authentication/Login.jsx';
 import Register from './authentication/Register.jsx';
+import CurrentTab from './tabs/CurrentTab';
 import Profile from './profile/Profile.jsx';
 import AllDrinks from './drinks/AllDrinks.jsx';
 import AllVenues from './venues/AllVenues.jsx';
@@ -87,6 +88,7 @@ const App = () => {
         <Route path="/order">
           <CurrentOrder user={user} setUser={setUser} />
         </Route>
+        <Route path="/tab" component={CurrentTab}></Route>
         <Route exact path="/venue/:id" component={AllDrinks}></Route>
         <Route
           exact

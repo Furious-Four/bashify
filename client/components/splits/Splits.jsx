@@ -8,21 +8,22 @@ import ConfirmSplit from './ConfirmSplit';
 import RejectSplit from './RejectSplit';
 
 const Splits = () => {
-  const [LANDING, NEW_TAB, CARD_CAPTURE, CONFIRM_SPLIT, REJECT_SPLIT] = [
-    'LANDING',
-    'NEW_TAB',
-    'CARD_CAPTURE',
-    'CONFIRM_SPLIT',
-    'REJECT_SPLIT',
-  ];
-  const [loading, setLoading] = useState(true);
-  const [journeyStep, setJourneyStep] = useState(LANDING);
+  const steps = {
+    LANDING: 'LANDING',
+    NEW_TAB: 'NEW_TAB',
+    CARD_CAPTURE: 'CARD_CAPTURE',
+    CONFIRM_SPLIT: 'CONFIRM_SPLIT',
+    REJECT_SPLIT: 'REJECT_SPLIT',
+  };
 
-  const advanceToNewTab = () => setJourneyStep(NEW_TAB);
-  const advanceToCardCapture = () => setJourneyStep(CARD_CAPTURE);
-  const advanceToConfirmSplit = () => setJourneyStep(CONFIRM_SPLIT);
-  const advanceToRejectSplit = () => setJourneyStep(REJECT_SPLIT);
-  const backToLanding = () => setJourneyStep(LANDING);
+  const [loading, setLoading] = useState(true);
+  const [journeyStep, setJourneyStep] = useState(steps.LANDING);
+
+  const advanceToNewTab = () => setJourneyStep(steps.NEW_TAB);
+  const advanceToCardCapture = () => setJourneyStep(steps.CARD_CAPTURE);
+  const advanceToConfirmSplit = () => setJourneyStep(steps.CONFIRM_SPLIT);
+  const advanceToRejectSplit = () => setJourneyStep(steps.REJECT_SPLIT);
+  const backToLanding = () => setJourneyStep(steps.LANDING);
 
   useEffect(async () => {
     if (loading) setLoading(false);

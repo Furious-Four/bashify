@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
 import Checkout from '../utils/Checkout'
+import {decDrink} from '../utils/DecDrink'
+import {incDrink} from '../utils/IncDrink'
 
 import {
   CurrentOrderCard,
@@ -16,70 +18,43 @@ const CurrentOrder = () => {
   const [order, setOrder] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [subtotal, setSubTotal] = useState(0);
+  const [subtotal, setSubTotal] = useState();
 
   useEffect(async () => {
-    try {
+    if(loading) {
+      try {
         const token = window.localStorage.getItem('token')
         const {data: order} = await axios.get(`/api/user/order/current`, 
         { headers: { authorization: token } }
         )
         setOrder(order)
+        setDrinks(order.orderDrinks)
         setLoading(false)
-
-        const {data} = await axios.get(`/api/user/order/${order.id}`, 
-            { headers: { authorization: token } }
-            )
-            const drinks = data.orderDrinks 
-            setDrinks(drinks)
       }
       catch (ex) {
         console.log(ex)
-      } 
-  }, [])
+      }
+    } 
+  }, [loading])
+
+  useEffect( () => {
+    if (order.orderDrinks) {
+      setDrinks(order.orderDrinks)
+    }
+  }, [order])
 
   useEffect(() => {
+    //console.log(drinks)
     if (drinks.length) {
       const prices = [];
       drinks.map((drink) => {
-        prices.push(drink.price);
+        prices.push(drink.price * drink.quantity);
       });
       const subtotal = prices.reduce((acc, cum) => acc + cum);
-
+      //console.log(subtotal)
       setSubTotal(subtotal);
     }
-  });
-
-  const increment = (id, subtotal) => {
-    let newSubtotal;
-    const newDrinks = drinks.map((drink) => {
-      if (drink.drink.id === id) {
-        drink.quantity++;
-        newSubtotal = subtotal + drink.drink.price;
-      }
-      return drink;
-    });
-    setDrinks(newDrinks);
-    setSubTotal(newSubtotal);
-  };
-
-  const decrement = async (id, subtotal) => {
-    let newSubtotal;
-    const newDrinks = drinks
-      .map((drink) => {
-        if (drink.drink.id === id) {
-          if (drink.quantity > 0) {
-            drink.quantity--;
-            newSubtotal = subtotal - drink.drink.price;
-          }
-        }
-        return drink;
-      })
-      .filter((drink) => drink.quantity !== 0);
-    // update drink here with put route?
-    setDrinks(newDrinks);
-    setSubTotal(newSubtotal);
-  };
+  }, [drinks]);
 
   if (loading) {
     return <div>...loading</div>;
@@ -95,14 +70,14 @@ const CurrentOrder = () => {
             <div>
               {drinks.map((drink) => {
                 return (
-                  <div className="formDiv" key={drink.drink.id}>
+                  <div className="formDiv" key={drink.drinkId}>
                     <div key={drink.drink.name}>{drink.drink.name}</div>
                     <div key={drink.drink.price}>${drink.drink.price}</div>
-                    <Button onClick={() => decrement(drink.drink.id, subtotal)}>
+                    <Button onClick={async() => setOrder(await decDrink(drink.drinkId))}>
                       -
                     </Button>
                     {drink.quantity}
-                    <Button onClick={() => increment(drink.drink.id, subtotal)}>
+                    <Button onClick={async() => setOrder(await incDrink(drink.drinkId))}>
                       +
                     </Button>
                   </div>
