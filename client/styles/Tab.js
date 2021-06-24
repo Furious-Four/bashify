@@ -15,6 +15,15 @@ export const Button = styled.button`
   margin: 0.25rem;
 `;
 
+export const Link = styled.link`
+   color: var(--blue);
+   text-align: center;
+   transition: all 0.15s;
+  background: var(--orange);
+  height: 25%;
+  margin: 0.25rem;
+`;
+
 export const CurrentTabHeader = styled.div`
   display: flex;
   flex-flow: column nowrap;
@@ -47,6 +56,7 @@ export const CurrentTabForm = styled.div`
     padding: 1rem;
   }
 `;
+
 export const Subtotal = styled.h3`
   display: flex;
   flex-flow: row;

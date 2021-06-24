@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import {
   CurrentTabHeader,
   CurrentTabCard,
   CurrentTabPage,
   CurrentTabForm,
-  Button,
   Tip,
+  Button,
 } from '../../styles/Tab';
 
 const CurrentTab = () => {
@@ -45,6 +46,7 @@ const CurrentTab = () => {
       setSubtotal(subtotal);
     }
   });
+
   const handleClick = function (value) {
     let tip = value;
     let total = tab.tax * subtotal + tip * subtotal + subtotal;
@@ -52,42 +54,57 @@ const CurrentTab = () => {
     setTotal(total);
   };
 
-  return (
-    <CurrentTabPage>
-      <CurrentTabHeader>
-        <h1> your current tab </h1>
-      </CurrentTabHeader>
-      <CurrentTabCard>
-        <CurrentTabForm>
-          <div>
-            {drinks.map((drink) => {
-              return (
-                <div className="formDiv">
-                  <div key={drink.drink.id}> {drink.drink.name} </div>
-                  <div key={drink.drink.name}> ${drink.drink.price} </div>
-                  <div key={drink.drink.tabId}>{drink.drink.amount}ml </div>
-                </div>
-              );
-            })}
-          </div>
-        </CurrentTabForm>
-        <h5> select tip amount </h5>
-        <Tip>
-          <Button value={0.2} onClick={(e) => handleClick(e.target.value)}>
-            20%
-          </Button>
-          <Button value={0.15} onClick={(e) => handleClick(e.target.value)}>
-            15%
-          </Button>
-          <Button value={0.25} onClick={(e) => handleClick(e.target.value)}>
-            25%
-          </Button>
-        </Tip>
-        <h3> subtotal ${subtotal} </h3>
-        <h2> total ${total} </h2> <Button> checkout and close tab </Button>
-      </CurrentTabCard>
-    </CurrentTabPage>
-  );
+  if (drinks.length) {
+    return (
+      <CurrentTabPage>
+        <CurrentTabHeader>
+          <h1> your current tab </h1>
+        </CurrentTabHeader>
+        <CurrentTabCard>
+          <CurrentTabForm>
+            <div>
+              {drinks.map((drink) => {
+                return (
+                  <div className="formDiv">
+                    <div key={drink.drink.id}> {drink.drink.name} </div>
+                    <div key={drink.drink.name}> ${drink.drink.price} </div>
+                    <div key={drink.drink.tabId}>{drink.drink.amount}ml </div>
+                    <Button> split drink</Button>
+                  </div>
+                );
+              })}
+            </div>
+          </CurrentTabForm>
+          <h5> select tip amount </h5>
+          <Tip>
+            <Button value={0.15} onClick={(e) => handleClick(e.target.value)}>
+              15%
+            </Button>
+            <Button value={0.2} onClick={(e) => handleClick(e.target.value)}>
+              20%
+            </Button>
+            <Button value={0.25} onClick={(e) => handleClick(e.target.value)}>
+              25%
+            </Button>
+          </Tip>
+          <h3> subtotal ${subtotal} </h3>
+          <h2> total ${total} </h2> <Button> checkout and close tab </Button>
+        </CurrentTabCard>
+      </CurrentTabPage>
+    );
+  } else {
+    return (
+      <CurrentTabPage>
+        <CurrentTabHeader>
+          <h1> your current tab </h1>
+        </CurrentTabHeader>
+        <CurrentTabCard>
+          <CurrentTabForm>your tab is currently empty</CurrentTabForm>
+        </CurrentTabCard>
+        <Link to="/"> order drinks </Link>
+      </CurrentTabPage>
+    );
+  }
 };
 
 export default CurrentTab;

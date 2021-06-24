@@ -5,13 +5,10 @@ const Menu = require('./models/Menu');
 const User = require('./models/User');
 const Venue = require('./models/Venue');
 const PickUpLocation = require('./models/PickUpLocation');
-
 const Order = require('./models/Order');
-const OrderDrink = require('./models/OrderDrink')
-
+const OrderDrink = require('./models/OrderDrink');
 const Tab = require('./models/Tab');
 const TabDrink = require('./models/TabDrink');
-
 
 const seed = async () => {
   try {
@@ -190,42 +187,39 @@ const seed = async () => {
       menuId: nightMenu.id,
     });
     // added test order
-const testOrder = await Order.create({
-  status: 'ORDERING',
-  userId: 3,
-  venueId: 1
-})
+    const testOrder = await Order.create({
+      status: 'ORDERING',
+      userId: 3,
+      venueId: 1,
+    });
 
-const testOrderDrink1 = await OrderDrink.create({
-  quantity: 1,
-  price: donJulioShot.price,
-  orderId: testOrder.id,
-  drinkId: donJulioShot.id
-})
+    const testOrderDrink1 = await OrderDrink.create({
+      quantity: 1,
+      price: donJulioShot.price,
+      orderId: testOrder.id,
+      drinkId: donJulioShot.id,
+    });
 
-const testOrderDrink2 = await OrderDrink.create({
-  quantity: 1,
-  price: patronShot.price,
-  orderId: testOrder.id,
-  drinkId: patronShot.id
-}) 
-
+    const testOrderDrink2 = await OrderDrink.create({
+      quantity: 1,
+      price: patronShot.price,
+      orderId: testOrder.id,
+      drinkId: patronShot.id,
+    });
 
     //tab data
     const michelleTab = await Tab.create({ userId: michelle.id });
 
     //tabDrink data
-    const michelleTabDrink = await TabDrink.create({
-      userId: michelle.id,
-      tabId: michelleTab.id,
-      drinkId: donJulioShot.id,
-    });
-
+    //     const michelleTabDrink = await TabDrink.create({
+    //       userId: michelle.id,
+    //       tabId: michelleTab.id,
+    //       drinkId: donJulioShot.id,
+    //     });
   } catch (error) {
     console.log(error);
   }
 };
-
 
 const init = async () => {
   try {
