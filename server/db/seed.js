@@ -257,6 +257,16 @@ const testOrderDrink2 = await OrderDrink.create({
       drinkId: donJulioShot.id,
     });
 
+    //tab data
+    const domisobiTab = await Tab.create({ userId: dominique.id });
+
+    //tabDrink data
+    const domisobiTabDrink = await TabDrink.create({
+      userId: dominique.id,
+      tabId: domisobiTab.id,
+      drinkId: donJulioShot.id,
+    });
+
   } catch (error) {
     console.log(error);
   }

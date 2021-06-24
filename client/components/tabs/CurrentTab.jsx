@@ -26,8 +26,8 @@ const CurrentTab = () => {
       setLoading(false);
       const drinks = tab.tabDrinks;
       setDrinks(drinks);
-      console.log('tab is', tab);
-      console.log('drinks is ', drinks);
+      //console.log('tab is', tab);
+      //console.log('drinks is ', drinks);
     } catch (ex) {
       console.log(ex);
     }
@@ -52,6 +52,17 @@ const CurrentTab = () => {
     setTotal(total);
   };
 
+  const chargeCard = async() => {
+    try {
+      const data =  await axios.post("/api/checkout/charge-card")
+      console.log(data)
+    }
+    catch (ex) {
+      console.log(ex)
+    }
+    return alert('thanks! your tab is now closed')    
+  }
+
   return (
     <CurrentTabPage>
       <CurrentTabHeader>
@@ -73,18 +84,18 @@ const CurrentTab = () => {
         </CurrentTabForm>
         <h5> select tip amount </h5>
         <Tip>
-          <Button value={0.2} onClick={(e) => handleClick(e.target.value)}>
-            20%
-          </Button>
           <Button value={0.15} onClick={(e) => handleClick(e.target.value)}>
             15%
+          </Button>
+          <Button value={0.2} onClick={(e) => handleClick(e.target.value)}>
+            20%
           </Button>
           <Button value={0.25} onClick={(e) => handleClick(e.target.value)}>
             25%
           </Button>
         </Tip>
         <h3> subtotal ${subtotal} </h3>
-        <h2> total ${total} </h2> <Button> checkout and close tab </Button>
+        <h2> total ${total} </h2> <Button onClick={async() => await chargeCard()}> checkout and close tab </Button>
       </CurrentTabCard>
     </CurrentTabPage>
   );

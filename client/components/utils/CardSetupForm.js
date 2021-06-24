@@ -16,17 +16,17 @@ export default function CardSetupForm() {
     }
 
     const { data: client_secret } = await axios.get('/api/checkout/card-wallet')
+    //console.log(client_secret)
     const result = await stripe.confirmCardSetup(client_secret, {
       payment_method: {
         card: elements.getElement(CardElement),
         // billing_details: {
-        //   we can add billing details if we want
+        //   we can add billing details if we want cardholderName.value
         // },
       }
     });
-
     if (result.error) {
-      console.log('error!')
+      console.log('setupIntent not successful')
     } else {
       // The setup has succeeded. Display a success message and send
       // result.setupIntent.payment_method to your server to save the
@@ -36,7 +36,7 @@ export default function CardSetupForm() {
       
     }
   };
-
+  
   return (
     <Form onSubmit={handleSubmit}>
       <CardSection />
