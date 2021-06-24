@@ -33,8 +33,8 @@ const CurrentTab = () => {
       setLoading(false);
       const drinks = tab.tabDrinks;
       setDrinks(drinks);
-      console.log('tab is', tab);
-      console.log('drinks is ', drinks);
+      //console.log('tab is', tab);
+      //console.log('drinks is ', drinks);
     } catch (ex) {
       console.log(ex);
     }
@@ -79,6 +79,16 @@ const CurrentTab = () => {
     //   console.log(e.target.value);
     // });
     // return userInput;
+  };
+
+  const chargeCard = async () => {
+    try {
+      const data = await axios.post('/api/checkout/charge-card');
+      console.log(data);
+    } catch (ex) {
+      console.log(ex);
+    }
+    return alert('thanks! your tab is now closed');
   };
 
   if (drinks.length) {
@@ -136,7 +146,11 @@ const CurrentTab = () => {
             </Button>
           </Tip>
           <h3> subtotal ${subtotal} </h3>
-          <h2> total ${total} </h2> <Button> checkout and close tab </Button>
+          <h2> total ${total} </h2>{' '}
+          <Button onClick={async () => await chargeCard()}>
+            {' '}
+            checkout and close tab{' '}
+          </Button>
         </CurrentTabCard>
       </CurrentTabPage>
     );

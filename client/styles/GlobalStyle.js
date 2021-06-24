@@ -1,4 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components';
+import { motion } from 'framer-motion';
 
 const GlobalStyle = createGlobalStyle`
   :root {
@@ -10,13 +11,12 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
     margin: 0;
     padding: 0;
     background: var(--blue);
     color: var(--yellow);
     a {
-      color: var(--orange);
+      color: var(--white);
     }
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
@@ -61,11 +61,13 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export const Button = styled.button`
+export const Button = styled(motion.button)`
   padding: 0.5rem;
   background: var(--orange);
   border: 0;
-  border-radius: 0.1rem;
+  border-radius: 1rem;
+  margin: 0.5rem;
+  cursor: pointer;
 `;
 
 export default GlobalStyle;
