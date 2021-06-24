@@ -47,13 +47,13 @@ const MainNav = ({ user, setLoggedIn }) => {
                 <img src="/public/menu.svg" width="20em" />
               </div>
             ) : (
-              <Link to="/menu">Menu</Link>
+              <Link to="/menu">menu</Link>
             )}
             <Link to="/">bashify</Link>
             {user.id ? (
-              <Link to="/tab">Tab</Link>
+              <Link to="/tab">tab</Link>
             ) : (
-              <Link to="/login">Login</Link>
+              <Link to="/login">login</Link>
             )}
           </div>
         )}
@@ -65,35 +65,35 @@ const MainNav = ({ user, setLoggedIn }) => {
               current={location === 'profile'}
               onClick={() => navigate('profile')}
             >
-              Profile
+              profile
             </SlideoutOpt>
             <SlideoutOpt
               current={location === 'menu'}
               onClick={() => navigate('menu')}
             >
-              Menu
+              menu
             </SlideoutOpt>
             <SlideoutOpt
               current={location === 'order'}
               onClick={() => navigate('order')}
             >
-              Current Order
+              current order
             </SlideoutOpt>
             <SlideoutOpt
               current={location === 'tab'}
               onClick={() => navigate('tab')}
             >
-              Your Tab
+              your tab
             </SlideoutOpt>
             <SlideoutOpt
               current={location === 'splits'}
               onClick={() => navigate('splits')}
             >
-              Your Splits
+              your splits
             </SlideoutOpt>
           </SlideoutOptions>
           <SlideoutOpt current={location === 'logout'} onClick={logout}>
-            Log Out
+            log out
           </SlideoutOpt>
         </NavSlideout>
       ) : (
