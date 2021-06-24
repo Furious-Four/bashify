@@ -44,14 +44,14 @@ const CurrentOrder = () => {
   }, [order])
 
   useEffect(() => {
-    console.log(drinks)
+    //console.log(drinks)
     if (drinks.length) {
       const prices = [];
       drinks.map((drink) => {
         prices.push(drink.price * drink.quantity);
       });
       const subtotal = prices.reduce((acc, cum) => acc + cum);
-      console.log(subtotal)
+      //console.log(subtotal)
       setSubTotal(subtotal);
     }
   }, [drinks]);
