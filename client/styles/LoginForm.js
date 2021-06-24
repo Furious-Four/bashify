@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {motion} from 'framer-motion';
 
 export const LoginPage = styled.div`
   display: flex;
@@ -7,6 +8,7 @@ export const LoginPage = styled.div`
   padding: 0 1.5rem;
   h1 {
     align-self: center;
+    font-weight: 200;
   }
   button {
     margin: 1rem 0;

@@ -36,20 +36,20 @@ const Login = ({ setLoggedIn }) => {
 
   return (
     <LoginPage>
-      <h1>Login</h1>
+      <h1>login</h1>
       <LoginForm>
         <LoginLabel htmlFor="email">
-          Email:
+          email:
           <input name="email" onChange={updateForm}></input>
         </LoginLabel>
         <LoginLabel htmlFor="password">
-          Password:
+          password:
           <input name="password" type="password" onChange={updateForm}></input>
         </LoginLabel>
       </LoginForm>
-      <Button onClick={handleSubmit}>Log In</Button>
+      <Button onClick={handleSubmit}>log in</Button>
       <div>
-        Need an account? <Link to="/register">Register</Link>
+        need an account? <Link to="/register">register</Link>
       </div>
     </LoginPage>
   );

@@ -31,7 +31,7 @@ const AllVenues = () => {
             whileTap={{ scale: 0.9 }}
             href={`/#/venue/${venue.id}`}
           >
-            <h1 style={{fontWeight:100 }}>{venue.name}</h1>
+            <h1 style={{fontWeight:100, marginBottom:0 }}>{venue.name}</h1>
             <hr />
             {venue.address} | {venue.website}
           </SingleVenue>

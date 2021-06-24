@@ -44,10 +44,11 @@ const SingleDrink = (props) => {
             whileTap={{ scale: 0.9 }} onClick={() => {
               if (window.localStorage.token){
                 incDrink(drink.id)
+                alert(`One ${drink.name} added to your order!`)
               } else {
                 props.history.push('/login')
               }
-            }}>Add to Order</Button>
+            }}>add to order</Button>
           </SingleDrinkView>
         );
       })}
