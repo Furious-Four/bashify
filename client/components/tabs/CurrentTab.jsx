@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import PopUp from './PopUp';
 import {
   CurrentTabHeader,
   CurrentTabCard,
@@ -16,6 +17,11 @@ const CurrentTab = () => {
   const [subtotal, setSubtotal] = useState(0);
   let [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  };
 
   useEffect(async () => {
     try {
@@ -69,11 +75,28 @@ const CurrentTab = () => {
                     <div key={drink.drink.id}> {drink.drink.name} </div>
                     <div key={drink.drink.name}> ${drink.drink.price} </div>
                     <div key={drink.drink.tabId}>{drink.drink.amount}ml </div>
-                    <Button> split drink</Button>
+                    <input
+                      type="button"
+                      value="split drink"
+                      onClick={togglePopup}
+                    />
+                    {isOpen && (
+                      <PopUp
+                        content={
+                          <>
+                            <b>enter a friend's username</b>
+                            <input type="text" id="reqUsername" />
+                            <button>send request</button>
+                          </>
+                        }
+                        handleClose={togglePopup}
+                      />
+                    )}
                   </div>
                 );
               })}
             </div>
+            <div></div>
           </CurrentTabForm>
           <h5> select tip amount </h5>
           <Tip>

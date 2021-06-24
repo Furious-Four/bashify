@@ -210,12 +210,12 @@ const seed = async () => {
     //tab data
     const michelleTab = await Tab.create({ userId: michelle.id });
 
-    //tabDrink data
-    //     const michelleTabDrink = await TabDrink.create({
-    //       userId: michelle.id,
-    //       tabId: michelleTab.id,
-    //       drinkId: donJulioShot.id,
-    //     });
+    // tabDrink data
+    const michelleTabDrink = await TabDrink.create({
+      userId: michelle.id,
+      tabId: michelleTab.id,
+      drinkId: donJulioShot.id,
+    });
   } catch (error) {
     console.log(error);
   }
