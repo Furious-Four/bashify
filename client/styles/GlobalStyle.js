@@ -32,10 +32,10 @@ const GlobalStyle = createGlobalStyle`
    
   .box {
     position: relative;
-    width: 70%;
+    width: 50%;
     margin: 0 auto;
     height: auto;
-    max-height: 70vh;
+    max-height: 80vh;
     margin-top: calc(100vh - 85vh - 20px);
     background: #fff;
     border-radius: 4px;
