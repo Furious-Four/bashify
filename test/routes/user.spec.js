@@ -378,24 +378,24 @@ describe('user routes', () => {
         expect(response.body.status).toBe('REJECTED');
       });
     });
-    describe('POST /api/user/tab/current', () => {
-      test('with a valid token for associated user and no open tab, create a new tab for the user', async () => {
-        newTab.status = 'closed';
-        await newTab.save();
-        const response = await app
-          .post('/api/user/tab/current/')
-          .set('authorization', token);
+    // describe('POST /api/user/tab/current', () => {
+    //   test('with a valid token for associated user and no open tab, create a new tab for the user', async () => {
+    //     newTab.status = 'closed';
+    //     await newTab.save();
+    //     const response = await app
+    //       .post('/api/user/tab/current/')
+    //       .set('authorization', token);
 
-        expect(response.status).toBe(200);
-        expect(response.body.status).toBe('open');
-      });
+    //     expect(response.status).toBe(200);
+    //     expect(response.body.status).toBe('open');
+    //   });
 
-      test('with a valid token but a still open tab, does not create a new tab', async () => {
-        const response = await app
-          .post('/api/user/tab/current')
-          .set('authorization', token);
-        expect(response.status).toBe(409);
-      });
-    });
+    //   test('with a valid token but a still open tab, does not create a new tab', async () => {
+    //     const response = await app
+    //       .post('/api/user/tab/current')
+    //       .set('authorization', token);
+    //     expect(response.status).toBe(409);
+    //   });
+    // });
   });
 });

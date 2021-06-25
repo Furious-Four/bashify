@@ -18,6 +18,7 @@ const CurrentTab = () => {
   let [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [friends, setFriends] = useState([]);
 
   const togglePopup = () => {
     setIsOpen(!isOpen);
@@ -30,11 +31,13 @@ const CurrentTab = () => {
         headers: { authorization: token },
       });
       setTab(tab);
+      const { data: friends } = await axios.get(`api/user/friend/all`, {
+        headers: { authorization: token },
+      });
+      setFriends(friends);
       setLoading(false);
       const drinks = tab.tabDrinks;
       setDrinks(drinks);
-      //console.log('tab is', tab);
-      //console.log('drinks is ', drinks);
     } catch (ex) {
       console.log(ex);
     }
@@ -45,17 +48,13 @@ const CurrentTab = () => {
     if (drinks.length) {
       const prices = [];
       drinks.map((drink) => {
-        prices.push(drink.drink.price);
+        prices.push(drink.drink.price * drink.quantity);
       });
       const subtotal = prices.reduce((acc, cum) => acc + cum);
 
       setSubtotal(subtotal);
     }
   });
-  //   const requestSplit = () => {
-  //     console.log('request sent to user');
-  //     console.log(userInput);
-  //   };
 
   const handleClick = function (value) {
     let tip = value;
@@ -63,7 +62,6 @@ const CurrentTab = () => {
     total = total.toFixed(2);
     setTotal(total);
   };
-  //   let userInput;
 
   const requestSplit = async (tabDrinkId) => {
     const token = window.localStorage.getItem('token');
@@ -73,12 +71,6 @@ const CurrentTab = () => {
       { headers: { authorization: token } }
     );
     setLoading(true);
-    // const inputElement = document.getElementById('reqUsername');
-    // inputElement.addEventListener('change', function (e) {
-    //   userInput = e.target.value;
-    //   console.log(e.target.value);
-    // });
-    // return userInput;
   };
 
   const chargeCard = async () => {
@@ -106,17 +98,27 @@ const CurrentTab = () => {
                     ? 'request pending'
                     : 'split drink';
                 return (
-                  <div className="formDiv">
-                    <div key={drink.drink.id}> {drink.drink.name} </div>
-                    <div key={drink.drink.name}> ${drink.drink.price} </div>
-                    <div key={drink.drink.tabId}>{drink.drink.amount}ml </div>
+                  <div className="formDiv" key={drink.drink.id}>
+                    <div> {drink.drink.name} </div>
+                    <div>{drink.quantity}</div>
+                    <div> x </div>
+                    <div> ${drink.drink.price} </div>
+
                     <input type="button" value={value} onClick={togglePopup} />
                     {isOpen && (
                       <PopUp
                         content={
                           <>
                             <b>enter username:</b>
-                            <input type="text" id="reqUsername" />
+                            <select id="reqUsername">
+                              {friends.map((friend) => {
+                                return (
+                                  <option value={friend.username}>
+                                    {friend.fullName}
+                                  </option>
+                                );
+                              })}
+                            </select>
                             <input
                               type="button"
                               value="send request"
