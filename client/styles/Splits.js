@@ -10,7 +10,10 @@ export const SplitRow = styled.div`
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  padding: 0 1em;
+  padding: 0 1rem 1rem;
+  :last-child {
+    padding-bottom: 0;
+  }
 `;
 
 export const SplitTab = styled.div`

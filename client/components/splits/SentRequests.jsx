@@ -38,7 +38,6 @@ const SentRequests = ({ reqConfig }) => {
           let displayStatus;
           if (status === 'REQUESTED-INCOMING') displayStatus = 'Pending';
           if (status === 'NO REQUEST') displayStatus = 'Accepted';
-          else displayStatus = status[0] + status.slice(1).toLowerCase();
           return (
             <SplitRow key={id}>
               <div>{name}</div>

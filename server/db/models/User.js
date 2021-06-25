@@ -58,13 +58,10 @@ class User extends Model {
           switch (friendship.status) {
             case 'PENDING':
               throw new Error('already requested');
-              break;
             case 'ACCEPTED':
               throw new Error('already a friend');
-              break;
             case 'REJECTED':
               throw new Error('rejected already');
-              break;
           }
         }
         friendship = new friendships();
