@@ -25,7 +25,8 @@ router.get('/card-wallet', requireUserToken, async (req, res, next) => {
 
     // if no tab open, create a tab
 
-    const tab = Tab.findOne({where: {userId: userId} })
+    const tab = await req.user.currentTab()
+    //Tab.findOne({where: {userId: userId} })
     if (!tab) {
       await Tab.create({userId})
     }
@@ -51,8 +52,9 @@ router.post("/charge-card", requireUserToken, async (req, res, next) => {
 
     // Create and confirm a PaymentIntent with the order amount, currency,
     // Customer and PaymentMethod ID
+    console.log(req.body.amount)
     paymentIntent = await stripe.paymentIntents.create({
-      amount: 1000, // this we can pull
+      amount: req.body.amount,
       currency: 'usd',
       payment_method: paymentMethods.data[0].id,
       // customer: customer.id,
@@ -75,7 +77,5 @@ router.post("/charge-card", requireUserToken, async (req, res, next) => {
     next(err);
   }
 });
-
-// closes tab
 
 module.exports = router;
