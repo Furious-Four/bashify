@@ -69,7 +69,7 @@ router.put('/current', requireUserToken, async (req, res, next) => {
       const tabDrink = await TabDrink.findOne({
         where: {
           tabId: tab.id,
-          drinkId: drink.drink.id,
+          drinkId: drink.drinkId,
         },
       });
       if (tabDrink) {
@@ -130,10 +130,19 @@ router.put(
       body: { tabDrinkId },
     } = req;
     try {
-      console.log(tabDrinkId);
+      const tab = await user.currentTab();
       const incomingDrink = await TabDrink.findByPk(tabDrinkId);
       incomingDrink.status = 'NO REQUEST';
-      incomingDrink.tabId = user.tabId;
+      const checkForDrink = await TabDrink.findOne({
+        where: { tabId: tab.id, drinkId: incomingDrink.drinkId },
+      });
+      if (checkForDrink) {
+        await checkForDrink.update({
+          quantity: checkForDrink.quantity + incomingDrink.quantity,
+        });
+      } else {
+        incomingDrink.tabId = tab.id;
+      }
       await incomingDrink.save();
       const { associatedTabDrinkId } = incomingDrink;
       const outboundDrink = await TabDrink.findByPk(associatedTabDrinkId);
