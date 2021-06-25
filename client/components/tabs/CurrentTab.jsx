@@ -46,12 +46,12 @@ const CurrentTab = () => {
   const tip = 0;
 
   useEffect(() => {
-    if (drinks.length) {
+    if (drinks) {
       const prices = [];
       drinks.map((drink) => {
         prices.push(drink.drink.price * drink.quantity);
       });
-      const subtotal = prices.reduce((acc, cum) => acc + cum);
+      const subtotal = prices.reduce((acc, cum) => acc + cum, 0);
 
       setSubtotal(subtotal);
     }
@@ -61,6 +61,7 @@ const CurrentTab = () => {
     let tip = value;
     let total = tab.tax * subtotal + tip * subtotal + subtotal;
     total = total.toFixed(2);
+    // currently total is 0 until we add tip?
     setTotal(total);
   };
 
@@ -74,17 +75,21 @@ const CurrentTab = () => {
     setLoading(true);
   };
 
-  const chargeCard = async () => {
+  const chargeCard = async(total) => {
     try {
-      const data = await axios.post('/api/checkout/charge-card');
-      console.log(data);
+      const amount = parseInt(total * 100)
+      const token = window.localStorage.getItem('token');
+      const data = await axios.post('/api/checkout/charge-card',
+      {amount}, 
+      { headers: { authorization: token } }
+      );
     } catch (ex) {
       console.log(ex);
     }
     return alert('thanks! your tab is now closed');
   };
 
-  if (drinks.length) {
+  if (drinks) {
     return (
       <CurrentTabPage>
         <CurrentTabHeader>
@@ -150,7 +155,7 @@ const CurrentTab = () => {
           </Tip>
           <h3> subtotal ${subtotal} </h3>
           <h2> total ${total} </h2>
-          <Button onClick={async () => await chargeCard()}>
+          <Button onClick={async () => await chargeCard(total)}>
             checkout and close tab
           </Button>
         </CurrentTabCard>
