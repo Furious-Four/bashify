@@ -56,22 +56,34 @@ router.get('/:tabId', requireUserToken, async (req, res, next) => {
   }
 });
 
-// // POST /api/user/tab/current - creates a new tab for the user
-router.post('/current', requireUserToken, async (req, res, next) => {
+// // PUT /api/user/tab/current - creates a new tab for the user
+router.put('/current', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
     const tab = await user.currentTab();
-    // check that the user does not have an open tab
-    console.log(tab);
-    if (tab) {
+    const order = await user.currentOrder();
+    if (!tab) {
       res.sendStatus(409);
-    } else {
-      let newTab = new Tab();
-      await newTab.save();
-      await user.addTab(newTab);
-      await user.save();
-      res.status(200).send(newTab);
     }
+    order.orderDrinks.forEach(async (drink) => {
+      const tabDrink = await TabDrink.findOne({
+        where: {
+          tabId: tab.id,
+          drinkId: drink.drink.id,
+        },
+      });
+      if (tabDrink) {
+        tabDrink.quantity += drink.quantity;
+        await tabDrink.save();
+      } else {
+        await TabDrink.create({
+          quantity: drink.quantity,
+          price: drink.price,
+          tabId: tab.id,
+          drinkId: drink.drinkId,
+        });
+      }
+    });
   } catch (err) {
     next(err);
   }

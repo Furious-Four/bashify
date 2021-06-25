@@ -6,7 +6,6 @@ const Menu = require('./models/Menu');
 const User = require('./models/User');
 const Venue = require('./models/Venue');
 const PickUpLocation = require('./models/PickUpLocation');
-
 const Order = require('./models/Order');
 const OrderDrink = require('./models/OrderDrink');
 
@@ -34,13 +33,13 @@ const seed = async () => {
       website: 'www.fullstackalcohol.com',
       rating: 3,
     });
-    const crocodilebar = await Venue.create({
-      name: 'Crocodile Bar',
+    const crocodilelounge = await Venue.create({
+      name: 'Crocodile Lounge',
       type: 'Bar',
       email: 'crocodilebar@NYU.com',
       address: '999 Crocodile Ave, NY, 10293',
       state: 'NY',
-      website: 'www.crocodilebar.com',
+      website: 'www.crocodilelounge.com',
       rating: 4,
     });
     const alligatorbar = await Venue.create({
@@ -249,11 +248,13 @@ const seed = async () => {
     //tab data
     const michelleTab = await Tab.create({ userId: michelle.id });
 
-    //tabDrink data
+    // tabDrink data
     const michelleTabDrink = await TabDrink.create({
       userId: michelle.id,
       tabId: michelleTab.id,
       drinkId: donJulioShot.id,
+      price: donJulioShot.price,
+      quantity: 1,
     });
 
     //tab data
@@ -264,6 +265,8 @@ const seed = async () => {
       userId: dominique.id,
       tabId: domisobiTab.id,
       drinkId: donJulioShot.id,
+      price: donJulioShot.price,
+      quantity: 1,
     });
 
     const domisobiDrinkRequest = await TabDrink.create({
