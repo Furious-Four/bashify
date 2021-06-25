@@ -2,7 +2,7 @@ const { Router } = require('express');
 const router = Router();
 
 const {
-  models: { Drink, Tab, TabDrink },
+  models: { Tab, TabDrink },
 } = require('../../db/index.js');
 const {
   userAuth: { requireToken: requireUserToken },
@@ -21,7 +21,7 @@ router.get('/all', requireUserToken, async (req, res, next) => {
   }
 });
 
-// // GET /api/user/tab/current - returns current open tab with drinks
+// GET /api/user/tab/current - returns current open tab with drinks
 router.get('/current', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
@@ -102,12 +102,13 @@ router.put(
       const outboundDrink = await TabDrink.findByPk(tabDrinkId);
       outboundDrink.status = 'REQUESTED-OUTBOUND';
       await outboundDrink.save();
-      const incomingDrink = await TabDrink.create({
+      await TabDrink.create({
         status: 'REQUESTED-INCOMING',
         quantity: outboundDrink.quantity,
         price: outboundDrink.price,
         drinkId: outboundDrink.drinkId,
         userId: requestUserId,
+        requestedById: user.id,
         associatedTabDrinkId: outboundDrink.id,
       });
       // console.log('outbound is', outboundDrink);
@@ -129,6 +130,7 @@ router.put(
       body: { tabDrinkId },
     } = req;
     try {
+      console.log(tabDrinkId);
       const incomingDrink = await TabDrink.findByPk(tabDrinkId);
       incomingDrink.status = 'NO REQUEST';
       incomingDrink.tabId = user.tabId;
@@ -151,7 +153,6 @@ router.put(
   requireUserToken,
   async (req, res, next) => {
     const {
-      user,
       body: { tabDrinkId },
     } = req;
     try {
