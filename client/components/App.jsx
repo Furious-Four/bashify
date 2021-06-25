@@ -40,7 +40,6 @@ const App = () => {
     // Like componentDidMount and componentDidUpdate all in one
     if (!token) {
       const localToken = window.localStorage.getItem('token');
-      console.log(localToken);
       if (localToken) {
         setToken(localToken);
         setLoggedIn(true);
