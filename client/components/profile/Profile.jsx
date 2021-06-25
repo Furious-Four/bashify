@@ -13,10 +13,6 @@ const Profile = ({ user }) => {
   const history = useHistory();
 
   useEffect(() => {
-    console.log({ loading, tab, search });
-  }, [loading, tab]);
-
-  useEffect(() => {
     if (loading) {
       const params = new URLSearchParams(search);
       const currTab = params.get('tab');
@@ -38,7 +34,7 @@ const Profile = ({ user }) => {
   return (
     <ProfilePage>
       <h1>Profile</h1>
-      <ProfileTabs>
+      <ProfileTabs total={3}>
         <TabOption
           onClick={() => changeTab('details')}
           bold={tab === 'details'}

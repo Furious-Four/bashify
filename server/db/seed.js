@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { db } = require('./index');
 const Drink = require('./models/Drink');
 const Employee = require('./models/Employee');
@@ -7,6 +8,7 @@ const Venue = require('./models/Venue');
 const PickUpLocation = require('./models/PickUpLocation');
 const Order = require('./models/Order');
 const OrderDrink = require('./models/OrderDrink');
+
 const Tab = require('./models/Tab');
 const TabDrink = require('./models/TabDrink');
 
@@ -31,13 +33,13 @@ const seed = async () => {
       website: 'www.fullstackalcohol.com',
       rating: 3,
     });
-    const crocodilebar = await Venue.create({
-      name: 'Crocodile Bar',
+    const crocodilelounge = await Venue.create({
+      name: 'Crocodile Lounge',
       type: 'Bar',
       email: 'crocodilebar@NYU.com',
       address: '999 Crocodile Ave, NY, 10293',
       state: 'NY',
-      website: 'www.crocodilebar.com',
+      website: 'www.crocodilelounge.com',
       rating: 4,
     });
     const alligatorbar = await Venue.create({
@@ -229,6 +231,13 @@ const seed = async () => {
       venueId: 1,
     });
 
+    const testOrderDrink1 = await OrderDrink.create({
+      quantity: 1,
+      price: donJulioShot.price,
+      orderId: testOrder.id,
+      drinkId: donJulioShot.id,
+    });
+
     const testOrderDrink2 = await OrderDrink.create({
       quantity: 1,
       price: patronShot.price,
@@ -244,6 +253,8 @@ const seed = async () => {
       userId: michelle.id,
       tabId: michelleTab.id,
       drinkId: donJulioShot.id,
+      price: donJulioShot.price,
+      quantity: 1,
     });
 
     //tab data
@@ -254,6 +265,18 @@ const seed = async () => {
       userId: dominique.id,
       tabId: domisobiTab.id,
       drinkId: donJulioShot.id,
+      price: donJulioShot.price,
+      quantity: 1,
+    });
+
+    const domisobiDrinkRequest = await TabDrink.create({
+      userId: dominique.id,
+      requestedById: michelle.id,
+      drinkId: donJulioShot.id,
+      price: donJulioShot.price,
+      quantity: 2,
+      status: 'REQUESTED-INCOMING',
+      associatedTabDrinkId: michelleTabDrink.id,
     });
   } catch (error) {
     console.log(error);

@@ -17,6 +17,7 @@ import AllDrinks from './drinks/AllDrinks.jsx';
 import AllVenues from './venues/AllVenues.jsx';
 import SingleDrink from './drinks/SingleDrink.jsx';
 import CurrentOrder from './orders/CurrentOrder.jsx';
+import Splits from './splits/Splits.jsx';
 import { connectUserSocket } from './utils/Socket.js';
 
 const App = () => {
@@ -40,7 +41,6 @@ const App = () => {
     // Like componentDidMount and componentDidUpdate all in one
     if (!token) {
       const localToken = window.localStorage.getItem('token');
-      console.log(localToken);
       if (localToken) {
         setToken(localToken);
         setLoggedIn(true);
@@ -94,6 +94,7 @@ const App = () => {
           path="/venue/:id/drink/:drinkid"
           component={SingleDrink}
         ></Route>
+        <Route exact path="/splits" component={Splits} />
         {/*
         AllDrinks
         SingleDrink

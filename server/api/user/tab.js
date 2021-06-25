@@ -2,7 +2,7 @@ const { Router } = require('express');
 const router = Router();
 
 const {
-  models: { Drink, Tab, TabDrink },
+  models: { Tab, TabDrink },
 } = require('../../db/index.js');
 const {
   userAuth: { requireToken: requireUserToken },
@@ -21,7 +21,7 @@ router.get('/all', requireUserToken, async (req, res, next) => {
   }
 });
 
-// // GET /api/user/tab/current - returns current open tab with drinks
+// GET /api/user/tab/current - returns current open tab with drinks
 router.get('/current', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
@@ -56,22 +56,34 @@ router.get('/:tabId', requireUserToken, async (req, res, next) => {
   }
 });
 
-// // POST /api/user/tab/current - creates a new tab for the user
-router.post('/current', requireUserToken, async (req, res, next) => {
+// // PUT /api/user/tab/current - creates a new tab for the user
+router.put('/current', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
     const tab = await user.currentTab();
-    // check that the user does not have an open tab
-    console.log(tab);
-    if (tab) {
+    const order = await user.currentOrder();
+    if (!tab) {
       res.sendStatus(409);
-    } else {
-      let newTab = new Tab();
-      await newTab.save();
-      await user.addTab(newTab);
-      await user.save();
-      res.status(200).send(newTab);
     }
+    order.orderDrinks.forEach(async (drink) => {
+      const tabDrink = await TabDrink.findOne({
+        where: {
+          tabId: tab.id,
+          drinkId: drink.drink.id,
+        },
+      });
+      if (tabDrink) {
+        tabDrink.quantity += drink.quantity;
+        await tabDrink.save();
+      } else {
+        await TabDrink.create({
+          quantity: drink.quantity,
+          price: drink.price,
+          tabId: tab.id,
+          drinkId: drink.drinkId,
+        });
+      }
+    });
   } catch (err) {
     next(err);
   }
@@ -90,12 +102,13 @@ router.put(
       const outboundDrink = await TabDrink.findByPk(tabDrinkId);
       outboundDrink.status = 'REQUESTED-OUTBOUND';
       await outboundDrink.save();
-      const incomingDrink = await TabDrink.create({
+      await TabDrink.create({
         status: 'REQUESTED-INCOMING',
         quantity: outboundDrink.quantity,
         price: outboundDrink.price,
         drinkId: outboundDrink.drinkId,
         userId: requestUserId,
+        requestedById: user.id,
         associatedTabDrinkId: outboundDrink.id,
       });
       // console.log('outbound is', outboundDrink);
@@ -117,6 +130,7 @@ router.put(
       body: { tabDrinkId },
     } = req;
     try {
+      console.log(tabDrinkId);
       const incomingDrink = await TabDrink.findByPk(tabDrinkId);
       incomingDrink.status = 'NO REQUEST';
       incomingDrink.tabId = user.tabId;
@@ -139,7 +153,6 @@ router.put(
   requireUserToken,
   async (req, res, next) => {
     const {
-      user,
       body: { tabDrinkId },
     } = req;
     try {

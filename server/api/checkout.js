@@ -1,4 +1,4 @@
-const env = require("dotenv").config({ path: "./.env" });
+const env = require('dotenv').config({ path: './.env' });
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const express = require('express');
 const router = express();
@@ -32,10 +32,8 @@ router.get('/card-wallet', requireUserToken, async (req, res, next) => {
     
 
     res.send(intent.client_secret);
-
-  }
-  catch (ex) {
-    next(ex)
+  } catch (ex) {
+    next(ex);
   }
 });
 
@@ -51,16 +49,16 @@ router.post("/charge-card", requireUserToken, async (req, res, next) => {
       type: "card"
     });
 
-    // Create and confirm a PaymentIntent with the order amount, currency, 
+    // Create and confirm a PaymentIntent with the order amount, currency,
     // Customer and PaymentMethod ID
     paymentIntent = await stripe.paymentIntents.create({
       amount: 1000, // this we can pull
-      currency: "usd",
+      currency: 'usd',
       payment_method: paymentMethods.data[0].id,
       // customer: customer.id,
       customer: customerId,
       off_session: true,
-      confirm: true
+      confirm: true,
     });
 
     const tab = await Tab.findOne({ where: { userId: userId }})
@@ -71,10 +69,10 @@ router.post("/charge-card", requireUserToken, async (req, res, next) => {
     res.send({
       succeeded: true,
       clientSecret: paymentIntent.client_secret,
-      publicKey: process.env.STRIPE_PUBLISHABLE_KEY
+      publicKey: process.env.STRIPE_PUBLISHABLE_KEY,
     });
   } catch (err) {
-      next(err)
+    next(err);
   }
 });
 

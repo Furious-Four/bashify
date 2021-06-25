@@ -71,6 +71,7 @@ router.put('/', requireUserToken, async (req, res, next) => {
 router.use('/auth', userRouter);
 router.use('/friend', require('./user/friend'));
 router.use('/order', require('./user/order'));
+router.use('/split', require('./user/split'));
 router.use('/tab', require('./user/tab'));
 
 module.exports = router;
