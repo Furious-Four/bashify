@@ -29,6 +29,8 @@ router.get('/card-wallet', async (req, res, next) => {
     const intent =  await stripe.setupIntents.create({
       customer: customer.id,
     });
+    // add all the tab drinks to the tab
+    // if tab open, add to tab
     res.send(intent.client_secret);
 
   }
