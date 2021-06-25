@@ -146,10 +146,9 @@ const CurrentTab = () => {
             </Button>
           </Tip>
           <h3> subtotal ${subtotal} </h3>
-          <h2> total ${total} </h2>{' '}
+          <h2> total ${total} </h2>
           <Button onClick={async () => await chargeCard()}>
-            {' '}
-            checkout and close tab{' '}
+            checkout and close tab
           </Button>
         </CurrentTabCard>
       </CurrentTabPage>
