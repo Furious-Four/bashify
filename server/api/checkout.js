@@ -5,32 +5,32 @@ const router = express();
 const {
   userAuth: { requireToken: requireUserToken },
 } = require('./auth.js');
+const {
+  models: { Tab },
+} = require('../db/index.js');
 
-
-// getting error that jwt is required here & setup intent is not successful
-// router.get('/card-wallet', requireUserToken, async (req, res, next) => {
-//   try {
-//     const customerId = req.user.stripeId
-//     const intent =  await stripe.setupIntents.create({
-//       customer: customerId,
-//     });
-//     res.send(intent.client_secret);
-
-//   }
-//   catch (ex) {
-//     next(ex)
-//   }
-// });
-
-let customer;
-router.get('/card-wallet', async (req, res, next) => {
+// let customer;
+router.get('/card-wallet', requireUserToken, async (req, res, next) => {
   try {
-    customer = await stripe.customers.create();
+    
+    const customerId = req.user.stripeId
+    const userId = req.user.id
+    console.log(req.user)
+    //customer = await stripe.customers.create();
+
     const intent =  await stripe.setupIntents.create({
-      customer: customer.id,
+      //customer: customer.id,
+      customer: customerId
     });
-    // add all the tab drinks to the tab
-    // if tab open, add to tab
+
+    // if no tab open, create a tab
+
+    const tab = Tab.findOne({where: {userId: userId} })
+    if (!tab) {
+      await Tab.create({userId})
+    }
+    
+
     res.send(intent.client_secret);
 
   }
@@ -39,12 +39,15 @@ router.get('/card-wallet', async (req, res, next) => {
   }
 });
 
-router.post("/charge-card", async (req, res, next) => {
+router.post("/charge-card", requireUserToken, async (req, res, next) => {
   let paymentIntent
+  const customerId = req.user.stripeId
+  const userId = req.user.id
   try {
     // List the customer's payment methods to find one to charge
     const paymentMethods = await stripe.paymentMethods.list({
-      customer: customer.id,
+      //customer: customer.id,
+      customer: customerId,
       type: "card"
     });
 
@@ -54,10 +57,16 @@ router.post("/charge-card", async (req, res, next) => {
       amount: 1000, // this we can pull
       currency: "usd",
       payment_method: paymentMethods.data[0].id,
-      customer: customer.id,
+      // customer: customer.id,
+      customer: customerId,
       off_session: true,
       confirm: true
     });
+
+    const tab = await Tab.findOne({ where: { userId: userId }})
+    console.log(tab)
+    tab.status = 'closed'
+    tab.save()
 
     res.send({
       succeeded: true,
@@ -69,6 +78,6 @@ router.post("/charge-card", async (req, res, next) => {
   }
 });
 
-
+// closes tab
 
 module.exports = router;

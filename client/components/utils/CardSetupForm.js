@@ -14,8 +14,9 @@ export default function CardSetupForm() {
     if (!stripe || !elements) {
       return;
     }
-
-    const { data: client_secret } = await axios.get('/api/checkout/card-wallet')
+    const token = window.localStorage.getItem('token')
+    const { data: client_secret } = await axios.get('/api/checkout/card-wallet', 
+    { headers: { authorization: token } })
     //console.log(client_secret)
     const result = await stripe.confirmCardSetup(client_secret, {
       payment_method: {

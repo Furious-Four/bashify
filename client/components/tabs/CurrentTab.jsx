@@ -81,10 +81,15 @@ const CurrentTab = () => {
     // return userInput;
   };
 
-  const chargeCard = async () => {
+  const chargeCard = async(total) => {
     try {
-      const data = await axios.post('/api/checkout/charge-card');
-      console.log(data);
+      console.log(total)
+      const token = window.localStorage.getItem('token');
+      const data = await axios.post('/api/checkout/charge-card',
+      null, 
+      // check this for the jwt error
+      { headers: { authorization: token } }
+      );
     } catch (ex) {
       console.log(ex);
     }
@@ -147,7 +152,7 @@ const CurrentTab = () => {
           </Tip>
           <h3> subtotal ${subtotal} </h3>
           <h2> total ${total} </h2>
-          <Button onClick={async () => await chargeCard()}>
+          <Button onClick={async () => await chargeCard(total)}>
             checkout and close tab
           </Button>
         </CurrentTabCard>
