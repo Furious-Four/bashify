@@ -250,7 +250,6 @@ const seed = async () => {
 
     //tab data
     const domisobiTab = await Tab.create({ userId: dominique.id });
-    const arjanTab = await Tab.create({ userId: arjan.id });
 
     //tabDrink data
     const domisobiTabDrink = await TabDrink.create({

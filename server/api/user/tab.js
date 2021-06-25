@@ -73,9 +73,7 @@ router.put('/current', requireUserToken, async (req, res, next) => {
         },
       });
       if (tabDrink) {
-        console.log('before', tabDrink.quantity);
         tabDrink.quantity += drink.quantity;
-        console.log('after', tabDrink.quantity);
         await tabDrink.save();
       } else {
         await TabDrink.create({
