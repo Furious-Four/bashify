@@ -246,7 +246,7 @@ const seed = async () => {
       drinkId: donJulioShot.id,
       price: donJulioShot.price,
       quantity: 1,
-      status: 'ACCEPTED',
+      // status: 'ACCEPTED',
     });
 
     //tab data
