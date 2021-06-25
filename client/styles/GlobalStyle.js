@@ -24,7 +24,8 @@ const GlobalStyle = createGlobalStyle`
 
 export const Button = styled(motion.button)`
   padding: 0.5rem;
-  background: var(--orange);
+  background: ${(props) =>
+    props.secondary ? 'var(--white)' : 'var(--orange)'};
   border: 0;
   border-radius: 1rem;
   margin: 0.5rem;

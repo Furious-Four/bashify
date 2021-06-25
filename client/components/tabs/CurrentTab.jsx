@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -52,16 +53,15 @@ const CurrentTab = () => {
     setTotal(total);
   };
 
-  const chargeCard = async() => {
+  const chargeCard = async () => {
     try {
-      const data =  await axios.post("/api/checkout/charge-card")
-      console.log(data)
+      const data = await axios.post('/api/checkout/charge-card');
+      console.log(data);
+    } catch (ex) {
+      console.log(ex);
     }
-    catch (ex) {
-      console.log(ex)
-    }
-    return alert('thanks! your tab is now closed')    
-  }
+    return alert('thanks! your tab is now closed');
+  };
 
   return (
     <CurrentTabPage>
@@ -95,7 +95,11 @@ const CurrentTab = () => {
           </Button>
         </Tip>
         <h3> subtotal ${subtotal} </h3>
-        <h2> total ${total} </h2> <Button onClick={async() => await chargeCard()}> checkout and close tab </Button>
+        <h2> total ${total} </h2>{' '}
+        <Button onClick={async () => await chargeCard()}>
+          {' '}
+          checkout and close tab{' '}
+        </Button>
       </CurrentTabCard>
     </CurrentTabPage>
   );

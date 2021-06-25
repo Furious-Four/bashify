@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { db } = require('./index');
 const Drink = require('./models/Drink');
 const Employee = require('./models/Employee');
@@ -7,11 +8,10 @@ const Venue = require('./models/Venue');
 const PickUpLocation = require('./models/PickUpLocation');
 
 const Order = require('./models/Order');
-const OrderDrink = require('./models/OrderDrink')
+const OrderDrink = require('./models/OrderDrink');
 
 const Tab = require('./models/Tab');
 const TabDrink = require('./models/TabDrink');
-
 
 const seed = async () => {
   try {
@@ -144,7 +144,7 @@ const seed = async () => {
       type: 'Whiskey',
       price: 7,
       amount: 25,
-      image: "../../public/assets/glenlivetfoundersreserve.png",
+      image: '../../public/assets/glenlivetfoundersreserve.png',
       menuId: nightMenu.id,
     });
     const glenlivetDoubleShot = await Drink.create({
@@ -153,7 +153,7 @@ const seed = async () => {
       type: 'Whiskey',
       price: 14,
       amount: 50,
-      image: "../../public/assets/glenlivetfoundersreserve.png",
+      image: '../../public/assets/glenlivetfoundersreserve.png',
       menuId: nightMenu.id,
     });
     const redLabelShot = await Drink.create({
@@ -162,7 +162,7 @@ const seed = async () => {
       type: 'Whiskey',
       price: 10,
       amount: 25,
-      image: "../../public/assets/johnniewalker.png",
+      image: '../../public/assets/johnniewalker.png',
       menuId: nightMenu.id,
     });
     const redLabelDoubleShot = await Drink.create({
@@ -171,7 +171,7 @@ const seed = async () => {
       type: 'Whiskey',
       price: 15,
       amount: 50,
-      image: "../../public/assets/johnniewalker.png",
+      image: '../../public/assets/johnniewalker.png',
       menuId: nightMenu.id,
     });
 
@@ -182,7 +182,7 @@ const seed = async () => {
       type: 'Rum',
       price: 9,
       amount: 25,
-      image: "../../public/assets/bacardirum.png",
+      image: '../../public/assets/bacardirum.png',
       menuId: nightMenu.id,
     });
     const captainMorganShot = await Drink.create({
@@ -191,7 +191,7 @@ const seed = async () => {
       type: 'Rum',
       price: 10,
       amount: 25,
-      image: "../../public/assets/captainmorgan.png",
+      image: '../../public/assets/captainmorgan.png',
       menuId: nightMenu.id,
     });
 
@@ -202,7 +202,7 @@ const seed = async () => {
       type: 'Cognac',
       price: 15,
       amount: 25,
-      image: "../../public/assets/hennessy.png",
+      image: '../../public/assets/hennessy.png',
       menuId: nightMenu.id,
     });
 
@@ -213,7 +213,7 @@ const seed = async () => {
       type: 'Tequila',
       price: 15,
       amount: 25,
-      image: "../../public/assets/patron.png",
+      image: '../../public/assets/patron.png',
       menuId: nightMenu.id,
     });
     const donJulioShot = await Drink.create({
@@ -222,30 +222,29 @@ const seed = async () => {
       type: 'Tequila',
       price: 15,
       amount: 25,
-      image: "../../public/assets/donjulio.png",
+      image: '../../public/assets/donjulio.png',
       menuId: nightMenu.id,
     });
     // added test order
-const testOrder = await Order.create({
-  status: 'ORDERING',
-  userId: 3,
-  venueId: 1
-})
+    const testOrder = await Order.create({
+      status: 'ORDERING',
+      userId: 3,
+      venueId: 1,
+    });
 
-const testOrderDrink1 = await OrderDrink.create({
-  quantity: 1,
-  price: donJulioShot.price,
-  orderId: testOrder.id,
-  drinkId: donJulioShot.id
-})
+    const testOrderDrink1 = await OrderDrink.create({
+      quantity: 1,
+      price: donJulioShot.price,
+      orderId: testOrder.id,
+      drinkId: donJulioShot.id,
+    });
 
-const testOrderDrink2 = await OrderDrink.create({
-  quantity: 1,
-  price: patronShot.price,
-  orderId: testOrder.id,
-  drinkId: patronShot.id
-})
-
+    const testOrderDrink2 = await OrderDrink.create({
+      quantity: 1,
+      price: patronShot.price,
+      orderId: testOrder.id,
+      drinkId: patronShot.id,
+    });
 
     //tab data
     const michelleTab = await Tab.create({ userId: michelle.id });
@@ -267,11 +266,18 @@ const testOrderDrink2 = await OrderDrink.create({
       drinkId: donJulioShot.id,
     });
 
+    const domisobiDrinkRequest = await TabDrink.create({
+      userId: dominique.id,
+      requestedById: justin.id,
+      drinkId: donJulioShot.id,
+      price: donJulioShot.price,
+      quantity: 2,
+      status: 'REQUESTED-INCOMING',
+    });
   } catch (error) {
     console.log(error);
   }
 };
-
 
 const init = async () => {
   try {

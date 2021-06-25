@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
-import axios from 'axios'
-import {useStripe, useElements, CardElement} from '@stripe/react-stripe-js';
+import axios from 'axios';
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import CardSection from './CardSection.js';
-import { Form } from '../../styles/CheckoutStyles.js'
+import { Form } from '../../styles/CheckoutStyles.js';
 
 export default function CardSetupForm() {
   const stripe = useStripe();
@@ -15,7 +16,11 @@ export default function CardSetupForm() {
       return;
     }
 
-    const { data: client_secret } = await axios.get('/api/checkout/card-wallet')
+    const token = window.localStorage.getItem('token');
+    const { data: client_secret } = await axios.get(
+      '/api/checkout/card-wallet',
+      { headers: { authorization: token } }
+    );
     //console.log(client_secret)
     const result = await stripe.confirmCardSetup(client_secret, {
       payment_method: {
@@ -23,25 +28,24 @@ export default function CardSetupForm() {
         // billing_details: {
         //   we can add billing details if we want cardholderName.value
         // },
-      }
+      },
     });
     if (result.error) {
-      console.log('setupIntent not successful')
+      console.log('setupIntent not successful');
     } else {
       // The setup has succeeded. Display a success message and send
       // result.setupIntent.payment_method to your server to save the
       // card to a Customer
-      alert('order submitted')
-      console.log(result.setupIntent.payment_method)
-      
+      alert('order submitted');
+      console.log(result.setupIntent.payment_method);
     }
   };
-  
+
   return (
     <Form onSubmit={handleSubmit}>
       <CardSection />
-      <button disabled={!stripe}>Submit Order</button>
-      <p>you won't be charged until your order is processed</p>
+      <button disabled={!stripe}>Create Tab</button>
+      <p>you won't be charged until your tab is closed</p>
     </Form>
   );
 }
