@@ -48,7 +48,9 @@ const CurrentTab = () => {
     if (drinks.length) {
       const prices = [];
       drinks.map((drink) => {
-        prices.push(drink.drink.price * drink.quantity);
+        if (drink.status !== 'ACCEPTED') {
+          prices.push(drink.drink.price * drink.quantity);
+        }
       });
       const subtotal = prices.reduce((acc, cum) => acc + cum);
 
