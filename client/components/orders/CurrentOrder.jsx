@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import axios from 'axios';
-import Checkout from '../utils/Checkout'
-import {decDrink} from '../utils/DecDrink'
-import {incDrink} from '../utils/IncDrink'
+import Checkout from '../utils/Checkout';
+import { decDrink } from '../utils/DecDrink';
+import { incDrink } from '../utils/IncDrink';
 
 import {
   CurrentOrderCard,
@@ -21,27 +21,33 @@ const CurrentOrder = () => {
   const [subtotal, setSubTotal] = useState();
 
   useEffect(async () => {
-    if(loading) {
+    if (loading) {
       try {
-        const token = window.localStorage.getItem('token')
-        const {data: order} = await axios.get(`/api/user/order/current`, 
-        { headers: { authorization: token } }
-        )
-        setOrder(order)
-        setDrinks(order.orderDrinks)
-        setLoading(false)
+        const token = window.localStorage.getItem('token');
+        const { data: order } = await axios.get(`/api/user/order/current`, {
+          headers: { authorization: token },
+        });
+        setOrder(order);
+        setDrinks(order.orderDrinks);
+        setLoading(false);
+      } catch (ex) {
+        console.log(ex);
       }
-      catch (ex) {
-        console.log(ex)
-      }
-    } 
-  }, [loading])
-
-  useEffect( () => {
-    if (order.orderDrinks) {
-      setDrinks(order.orderDrinks)
     }
-  }, [order])
+  }, [loading]);
+
+  useEffect(() => {
+    if (order.orderDrinks) {
+      setDrinks(order.orderDrinks);
+    }
+  }, [order]);
+
+  const createTabDrinks = async () => {
+    const token = window.localStorage.getItem('token');
+    const { data: tabDrinks } = await axios.put('/api/user/tab/current', null, {
+      headers: { authorization: token },
+    });
+  };
 
   useEffect(() => {
     //console.log(drinks)
@@ -73,11 +79,19 @@ const CurrentOrder = () => {
                   <div className="formDiv" key={drink.drinkId}>
                     <div key={drink.drink.name}>{drink.drink.name}</div>
                     <div key={drink.drink.price}>${drink.drink.price}</div>
-                    <Button onClick={async() => setOrder(await decDrink(drink.drinkId))}>
+                    <Button
+                      onClick={async () =>
+                        setOrder(await decDrink(drink.drinkId))
+                      }
+                    >
                       -
                     </Button>
                     {drink.quantity}
-                    <Button onClick={async() => setOrder(await incDrink(drink.drinkId))}>
+                    <Button
+                      onClick={async () =>
+                        setOrder(await incDrink(drink.drinkId))
+                      }
+                    >
                       +
                     </Button>
                   </div>
@@ -86,9 +100,9 @@ const CurrentOrder = () => {
             </div>
           </CurrentOrderForm>
           <h3 id="subtotal">subtotal ${subtotal}</h3>
-        </CurrentOrderCard>    
-        <Button>
-          <Link to='tab'>Submit Order</Link>
+        </CurrentOrderCard>
+        <Button onClick={createTabDrinks}>
+          <Link to="tab">Submit Order</Link>
         </Button>
         <Checkout />
       </CurrentOrderPage>

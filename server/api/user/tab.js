@@ -66,12 +66,25 @@ router.put('/current', requireUserToken, async (req, res, next) => {
       res.sendStatus(409);
     }
     order.orderDrinks.forEach(async (drink) => {
-      await TabDrink.create({
-        quantity: drink.quantity,
-        price: drink.price,
-        tabId: tab.id,
-        drinkId: drink.drink.id,
+      const tabDrink = await TabDrink.findOne({
+        where: {
+          tabId: tab.id,
+          drinkId: drink.drink.id,
+        },
       });
+      if (tabDrink) {
+        console.log('before', tabDrink.quantity);
+        tabDrink.quantity += drink.quantity;
+        console.log('after', tabDrink.quantity);
+        await tabDrink.save();
+      } else {
+        await TabDrink.create({
+          quantity: drink.quantity,
+          price: drink.price,
+          tabId: tab.id,
+          drinkId: drink.drinkId,
+        });
+      }
     });
   } catch (err) {
     next(err);
