@@ -2,105 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import {
-  SplitPage,
-  SplitTabs,
-  SplitRow,
-  SplitConfirm,
-} from '../../styles/Splits';
+import SplitsWrapper from './SplitsWrapper';
+import SentRequests from './SentRequests';
+import { SplitRow, SplitConfirm, SplitTab } from '../../styles/Splits';
 import Checkout from '../utils/Checkout';
 import { Button } from '../../styles/GlobalStyle';
-import { useHistory, useLocation } from 'react-router-dom';
-import { ProfileTabs, TabOption } from '../../styles/Profile';
-
-const SplitsWrapper = ({ component: Component }) => {
-  const [loading, setLoading] = useState(true);
-  const [pageTab, setPageTab] = useState('incoming');
-  const { search } = useLocation();
-  const history = useHistory();
-
-  useEffect(() => {
-    if (loading) {
-      const params = new URLSearchParams(search);
-      const currTab = params.get('tab');
-      if (currTab) setPageTab(currTab);
-      setLoading(false);
-    }
-  }, [loading]);
-
-  useEffect(() => {
-    const params = new URLSearchParams(search);
-    params.set('tab', pageTab);
-    history.push({ search: params.toString() });
-  }, [pageTab]);
-
-  return (
-    <SplitPage>
-      <h1>Your Splits</h1>
-      <ProfileTabs total={2}>
-        <TabOption
-          onClick={() => setPageTab('incoming')}
-          bold={pageTab === 'incoming'}
-        >
-          Received
-        </TabOption>
-        <TabOption
-          onClick={() => setPageTab('outbound')}
-          bold={pageTab === 'outbound'}
-        >
-          Sent
-        </TabOption>
-      </ProfileTabs>
-      <Component pageTab={pageTab} />
-    </SplitPage>
-  );
-};
-
-const SentRequests = ({ reqConfig }) => {
-  const [loading, setLoading] = useState(true);
-  const [sentRequests, setSentRequests] = useState([]);
-
-  useEffect(async () => {
-    try {
-      const { data: requests } = await axios.get(
-        '/api/user/split/outbound',
-        reqConfig
-      );
-      setSentRequests(requests);
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-    }
-  }, [loading]);
-
-  return (
-    <>
-      {sentRequests.map((request) => {
-        const {
-          id,
-          status,
-          quantity,
-          price,
-          drink: { name },
-          owner: { fullName },
-        } = request;
-        let displayStatus;
-        if (status === 'REQUESTED-INCOMING') displayStatus = 'Pending';
-        else displayStatus = status[0] + status.slice(1).toLowerCase();
-        return (
-          <SplitRow key={id}>
-            <div>{name}</div>
-            <div>Status: {displayStatus}</div>
-            <div>
-              {quantity} x ${price} = ${quantity * price}
-            </div>
-            <div>Requested from {fullName}</div>
-          </SplitRow>
-        );
-      })}
-    </>
-  );
-};
 
 const Splits = () => {
   const steps = {
@@ -125,11 +31,15 @@ const Splits = () => {
 
   const requestControl = async (opt, tabDrinkId) => {
     await axios.put(
-      `/api/user/tab/current/split/${opt}-split`,
+      `/api/user/tab/current/${opt}-split`,
       { tabDrinkId },
       reqConfig
     );
+    setLoading(true);
+    backToLanding();
   };
+
+  useEffect(() => console.log(requestCurrent), [requestCurrent]);
 
   useEffect(async () => {
     if (loading) {
@@ -175,14 +85,18 @@ const Splits = () => {
           if (pageTab === 'incoming') {
             if (journeyStep === steps.LANDING) {
               return (
-                <>
+                <SplitTab>
                   <div>To view split requests, you must open a tab</div>
                   <Button onClick={advanceToCardCapture}>Set up a Tab</Button>
-                </>
+                </SplitTab>
               );
             }
             if (journeyStep === steps.CARD_CAPTURE) {
-              return <Checkout />;
+              return (
+                <SplitTab>
+                  <Checkout />;
+                </SplitTab>
+              );
             }
           } else {
             return <SentRequests reqConfig={reqConfig} />;
@@ -196,7 +110,7 @@ const Splits = () => {
         <SplitsWrapper
           component={({ pageTab }) => {
             if (pageTab === 'incoming') {
-              return <div>You have no split requests</div>;
+              return <SplitTab>You have no split requests</SplitTab>;
             } else {
               return <SentRequests reqConfig={reqConfig} />;
             }
@@ -219,23 +133,29 @@ const Splits = () => {
               requestedBy: { fullName },
             } = requestCurrent;
             return (
-              <SplitRow>
-                <div>{name}</div>
-                <div>
-                  {quantity} x ${price} = ${quantity * price}
-                </div>
-                <div>requested by {fullName}</div>
-                <SplitConfirm>
-                  Are you sure you want to {opt} this request? This action
-                  cannot be undone.
-                </SplitConfirm>
-                <div>
-                  <Button>Yes, {opt}</Button>
-                  <Button secondary onClick={backToLanding}>
-                    No, go back
-                  </Button>
-                </div>
-              </SplitRow>
+              <SplitTab>
+                <SplitRow>
+                  <div>{name}</div>
+                  <div>
+                    {quantity} x ${price} = ${quantity * price}
+                  </div>
+                  <div>requested by {fullName}</div>
+                  <SplitConfirm>
+                    Are you sure you want to {opt} this request? This action
+                    cannot be undone.
+                  </SplitConfirm>
+                  <div>
+                    <Button
+                      onClick={() => requestControl(opt, requestCurrent.id)}
+                    >
+                      Yes, {opt}
+                    </Button>
+                    <Button secondary onClick={backToLanding}>
+                      No, go back
+                    </Button>
+                  </div>
+                </SplitRow>
+              </SplitTab>
             );
           }}
         />
@@ -247,7 +167,7 @@ const Splits = () => {
           component={({ pageTab }) => {
             if (pageTab === 'incoming') {
               return (
-                <>
+                <SplitTab>
                   {requestList.map((request) => {
                     const {
                       id,
@@ -284,7 +204,7 @@ const Splits = () => {
                       </SplitRow>
                     );
                   })}
-                </>
+                </SplitTab>
               );
             } else {
               return <SentRequests reqConfig={reqConfig} />;

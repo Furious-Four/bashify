@@ -14,7 +14,7 @@ export const ProfileTabs = styled.div`
   flex-flow: row nowrap;
   > div {
     width: calc(
-      (100% - ${(props) => props.total - 1}px) / ${(props) => props.total}
+      (100% - ${(props) => (props.total - 1) * 2}px) / ${(props) => props.total}
     );
   }
 `;

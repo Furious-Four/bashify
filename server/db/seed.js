@@ -271,11 +271,12 @@ const seed = async () => {
 
     const domisobiDrinkRequest = await TabDrink.create({
       userId: dominique.id,
-      requestedById: justin.id,
+      requestedById: michelle.id,
       drinkId: donJulioShot.id,
       price: donJulioShot.price,
       quantity: 2,
       status: 'REQUESTED-INCOMING',
+      associatedTabDrinkId: michelleTabDrink.id,
     });
   } catch (error) {
     console.log(error);

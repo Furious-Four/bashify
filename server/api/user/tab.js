@@ -130,6 +130,7 @@ router.put(
       body: { tabDrinkId },
     } = req;
     try {
+      console.log(tabDrinkId);
       const incomingDrink = await TabDrink.findByPk(tabDrinkId);
       incomingDrink.status = 'NO REQUEST';
       incomingDrink.tabId = user.tabId;
