@@ -86,7 +86,10 @@ const CurrentOrder = () => {
             </div>
           </CurrentOrderForm>
           <h3 id="subtotal">subtotal ${subtotal}</h3>
-        </CurrentOrderCard>
+        </CurrentOrderCard>    
+        <Button>
+          <Link to='tab'>Submit Order</Link>
+        </Button>
         <Checkout />
       </CurrentOrderPage>
     );
