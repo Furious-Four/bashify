@@ -78,13 +78,14 @@ const CurrentTab = () => {
     setLoading(true);
   };
 
-  const chargeCard = async(total) => {
+  const chargeCard = async (total) => {
     try {
-      const amount = parseInt(total * 100)
+      const amount = parseInt(total * 100);
       const token = window.localStorage.getItem('token');
-      const data = await axios.post('/api/checkout/charge-card',
-      {amount}, 
-      { headers: { authorization: token } }
+      const data = await axios.post(
+        '/api/checkout/charge-card',
+        { amount },
+        { headers: { authorization: token } }
       );
     } catch (ex) {
       console.log(ex);
@@ -117,7 +118,13 @@ const CurrentTab = () => {
                     <div>{drink.quantity}</div>
                     <div> x </div>
                     <div> ${drink.drink.price} </div>
-                    <input type="button" value={value} onClick={togglePopup} />
+                    {drink.status === "ACCEPTED" ? (
+
+                    
+                    <input disabled type="button" value={value} onClick={togglePopup} />
+                    ) : (
+                        <input type="button" value={value} onClick={togglePopup} />
+                    )}
                     {isOpen && (
                       <PopUp
                         content={
@@ -132,11 +139,12 @@ const CurrentTab = () => {
                                 );
                               })}
                             </select>
-                            <input
-                              type="button"
-                              value="send request"
-                              onClick={() => requestSplit(drink.id)}
-                            />
+                              <input
+                                type="button"
+                                value="send request"
+                                onClick={() => requestSplit(drink.id)}
+                              />
+                            )}
                           </>
                         }
                         handleClose={togglePopup}
