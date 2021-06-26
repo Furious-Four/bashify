@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const { db } = require('./index');
 const Drink = require('./models/Drink');
 const Employee = require('./models/Employee');
@@ -7,6 +8,7 @@ const Venue = require('./models/Venue');
 const PickUpLocation = require('./models/PickUpLocation');
 const Order = require('./models/Order');
 const OrderDrink = require('./models/OrderDrink');
+
 const Tab = require('./models/Tab');
 const TabDrink = require('./models/TabDrink');
 
@@ -229,6 +231,13 @@ const seed = async () => {
       venueId: 1,
     });
 
+    const testOrderDrink1 = await OrderDrink.create({
+      quantity: 1,
+      price: donJulioShot.price,
+      orderId: testOrder.id,
+      drinkId: donJulioShot.id,
+    });
+
     const testOrderDrink2 = await OrderDrink.create({
       quantity: 1,
       price: patronShot.price,
@@ -246,7 +255,7 @@ const seed = async () => {
       drinkId: donJulioShot.id,
       price: donJulioShot.price,
       quantity: 1,
-      // status: 'ACCEPTED',
+      status: 'ACCEPTED',
     });
 
     //tab data
@@ -259,6 +268,16 @@ const seed = async () => {
       drinkId: donJulioShot.id,
       price: donJulioShot.price,
       quantity: 1,
+    });
+
+    const domisobiDrinkRequest = await TabDrink.create({
+      userId: dominique.id,
+      requestedById: michelle.id,
+      drinkId: donJulioShot.id,
+      price: donJulioShot.price,
+      quantity: 2,
+      status: 'REQUESTED-INCOMING',
+      associatedTabDrinkId: michelleTabDrink.id,
     });
   } catch (error) {
     console.log(error);

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -8,14 +9,15 @@ import {
   CurrentTabPage,
   CurrentTabForm,
   Tip,
-  Button,
 } from '../../styles/Tab';
+
+import { Button } from '../../styles/GlobalStyle';
 
 const CurrentTab = () => {
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
-  let [total, setTotal] = useState(0);
+  let [total, setTotal] = useState(subtotal);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [friends, setFriends] = useState([]);
@@ -45,14 +47,14 @@ const CurrentTab = () => {
   const tip = 0;
 
   useEffect(() => {
-    if (drinks.length) {
+    if (drinks) {
       const prices = [];
       drinks.map((drink) => {
         if (drink.status !== 'ACCEPTED') {
           prices.push(drink.drink.price * drink.quantity);
         }
       });
-      const subtotal = prices.reduce((acc, cum) => acc + cum);
+      const subtotal = prices.reduce((acc, cum) => acc + cum, 0);
 
       setSubtotal(subtotal);
     }
@@ -62,6 +64,7 @@ const CurrentTab = () => {
     let tip = value;
     let total = tab.tax * subtotal + tip * subtotal + subtotal;
     total = total.toFixed(2);
+    // currently total is 0 until we add tip?
     setTotal(total);
   };
 
@@ -75,17 +78,21 @@ const CurrentTab = () => {
     setLoading(true);
   };
 
-  const chargeCard = async () => {
+  const chargeCard = async(total) => {
     try {
-      const data = await axios.post('/api/checkout/charge-card');
-      console.log(data);
+      const amount = parseInt(total * 100)
+      const token = window.localStorage.getItem('token');
+      const data = await axios.post('/api/checkout/charge-card',
+      {amount}, 
+      { headers: { authorization: token } }
+      );
     } catch (ex) {
       console.log(ex);
     }
     return alert('thanks! your tab is now closed');
   };
 
-  if (drinks.length) {
+  if (drinks) {
     return (
       <CurrentTabPage>
         <CurrentTabHeader>
@@ -95,17 +102,21 @@ const CurrentTab = () => {
           <CurrentTabForm>
             <div>
               {drinks.map((drink) => {
-                let value =
-                  drink.status === 'REQUESTED-OUTBOUND'
-                    ? 'request pending'
-                    : 'split drink';
+                let value;
+                if (drink.status === 'ACCEPTED') {
+                  value = 'split accepted';
+                } else {
+                  value =
+                    drink.status === 'REQUESTED-OUTBOUND'
+                      ? 'request pending'
+                      : 'split drink';
+                }
                 return (
                   <div className="formDiv" key={drink.drink.id}>
                     <div> {drink.drink.name} </div>
                     <div>{drink.quantity}</div>
                     <div> x </div>
                     <div> ${drink.drink.price} </div>
-
                     <input type="button" value={value} onClick={togglePopup} />
                     {isOpen && (
                       <PopUp
@@ -151,7 +162,7 @@ const CurrentTab = () => {
           </Tip>
           <h3> subtotal ${subtotal} </h3>
           <h2> total ${total} </h2>
-          <Button onClick={async () => await chargeCard()}>
+          <Button onClick={async () => await chargeCard(total)}>
             checkout and close tab
           </Button>
         </CurrentTabCard>

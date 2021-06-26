@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
@@ -47,7 +48,6 @@ const Friends = () => {
   const requestResponse = async (friendId, mode) => {
     try {
       const body = { friendId, mode };
-      console.log(body);
       await axios.put('/api/user/friend/request', body, requestConfig);
       setLoading(true);
     } catch (err) {

@@ -10,7 +10,7 @@
     },
     "sourceType": "module"
   },
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "rules": {
     "dot-notation": 1,
     "valid-typeof": 2,

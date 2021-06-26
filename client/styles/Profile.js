@@ -12,10 +12,14 @@ export const ProfileTabs = styled.div`
   color: var(--blue);
   display: flex;
   flex-flow: row nowrap;
+  > div {
+    width: calc(
+      (100% - ${(props) => (props.total - 1) * 2}px) / ${(props) => props.total}
+    );
+  }
 `;
 
 export const TabOption = styled.div`
-  width: calc((100% - 4px) / 3);
   text-align: center;
   border-right: 2px solid var(--blue);
   padding: 1rem 0;

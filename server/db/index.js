@@ -29,13 +29,18 @@ Employee.belongsTo(Venue);
 Venue.hasMany(Menu);
 Menu.belongsTo(Venue);
 
-// the below 2 through associations are causing an error
 Tab.belongsToMany(Drink, { through: TabDrink });
 Drink.belongsToMany(Tab, { through: TabDrink });
 Tab.hasMany(TabDrink);
 TabDrink.belongsTo(Tab);
 Drink.hasMany(TabDrink);
 TabDrink.belongsTo(Drink);
+
+// For the sake of requests:
+User.hasMany(TabDrink, { as: 'owner' });
+TabDrink.belongsTo(User, { as: 'owner', foreignKey: 'userId' });
+User.hasMany(TabDrink, { as: 'requestedBy' });
+TabDrink.belongsTo(User, { as: 'requestedBy', foreignKey: 'requestedById' });
 
 User.hasMany(Order);
 Order.belongsTo(User);

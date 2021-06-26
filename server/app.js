@@ -15,7 +15,7 @@ app.use('/api/venue', require('./api/venue'));
 app.use('/api/drink', require('./api/drink'));
 app.use('/api/checkout', require('./api/checkout'));
 
-app.get("/public-key", (req, res) => {
+app.get('/public-key', (req, res) => {
   res.send({ publicKey: process.env.STRIPE_PUBLISHABLE_KEY });
 });
 
@@ -27,8 +27,10 @@ app.get('/', async (req, res, next) => {
   }
 });
 
-app.use((err, request, response) => {
-  console.log(err);
-  response.sendStatus(err.status || 500);
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).send(err);
+  next(err);
 });
+
 module.exports = app;

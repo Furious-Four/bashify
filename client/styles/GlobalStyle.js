@@ -29,7 +29,7 @@ const GlobalStyle = createGlobalStyle`
     top: 0;
     left: 0;
   }
-   
+
   .box {
     position: relative;
     width: 50%;
@@ -59,11 +59,22 @@ const GlobalStyle = createGlobalStyle`
     border: 1px solid #999;
     font-size: 20px;
   }
+
+  input[type="button"]{
+    padding: 0.5rem;
+  background: ${(props) =>
+    props.secondary ? 'var(--yellow)' : 'var(--orange)'};
+  border: 0;
+  border-radius: 1rem;
+  margin: 0.5rem;
+  cursor: pointer;
+  }
 `;
 
 export const Button = styled(motion.button)`
   padding: 0.5rem;
-  background: var(--orange);
+  background: ${(props) =>
+    props.secondary ? 'var(--yellow)' : 'var(--orange)'};
   border: 0;
   border-radius: 1rem;
   margin: 0.5rem;
