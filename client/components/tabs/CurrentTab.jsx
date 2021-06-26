@@ -71,11 +71,11 @@ const CurrentTab = () => {
     // setTotal(total);
   };
 
-  const requestSplit = async (tabDrinkId) => {
+  const requestSplit = async (tabDrinkId, requestUserId) => {
     const token = window.localStorage.getItem('token');
     const { data: updatedDrink } = await axios.put(
       '/api/user/tab/current/request-split',
-      { tabDrinkId, requestUserId: 2 },
+      { tabDrinkId, requestUserId },
       { headers: { authorization: token } }
     );
     setLoading(true);
@@ -124,48 +124,46 @@ const CurrentTab = () => {
                     <div>{drink.quantity}</div>
                     <div> x </div>
                     <div> ${drink.drink.price} </div>
-                    {drink.status === 'ACCEPTED' ? (
-                      <input
-                        disabled
-                        type="button"
-                        value={value}
-                        onClick={togglePopup}
-                      />
-                    ) : (
-                      <input
-                        type="button"
-                        value={value}
-                        onClick={togglePopup}
-                      />
-                    )}
+                    <Button
+                      disabled={buttonOpt}
+                      secondary={buttonOpt}
+                      onClick={togglePopup}
+                    >
+                      {value}
+                    </Button>
                     {isOpen && (
                       <PopUp
                         content={
                           friends.length ? (
                             <>
-                              <b>enter username:</b>
+                              <b>select a friend to request:</b>
                               <select id="reqUsername">
                                 {friends.map((friend) => {
                                   return (
-                                    <option value={friend.username}>
+                                    <option key={friend.id} value={friend.id}>
                                       {friend.fullName}
                                     </option>
                                   );
                                 })}
                               </select>
                               <Button
-                                disabled={buttonOpt}
-                                secondary={buttonOpt}
-                                onClick={togglePopup}
+                                onClick={(ev) => {
+                                  const requestUserId = ev.target.parentNode.querySelector(
+                                    'select'
+                                  ).value;
+                                  console.log(requestUserId);
+                                  requestSplit(drink.id, requestUserId);
+                                  togglePopup();
+                                }}
                               >
-                                {value}
+                                Request
                               </Button>
                             </>
                           ) : (
                             <>
-                              <div>
-                                To send a request, you need at least one friend
-                              </div>
+                              <b>
+                                to send a request, you need at least one friend
+                              </b>
                               <Button
                                 onClick={() =>
                                   history.push('/profile?tab=friends')
