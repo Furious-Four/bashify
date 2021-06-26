@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import PopUp from './PopUp';
 import {
@@ -15,6 +15,7 @@ import {
 import { Button } from '../../styles/GlobalStyle';
 
 const CurrentTab = () => {
+  const history = useHistory();
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
@@ -70,11 +71,11 @@ const CurrentTab = () => {
     // setTotal(total);
   };
 
-  const requestSplit = async (tabDrinkId) => {
+  const requestSplit = async (tabDrinkId, requestUserId) => {
     const token = window.localStorage.getItem('token');
     const { data: updatedDrink } = await axios.put(
       '/api/user/tab/current/request-split',
-      { tabDrinkId, requestUserId: 2 },
+      { tabDrinkId, requestUserId },
       { headers: { authorization: token } }
     );
     setLoading(true);
@@ -130,31 +131,53 @@ const CurrentTab = () => {
                     >
                       {value}
                     </Button>
+                    {isOpen && (
+                      <PopUp
+                        content={
+                          friends.length ? (
+                            <>
+                              <b>select a friend to request:</b>
+                              <select id="reqUsername">
+                                {friends.map((friend) => {
+                                  return (
+                                    <option key={friend.id} value={friend.id}>
+                                      {friend.fullName}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                              <Button
+                                onClick={(ev) => {
+                                  const requestUserId = ev.target.parentNode.querySelector(
+                                    'select'
+                                  ).value;
+                                  console.log(requestUserId);
+                                  requestSplit(drink.id, requestUserId);
+                                  togglePopup();
+                                }}
+                              >
+                                Request
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <b>
+                                to send a request, you need at least one friend
+                              </b>
+                              <Button
+                                onClick={() =>
+                                  history.push('/profile?tab=friends')
+                                }
+                              >
+                                Add Friends
+                              </Button>
+                            </>
+                          )
+                        }
+                        handleClose={togglePopup}
+                      />
+                    )}
                   </div>
-                  {isOpen && (
-                    <PopUp
-                      content={
-                        <>
-                          <b>enter username:</b>
-                          <select id="reqUsername">
-                            {friends.map((friend) => {
-                              return (
-                                <option value={friend.username}>
-                                  {friend.fullName}
-                                </option>
-                              );
-                            })}
-                          </select>
-                          <input
-                            type="button"
-                            value="send request"
-                            onClick={() => requestSplit(drink.id)}
-                          />
-                        </>
-                      }
-                      handleClose={togglePopup}
-                    />
-                  )}
                 </TabRow>
               );
             })}
