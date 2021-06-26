@@ -69,6 +69,7 @@ const CurrentOrder = () => {
       //console.log(subtotal)
       setSubTotal(subtotal);
     }
+    // subtotal not updating if i delete all drinks
   }, [drinks]);
 
   if (loading) {
