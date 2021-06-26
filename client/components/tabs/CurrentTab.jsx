@@ -9,14 +9,15 @@ import {
   CurrentTabPage,
   CurrentTabForm,
   Tip,
-  Button,
 } from '../../styles/Tab';
+
+import { Button } from '../../styles/GlobalStyle';
 
 const CurrentTab = () => {
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
-  let [total, setTotal] = useState(0);
+  let [total, setTotal] = useState(subtotal);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [friends, setFriends] = useState([]);
@@ -49,7 +50,9 @@ const CurrentTab = () => {
     if (drinks) {
       const prices = [];
       drinks.map((drink) => {
-        prices.push(drink.drink.price * drink.quantity);
+        if (drink.status !== 'ACCEPTED') {
+          prices.push(drink.drink.price * drink.quantity);
+        }
       });
       const subtotal = prices.reduce((acc, cum) => acc + cum, 0);
 
@@ -75,13 +78,14 @@ const CurrentTab = () => {
     setLoading(true);
   };
 
-  const chargeCard = async(total) => {
+  const chargeCard = async (total) => {
     try {
-      const amount = parseInt(total * 100)
+      const amount = parseInt(total * 100);
       const token = window.localStorage.getItem('token');
-      const data = await axios.post('/api/checkout/charge-card',
-      {amount}, 
-      { headers: { authorization: token } }
+      const data = await axios.post(
+        '/api/checkout/charge-card',
+        { amount },
+        { headers: { authorization: token } }
       );
     } catch (ex) {
       console.log(ex);
@@ -99,18 +103,28 @@ const CurrentTab = () => {
           <CurrentTabForm>
             <div>
               {drinks.map((drink) => {
-                let value =
-                  drink.status === 'REQUESTED-OUTBOUND'
-                    ? 'request pending'
-                    : 'split drink';
+                let value;
+                if (drink.status === 'ACCEPTED') {
+                  value = 'split accepted';
+                } else {
+                  value =
+                    drink.status === 'REQUESTED-OUTBOUND'
+                      ? 'request pending'
+                      : 'split drink';
+                }
                 return (
                   <div className="formDiv" key={drink.drink.id}>
                     <div> {drink.drink.name} </div>
                     <div>{drink.quantity}</div>
                     <div> x </div>
                     <div> ${drink.drink.price} </div>
+                    {drink.status === "ACCEPTED" ? (
 
-                    <input type="button" value={value} onClick={togglePopup} />
+                    
+                    <input disabled type="button" value={value} onClick={togglePopup} />
+                    ) : (
+                        <input type="button" value={value} onClick={togglePopup} />
+                    )}
                     {isOpen && (
                       <PopUp
                         content={
@@ -125,11 +139,12 @@ const CurrentTab = () => {
                                 );
                               })}
                             </select>
-                            <input
-                              type="button"
-                              value="send request"
-                              onClick={() => requestSplit(drink.id)}
-                            />
+                              <input
+                                type="button"
+                                value="send request"
+                                onClick={() => requestSplit(drink.id)}
+                              />
+                            )}
                           </>
                         }
                         handleClose={togglePopup}
