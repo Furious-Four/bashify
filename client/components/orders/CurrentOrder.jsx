@@ -72,6 +72,19 @@ const CurrentOrder = () => {
     // subtotal not updating if i delete all drinks
   }, [drinks]);
 
+  const PopUp = (props) => {
+    return (
+      <div className="popup-box">
+        <div className="box">
+          <span className="close-icon" onClick={props.handleClose}>
+            X
+          </span>
+          {props.content}
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return <div>...loading</div>;
   } else {

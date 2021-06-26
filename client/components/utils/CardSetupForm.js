@@ -33,7 +33,7 @@ export default function CardSetupForm() {
       // The setup has succeeded. Display a success message and send
       // result.setupIntent.payment_method to your server to save the
       // card to a Customer
-      alert('order submitted');
+      alert('tab opened!');
       console.log(result.setupIntent.payment_method);
     }
   };
@@ -41,7 +41,7 @@ export default function CardSetupForm() {
   return (
     <Form onSubmit={handleSubmit}>
       <CardSection />
-      <button disabled={!stripe}>Create Tab</button>
+      <button disabled={!stripe}>Open Tab</button>
       <p>you won't be charged until your tab is closed</p>
     </Form>
   );
