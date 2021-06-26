@@ -28,7 +28,7 @@ app.get('/', async (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.log(err);
+  console.error(err);
   res.status(err.status || 500).send(err);
   next(err);
 });
