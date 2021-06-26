@@ -7,7 +7,7 @@ import { SplitRow, SplitConfirm, SplitTab } from '../../styles/Splits';
 import Checkout from '../utils/Checkout';
 import { Button } from '../../styles/GlobalStyle';
 
-const Splits = () => {
+const Splits = ({ socket }) => {
   const steps = {
     LANDING: 'LANDING',
     NEW_TAB: 'NEW_TAB',
@@ -22,6 +22,7 @@ const Splits = () => {
   const [userTab, setUserTab] = useState(null);
   const [requestList, setRequestList] = useState([]);
   const [requestCurrent, setRequestCurrent] = useState(null);
+  const [socketLoaded, setSocketLoaded] = useState(false);
 
   const advanceToCardCapture = () => setJourneyStep(steps.CARD_CAPTURE);
   const advanceToConfirmSplit = () => setJourneyStep(steps.ACCEPT_SPLIT);
@@ -66,6 +67,22 @@ const Splits = () => {
       }
     }
   }, [loading, reqConfig]);
+
+  useEffect(() => {
+    if (socket && !socketLoaded) {
+      console.log(socket);
+      const listener = (message) => {
+        if (message === 'NEW_SPLITS') {
+          setLoading(true);
+        }
+      };
+      socket.on('split', listener);
+      setSocketLoaded(true);
+      return () => {
+        socket.removeListener('split', listener);
+      };
+    }
+  });
 
   if (loading) {
     return (

@@ -14,7 +14,8 @@ import {
 
 import { Button } from '../../styles/GlobalStyle';
 
-const CurrentTab = () => {
+const CurrentTab = ({ socket }) => {
+  console.log(socket);
   const history = useHistory();
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);
@@ -73,11 +74,12 @@ const CurrentTab = () => {
 
   const requestSplit = async (tabDrinkId, requestUserId) => {
     const token = window.localStorage.getItem('token');
-    const { data: updatedDrink } = await axios.put(
+    await axios.put(
       '/api/user/tab/current/request-split',
       { tabDrinkId, requestUserId },
       { headers: { authorization: token } }
     );
+    socket.emit('split', 'NEW_SPLIT', requestUserId);
     setLoading(true);
   };
 

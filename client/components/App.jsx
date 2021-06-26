@@ -85,19 +85,23 @@ const App = () => {
           )}
         </Route>
         <Route path="/profile">
-          <Profile user={user} />
+          <Profile socket={socket} user={user} />
         </Route>
         <Route path="/order">
           <CurrentOrder user={user} setUser={setUser} />
         </Route>
-        <Route path="/tab" component={CurrentTab}></Route>
+        <Route path="/tab">
+          <CurrentTab socket={socket} />
+        </Route>
         <Route exact path="/venue/:id" component={AllDrinks}></Route>
         <Route
           exact
           path="/venue/:id/drink/:drinkid"
           component={SingleDrink}
         ></Route>
-        <Route exact path="/splits" component={Splits} />
+        <Route exact path="/splits">
+          <Splits socket={socket} />
+        </Route>
         <Route exact path="/menu">
           {venue ? <Redirect to={`/venue/${venue.id}`} /> : <Redirect to="/" />}
         </Route>

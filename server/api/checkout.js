@@ -12,25 +12,23 @@ const {
 // let customer;
 router.get('/card-wallet', requireUserToken, async (req, res, next) => {
   try {
-    
-    const customerId = req.user.stripeId
-    const userId = req.user.id
-    console.log(req.user)
+    const customerId = req.user.stripeId;
+    const userId = req.user.id;
+    // console.log(req.user)
     //customer = await stripe.customers.create();
 
-    const intent =  await stripe.setupIntents.create({
+    const intent = await stripe.setupIntents.create({
       //customer: customer.id,
-      customer: customerId
+      customer: customerId,
     });
 
     // if no tab open, create a tab
 
-    const tab = await req.user.currentTab()
+    const tab = await req.user.currentTab();
     //Tab.findOne({where: {userId: userId} })
     if (!tab) {
-      await Tab.create({userId})
+      await Tab.create({ userId });
     }
-    
 
     res.send(intent.client_secret);
   } catch (ex) {
@@ -38,21 +36,21 @@ router.get('/card-wallet', requireUserToken, async (req, res, next) => {
   }
 });
 
-router.post("/charge-card", requireUserToken, async (req, res, next) => {
-  let paymentIntent
-  const customerId = req.user.stripeId
-  const userId = req.user.id
+router.post('/charge-card', requireUserToken, async (req, res, next) => {
+  let paymentIntent;
+  const customerId = req.user.stripeId;
+  const userId = req.user.id;
   try {
     // List the customer's payment methods to find one to charge
     const paymentMethods = await stripe.paymentMethods.list({
       //customer: customer.id,
       customer: customerId,
-      type: "card"
+      type: 'card',
     });
 
     // Create and confirm a PaymentIntent with the order amount, currency,
     // Customer and PaymentMethod ID
-    console.log(req.body.amount)
+    // console.log(req.body.amount);
     paymentIntent = await stripe.paymentIntents.create({
       amount: req.body.amount,
       currency: 'usd',
@@ -63,10 +61,10 @@ router.post("/charge-card", requireUserToken, async (req, res, next) => {
       confirm: true,
     });
 
-    const tab = await Tab.findOne({ where: { userId: userId }})
-    console.log(tab)
-    tab.status = 'closed'
-    tab.save()
+    const tab = await Tab.findOne({ where: { userId: userId } });
+    // console.log(tab);
+    tab.status = 'closed';
+    tab.save();
 
     res.send({
       succeeded: true,

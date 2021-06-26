@@ -32,6 +32,12 @@ const socketServer = (server) => {
     });
   });
 
+  usersNamespace.on('split', (type, requestUserId) => {
+    if (type === 'NEW_SPLIT') {
+      console.log('New split for user: ', requestUserId);
+    }
+  });
+
   const venuesNamespace = io.of('/venues');
 
   venuesNamespace.use(async (socket, next) => {
