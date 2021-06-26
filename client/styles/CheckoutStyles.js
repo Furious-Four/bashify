@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 export const Form = styled.form`
-.StripeElement {
+  .StripeElement {
     height: 15px;
     padding: 10px 12px;
     margin: .5rem;
-    width: 75%;
+    width: calc(100% - 2rem);
     color: #32325d;
     background-color: white;
     border: 1px solid transparent;

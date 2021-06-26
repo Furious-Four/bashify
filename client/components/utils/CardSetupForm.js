@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import CardSection from './CardSection.js';
 import { Form } from '../../styles/CheckoutStyles.js';
+import { Button } from '../../styles/GlobalStyle.js';
 
 export default function CardSetupForm() {
   const stripe = useStripe();
@@ -17,9 +18,11 @@ export default function CardSetupForm() {
     if (!stripe || !elements) {
       return;
     }
-    const token = window.localStorage.getItem('token')
-    const { data: client_secret } = await axios.get('/api/checkout/card-wallet', 
-    { headers: { authorization: token } })
+    const token = window.localStorage.getItem('token');
+    const { data: client_secret } = await axios.get(
+      '/api/checkout/card-wallet',
+      { headers: { authorization: token } }
+    );
     //console.log(client_secret)
     const result = await stripe.confirmCardSetup(client_secret, {
       payment_method: {
@@ -58,10 +61,7 @@ export default function CardSetupForm() {
   return (
     <Form onSubmit={handleSubmit}>
       <CardSection />
-      <input type='button' value='open tab' disabled={!stripe} onClick={async () => {
-                    await createTabDrinks();
-                    history.push('/tab');
-      }}/>
+      <Button disabled={!stripe}>Create Tab</Button>
       <p>you won't be charged until your tab is closed</p>
     </Form>
   );

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import PopUp from './PopUp';
 import {
@@ -8,15 +8,18 @@ import {
   CurrentTabCard,
   CurrentTabPage,
   CurrentTabForm,
+  TabRow,
   Tip,
 } from '../../styles/Tab';
 
 import { Button } from '../../styles/GlobalStyle';
 
 const CurrentTab = () => {
+  const history = useHistory();
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
+  const [tip, setTip] = useState(0.15);
   let [total, setTotal] = useState(subtotal);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -43,8 +46,7 @@ const CurrentTab = () => {
     } catch (ex) {
       console.log(ex);
     }
-  }, []);
-  const tip = 0;
+  }, [isOpen]);
 
   useEffect(() => {
     if (drinks) {
@@ -57,22 +59,23 @@ const CurrentTab = () => {
       const subtotal = prices.reduce((acc, cum) => acc + cum, 0);
 
       setSubtotal(subtotal);
+      setTotal(subtotal + subtotal * tip);
     }
   });
 
   const handleClick = function (value) {
-    let tip = value;
-    let total = tab.tax * subtotal + tip * subtotal + subtotal;
-    total = total.toFixed(2);
-    // currently total is 0 until we add tip?
-    setTotal(total);
+    setTip(value);
+    // let total = tab.tax * subtotal + tip * subtotal + subtotal;
+    // total = total.toFixed(2);
+    // // currently total is 0 until we add tip?
+    // setTotal(total);
   };
 
-  const requestSplit = async (tabDrinkId) => {
+  const requestSplit = async (tabDrinkId, requestUserId) => {
     const token = window.localStorage.getItem('token');
     const { data: updatedDrink } = await axios.put(
       '/api/user/tab/current/request-split',
-      { tabDrinkId, requestUserId: 2 },
+      { tabDrinkId, requestUserId },
       { headers: { authorization: token } }
     );
     setLoading(true);
@@ -101,74 +104,118 @@ const CurrentTab = () => {
         </CurrentTabHeader>
         <CurrentTabCard>
           <CurrentTabForm>
-            <div>
-              {drinks.map((drink) => {
-                let value;
-                if (drink.status === 'ACCEPTED') {
-                  value = 'split accepted';
-                } else {
-                  value =
-                    drink.status === 'REQUESTED-OUTBOUND'
-                      ? 'request pending'
-                      : 'split drink';
-                }
-                return (
-                  <div className="formDiv" key={drink.drink.id}>
-                    <div> {drink.drink.name} </div>
+            {drinks.map((drink) => {
+              let value;
+              if (drink.status === 'ACCEPTED') {
+                value = 'split accepted';
+              } else {
+                value =
+                  drink.status === 'REQUESTED-OUTBOUND'
+                    ? 'request pending'
+                    : 'split drink';
+              }
+              const buttonOpt =
+                drink.status === 'ACCEPTED' ||
+                drink.status === 'REQUESTED-OUTBOUND';
+              return (
+                <TabRow key={drink.drink.id}>
+                  <div> {drink.drink.name} </div>
+                  <div>
                     <div>{drink.quantity}</div>
                     <div> x </div>
                     <div> ${drink.drink.price} </div>
-                    {drink.status === "ACCEPTED" ? (
-
-                    
-                    <input disabled type="button" value={value} onClick={togglePopup} />
-                    ) : (
-                        <input type="button" value={value} onClick={togglePopup} />
-                    )}
+                    <Button
+                      disabled={buttonOpt}
+                      secondary={buttonOpt}
+                      onClick={togglePopup}
+                    >
+                      {value}
+                    </Button>
                     {isOpen && (
                       <PopUp
                         content={
-                          <>
-                            <b>enter username:</b>
-                            <select id="reqUsername">
-                              {friends.map((friend) => {
-                                return (
-                                  <option value={friend.username}>
-                                    {friend.fullName}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                              <input
-                                type="button"
-                                value="send request"
-                                onClick={() => requestSplit(drink.id)}
-                              />
-                          </>
+                          friends.length ? (
+                            <>
+                              <b>select a friend to request:</b>
+                              <select id="reqUsername">
+                                {friends.map((friend) => {
+                                  return (
+                                    <option key={friend.id} value={friend.id}>
+                                      {friend.fullName}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                              <Button
+                                onClick={(ev) => {
+                                  const requestUserId = ev.target.parentNode.querySelector(
+                                    'select'
+                                  ).value;
+                                  requestSplit(drink.id, requestUserId);
+                                  togglePopup();
+                                }}
+                              >
+                                Request
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <b>
+                                to send a request, you need at least one friend
+                              </b>
+                              <Button
+                                onClick={() =>
+                                  history.push('/profile?tab=friends')
+                                }
+                              >
+                                Add Friends
+                              </Button>
+                            </>
+                          )
                         }
                         handleClose={togglePopup}
                       />
                     )}
                   </div>
-                );
-              })}
-            </div>
-            <div></div>
+                </TabRow>
+              );
+            })}
           </CurrentTabForm>
-          <h5> select tip amount </h5>
           <Tip>
-            <Button value={0.15} onClick={(e) => handleClick(e.target.value)}>
+            <h5>select tip amount: </h5>
+            <Button
+              disabled={tip == 0.15}
+              secondary={tip == 0.15}
+              value={0.15}
+              onClick={(e) => handleClick(e.target.value)}
+            >
               15%
             </Button>
-            <Button value={0.2} onClick={(e) => handleClick(e.target.value)}>
+            <Button
+              disabled={tip == 0.2}
+              secondary={tip == 0.2}
+              value={0.2}
+              onClick={(e) => handleClick(e.target.value)}
+            >
               20%
             </Button>
-            <Button value={0.25} onClick={(e) => handleClick(e.target.value)}>
+            <Button
+              disabled={tip == 0.25}
+              secondary={tip == 0.25}
+              value={0.25}
+              onClick={(e) => handleClick(e.target.value)}
+            >
               25%
             </Button>
           </Tip>
-          <h3> subtotal ${subtotal} </h3>
-          <h2> total ${total} </h2>
+          <Tip>
+            <h3>subtotal:</h3>
+            <h3>${subtotal}</h3>
+          </Tip>
+          <Tip>
+            <h2>total:</h2>
+            <h2>${total}</h2>
+          </Tip>
           <Button onClick={async () => await chargeCard(total)}>
             checkout and close tab
           </Button>

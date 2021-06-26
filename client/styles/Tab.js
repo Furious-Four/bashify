@@ -31,9 +31,11 @@ export const CurrentTabHeader = styled.div`
 `;
 
 export const Tip = styled.div`
+  width: calc(100% - 2rem);
   display: flex;
   flex-flow: row;
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const CurrentTabCard = styled.div`
@@ -42,18 +44,32 @@ export const CurrentTabCard = styled.div`
   align-items: center;
   background: var(--white);
   color: var(--blue);
-  width: 75%;
+  width: calc(100% - 2rem);
   margin: 1rem;
 `;
 
 export const CurrentTabForm = styled.div`
+  width: calc(100% - 2rem);
   display: flex;
-  .formDiv {
-    display: flex;
-    align-items: center;
+  flex-flow: column nowrap;
+  > div {
+    width: 100%;
+    padding-bottom: 1rem;
+    :first-child {
+      padding-top: 1rem;
+    }
   }
-  div {
-    padding: 1rem;
+`;
+
+export const TabRow = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  > div {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
   }
 `;
 
