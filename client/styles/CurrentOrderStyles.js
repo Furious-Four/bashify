@@ -33,12 +33,26 @@ export const CurrentOrderCard = styled(motion.div)`
 `;
 
 export const CurrentOrderForm = styled(motion.div)`
+  width: calc(100% - 2rem);
   display: flex;
-  .formDiv {
-    display: flex;
-    align-items: center;
+  flex-flow: column nowrap;
+  > div {
+    width: 100%;
+    padding-bottom: 1rem;
+    :first-child {
+      padding-top: 1rem;
+    }
   }
-  div {
-    padding: 1rem;
+`;
+
+export const OrderRow = styled(motion.div)`
+  display: flex;
+  flex-flow: column nowrap;
+  > div {
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
   }
 `;

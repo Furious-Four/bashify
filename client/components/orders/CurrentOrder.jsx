@@ -7,11 +7,13 @@ import { decDrink } from '../utils/DecDrink';
 import { incDrink } from '../utils/IncDrink';
 
 import { Button } from '../../styles/GlobalStyle';
+import { Tip } from '../../styles/Tab';
 import {
   CurrentOrderCard,
   CurrentOrderHeader,
   CurrentOrderPage,
   CurrentOrderForm,
+  OrderRow,
 } from '../../styles/CurrentOrderStyles';
 
 const CurrentOrder = () => {
@@ -81,35 +83,42 @@ const CurrentOrder = () => {
           <h2>your current order</h2>
         </CurrentOrderHeader>
         <CurrentOrderCard>
-          <h3>Status: {order.status}</h3>
+          {/* <h3>Status: {order.status}</h3> */}
           <CurrentOrderForm>
             <div>
               {drinks.map((drink) => {
                 return (
-                  <div className="formDiv" key={drink.drinkId}>
+                  <OrderRow key={drink.drinkId}>
                     <div key={drink.drink.name}>{drink.drink.name}</div>
-                    <div key={drink.drink.price}>${drink.drink.price}</div>
-                    <Button
-                      onClick={async () =>
-                        setOrder(await decDrink(drink.drinkId))
-                      }
-                    >
-                      -
-                    </Button>
-                    {drink.quantity}
-                    <Button
-                      onClick={async () =>
-                        setOrder(await incDrink(drink.drinkId))
-                      }
-                    >
-                      +
-                    </Button>
-                  </div>
+                    <div>
+                      <div key={drink.drink.price}>${drink.drink.price}</div>
+                      <div>
+                        <Button
+                          onClick={async () =>
+                            setOrder(await decDrink(drink.drinkId))
+                          }
+                        >
+                          <img src="/public/minus.svg" width="15em" />
+                        </Button>
+                        {drink.quantity}
+                        <Button
+                          onClick={async () =>
+                            setOrder(await incDrink(drink.drinkId))
+                          }
+                        >
+                          <img src="/public/plus.svg" width="15em" />
+                        </Button>
+                      </div>
+                    </div>
+                  </OrderRow>
                 );
               })}
             </div>
           </CurrentOrderForm>
-          <h3 id="subtotal">subtotal ${subtotal}</h3>
+          <Tip>
+            <h3 id="subtotal">subtotal:</h3>
+            <h3>${subtotal}</h3>
+          </Tip>
         </CurrentOrderCard>
         <Button
           onClick={async () => {
