@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import CardSection from './CardSection.js';
 import { Form } from '../../styles/CheckoutStyles.js';
@@ -9,6 +10,7 @@ import { Button } from '../../styles/GlobalStyle.js';
 export default function CardSetupForm() {
   const stripe = useStripe();
   const elements = useElements();
+  const history = useHistory();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,8 +38,23 @@ export default function CardSetupForm() {
       // The setup has succeeded. Display a success message and send
       // result.setupIntent.payment_method to your server to save the
       // card to a Customer
-      alert('order submitted');
+      alert('tab opened!');
       console.log(result.setupIntent.payment_method);
+    }
+  };
+
+  const createTabDrinks = async () => {
+    try {
+      const token = window.localStorage.getItem('token');
+      const { data: tabDrinks } = await axios.put(
+        '/api/user/tab/current',
+        null,
+        {
+          headers: { authorization: token },
+        }
+      );
+    } catch (err) {
+      console.error(err);
     }
   };
 

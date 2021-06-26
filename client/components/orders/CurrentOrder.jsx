@@ -5,7 +5,7 @@ import axios from 'axios';
 import Checkout from '../utils/Checkout';
 import { decDrink } from '../utils/DecDrink';
 import { incDrink } from '../utils/IncDrink';
-
+import PopUp from '../tabs/PopUp.jsx';
 import { Button } from '../../styles/GlobalStyle';
 import { Tip } from '../../styles/Tab';
 import {
@@ -22,6 +22,7 @@ const CurrentOrder = () => {
   const [drinks, setDrinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subtotal, setSubTotal] = useState();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(async () => {
     if (loading) {
@@ -74,6 +75,12 @@ const CurrentOrder = () => {
     // subtotal not updating if i delete all drinks
   }, [drinks]);
 
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  };
+
+
+
   if (loading) {
     return <div>...loading</div>;
   } else {
@@ -120,15 +127,26 @@ const CurrentOrder = () => {
             <h3>${subtotal}</h3>
           </Tip>
         </CurrentOrderCard>
-        <Button
-          onClick={async () => {
-            await createTabDrinks();
-            history.push('/tab');
-          }}
-        >
-          Submit Order
-        </Button>
-        <Checkout />
+        <div>
+          <input type="button" value="submit order" onClick={togglePopup} />
+            {isOpen && (
+              <PopUp
+                content={
+                <div>
+                  <Checkout />
+                  {/* <Button
+                  onClick={async () => {
+                    await createTabDrinks();
+                    history.push('/tab');
+                  }}
+                  >
+                  Go to tab
+                </Button> */}
+                </div>
+                }
+                handleClose={togglePopup}
+            />)}
+        </div>        
       </CurrentOrderPage>
     );
   }
