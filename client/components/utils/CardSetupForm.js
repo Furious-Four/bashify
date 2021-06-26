@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import CardSection from './CardSection.js';
 import { Form } from '../../styles/CheckoutStyles.js';
@@ -8,6 +9,7 @@ import { Form } from '../../styles/CheckoutStyles.js';
 export default function CardSetupForm() {
   const stripe = useStripe();
   const elements = useElements();
+  const history = useHistory();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,10 +40,28 @@ export default function CardSetupForm() {
     }
   };
 
+  const createTabDrinks = async () => {
+    try {
+      const token = window.localStorage.getItem('token');
+      const { data: tabDrinks } = await axios.put(
+        '/api/user/tab/current',
+        null,
+        {
+          headers: { authorization: token },
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <Form onSubmit={handleSubmit}>
       <CardSection />
-      <button disabled={!stripe}>Open Tab</button>
+      <input type='button' value='open tab' disabled={!stripe} onClick={async () => {
+                    await createTabDrinks();
+                    history.push('/tab');
+      }}/>
       <p>you won't be charged until your tab is closed</p>
     </Form>
   );

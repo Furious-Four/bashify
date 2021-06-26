@@ -5,7 +5,7 @@ import axios from 'axios';
 import Checkout from '../utils/Checkout';
 import { decDrink } from '../utils/DecDrink';
 import { incDrink } from '../utils/IncDrink';
-
+import PopUp from '../tabs/PopUp.jsx';
 import { Button } from '../../styles/GlobalStyle';
 import {
   CurrentOrderCard,
@@ -20,6 +20,7 @@ const CurrentOrder = () => {
   const [drinks, setDrinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [subtotal, setSubTotal] = useState();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(async () => {
     if (loading) {
@@ -72,18 +73,11 @@ const CurrentOrder = () => {
     // subtotal not updating if i delete all drinks
   }, [drinks]);
 
-  const PopUp = (props) => {
-    return (
-      <div className="popup-box">
-        <div className="box">
-          <span className="close-icon" onClick={props.handleClose}>
-            X
-          </span>
-          {props.content}
-        </div>
-      </div>
-    );
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
   };
+
+
 
   if (loading) {
     return <div>...loading</div>;
@@ -124,15 +118,26 @@ const CurrentOrder = () => {
           </CurrentOrderForm>
           <h3 id="subtotal">subtotal ${subtotal}</h3>
         </CurrentOrderCard>
-        <Button
-          onClick={async () => {
-            await createTabDrinks();
-            history.push('/tab');
-          }}
-        >
-          Submit Order
-        </Button>
-        <Checkout />
+        <div>
+          <input type="button" value="submit order" onClick={togglePopup} />
+            {isOpen && (
+              <PopUp
+                content={
+                <div>
+                  <Checkout />
+                  {/* <Button
+                  onClick={async () => {
+                    await createTabDrinks();
+                    history.push('/tab');
+                  }}
+                  >
+                  Go to tab
+                </Button> */}
+                </div>
+                }
+                handleClose={togglePopup}
+            />)}
+        </div>        
       </CurrentOrderPage>
     );
   }

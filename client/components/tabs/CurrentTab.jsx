@@ -144,7 +144,6 @@ const CurrentTab = () => {
                                 value="send request"
                                 onClick={() => requestSplit(drink.id)}
                               />
-                            )}
                           </>
                         }
                         handleClose={togglePopup}

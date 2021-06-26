@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
 
   .popup-box {
     position: fixed;
-    background: #00000050;
+    color: var(--blue);
     width: 100%;
     height: 100vh;
     top: 0;
