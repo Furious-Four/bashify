@@ -63,7 +63,9 @@ router.put('/current', requireUserToken, async (req, res, next) => {
     const tab = await user.currentTab();
     const order = await user.currentOrder();
     if (!tab) {
-      res.sendStatus(409);
+      const error = new Error('no current tab');
+      error.status = 409;
+      throw error;
     }
     order.orderDrinks.forEach(async (drink) => {
       const tabDrink = await TabDrink.findOne({
@@ -84,6 +86,8 @@ router.put('/current', requireUserToken, async (req, res, next) => {
         });
       }
     });
+    await order.update({ status: 'SUBMITTED' });
+    res.sendStatus(200);
   } catch (err) {
     next(err);
   }
