@@ -1,20 +1,21 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Checkout from '../utils/Checkout';
 import { decDrink } from '../utils/DecDrink';
 import { incDrink } from '../utils/IncDrink';
 
+import { Button } from '../../styles/GlobalStyle';
 import {
   CurrentOrderCard,
   CurrentOrderHeader,
   CurrentOrderPage,
   CurrentOrderForm,
-  Button,
 } from '../../styles/CurrentOrderStyles';
 
 const CurrentOrder = () => {
+  const history = useHistory();
   const [order, setOrder] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,10 +44,18 @@ const CurrentOrder = () => {
   }, [order]);
 
   const createTabDrinks = async () => {
-    const token = window.localStorage.getItem('token');
-    const { data: tabDrinks } = await axios.put('/api/user/tab/current', null, {
-      headers: { authorization: token },
-    });
+    try {
+      const token = window.localStorage.getItem('token');
+      const { data: tabDrinks } = await axios.put(
+        '/api/user/tab/current',
+        null,
+        {
+          headers: { authorization: token },
+        }
+      );
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -102,8 +111,13 @@ const CurrentOrder = () => {
           </CurrentOrderForm>
           <h3 id="subtotal">subtotal ${subtotal}</h3>
         </CurrentOrderCard>
-        <Button onClick={createTabDrinks}>
-          <Link to="tab">Submit Order</Link>
+        <Button
+          onClick={async () => {
+            await createTabDrinks();
+            history.push('/tab');
+          }}
+        >
+          Submit Order
         </Button>
         <Checkout />
       </CurrentOrderPage>
