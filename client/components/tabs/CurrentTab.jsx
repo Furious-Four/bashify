@@ -46,7 +46,7 @@ const CurrentTab = () => {
     } catch (ex) {
       console.log(ex);
     }
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     if (drinks) {
@@ -151,7 +151,6 @@ const CurrentTab = () => {
                                   const requestUserId = ev.target.parentNode.querySelector(
                                     'select'
                                   ).value;
-                                  console.log(requestUserId);
                                   requestSplit(drink.id, requestUserId);
                                   togglePopup();
                                 }}
