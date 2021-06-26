@@ -9,14 +9,15 @@ import {
   CurrentTabPage,
   CurrentTabForm,
   Tip,
-  Button,
 } from '../../styles/Tab';
+
+import { Button } from '../../styles/GlobalStyle';
 
 const CurrentTab = () => {
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
-  let [total, setTotal] = useState(0);
+  let [total, setTotal] = useState(subtotal);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [friends, setFriends] = useState([]);
@@ -49,7 +50,9 @@ const CurrentTab = () => {
     if (drinks.length) {
       const prices = [];
       drinks.map((drink) => {
-        prices.push(drink.drink.price * drink.quantity);
+        if (drink.status !== 'ACCEPTED') {
+          prices.push(drink.drink.price * drink.quantity);
+        }
       });
       const subtotal = prices.reduce((acc, cum) => acc + cum);
 
@@ -94,17 +97,21 @@ const CurrentTab = () => {
           <CurrentTabForm>
             <div>
               {drinks.map((drink) => {
-                let value =
-                  drink.status === 'REQUESTED-OUTBOUND'
-                    ? 'request pending'
-                    : 'split drink';
+                let value;
+                if (drink.status === 'ACCEPTED') {
+                  value = 'split accepted';
+                } else {
+                  value =
+                    drink.status === 'REQUESTED-OUTBOUND'
+                      ? 'request pending'
+                      : 'split drink';
+                }
                 return (
                   <div className="formDiv" key={drink.drink.id}>
                     <div> {drink.drink.name} </div>
                     <div>{drink.quantity}</div>
                     <div> x </div>
                     <div> ${drink.drink.price} </div>
-
                     <input type="button" value={value} onClick={togglePopup} />
                     {isOpen && (
                       <PopUp
