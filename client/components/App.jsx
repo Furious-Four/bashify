@@ -22,6 +22,7 @@ import { connectUserSocket } from './utils/Socket.js';
 
 const App = () => {
   const [user, setUser] = useState({});
+  const [venue, setVenue] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -70,7 +71,9 @@ const App = () => {
     <Router>
       <MainNav user={user} setLoggedIn={setLoggedIn} />
       <Switch>
-        <Route path="/" exact component={AllVenues} />
+        <Route path="/" exact>
+          <AllVenues setAppVenue={setVenue} />
+        </Route>
         <Route exact path="/login">
           {loggedIn ? <Redirect to="/" /> : <Login setLoggedIn={setLoggedIn} />}
         </Route>
@@ -95,6 +98,9 @@ const App = () => {
           component={SingleDrink}
         ></Route>
         <Route exact path="/splits" component={Splits} />
+        <Route exact path="/menu">
+          {venue ? <Redirect to={`/venue/${venue.id}`} /> : <Redirect to="/" />}
+        </Route>
         {/*
         AllDrinks
         SingleDrink
