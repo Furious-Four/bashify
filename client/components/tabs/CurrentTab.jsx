@@ -52,6 +52,22 @@ const CurrentTab = () => {
     }
   }, [loading]);
 
+  useEffect(() => {
+    if (socket) {
+      const listener = (message) => {
+        console.log(message);
+        if (message === 'ACCEPT_SPLIT' || message === 'REJECT_SPLIT') {
+          setLoading(true);
+        }
+      };
+      socket.on('split', listener);
+      return () => {
+        socket.disconnect();
+        setSocket(null);
+      };
+    }
+  }, [socket]);
+
   const togglePopup = () => {
     setIsOpen(!isOpen);
   };

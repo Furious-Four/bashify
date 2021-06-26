@@ -38,7 +38,6 @@ const App = () => {
 
   useEffect(async () => {
     // Like componentDidMount and componentDidUpdate all in one
-    console.log(loggedIn, token, user.id);
     if (!token) {
       const localToken = window.localStorage.getItem('token');
       if (localToken) {

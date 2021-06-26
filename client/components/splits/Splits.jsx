@@ -36,6 +36,7 @@ const Splits = () => {
       { tabDrinkId },
       reqConfig
     );
+    socket.emit('split', 'ACCEPT_SPLIT', requestCurrent.requestedById);
     setLoading(true);
     backToLanding();
   };
@@ -85,6 +86,7 @@ const Splits = () => {
       socket.on('split', listener);
       return () => {
         socket.disconnect();
+        setSocket(null);
       };
     }
   }, [socket]);

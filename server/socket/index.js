@@ -34,18 +34,16 @@ const socketServer = (server) => {
     });
 
     socket.on('split', async (type, requestUserId) => {
+      console.log(type, requestUserId);
       const receiveSocket = userSockets[requestUserId];
       if (type === 'NEW_SPLIT') {
-        receiveSocket.emit('split', 'NEW_SPLIT');
+        receiveSocket.emit('split', type);
+      }
+      if (type === 'ACCEPT_SPLIT') {
+        receiveSocket.emit('split', type);
       }
     });
   });
-
-  // usersNamespace.on('split', (type, requestUserId) => {
-  //   if (type === 'NEW_SPLIT') {
-  //     console.log('New split for user: ', requestUserId);
-  //   }
-  // });
 
   const venuesNamespace = io.of('/venues');
 
