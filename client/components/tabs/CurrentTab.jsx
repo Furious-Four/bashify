@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import PopUp from './PopUp';
 import {
@@ -14,6 +14,7 @@ import {
 import { Button } from '../../styles/GlobalStyle';
 
 const CurrentTab = () => {
+  const history = useHistory();
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
@@ -118,34 +119,55 @@ const CurrentTab = () => {
                     <div>{drink.quantity}</div>
                     <div> x </div>
                     <div> ${drink.drink.price} </div>
-                    {drink.status === "ACCEPTED" ? (
-
-                    
-                    <input disabled type="button" value={value} onClick={togglePopup} />
+                    {drink.status === 'ACCEPTED' ? (
+                      <input
+                        disabled
+                        type="button"
+                        value={value}
+                        onClick={togglePopup}
+                      />
                     ) : (
-                        <input type="button" value={value} onClick={togglePopup} />
+                      <input
+                        type="button"
+                        value={value}
+                        onClick={togglePopup}
+                      />
                     )}
                     {isOpen && (
                       <PopUp
                         content={
-                          <>
-                            <b>enter username:</b>
-                            <select id="reqUsername">
-                              {friends.map((friend) => {
-                                return (
-                                  <option value={friend.username}>
-                                    {friend.fullName}
-                                  </option>
-                                );
-                              })}
-                            </select>
+                          friends.length ? (
+                            <>
+                              <b>enter username:</b>
+                              <select id="reqUsername">
+                                {friends.map((friend) => {
+                                  return (
+                                    <option value={friend.username}>
+                                      {friend.fullName}
+                                    </option>
+                                  );
+                                })}
+                              </select>
                               <input
                                 type="button"
                                 value="send request"
                                 onClick={() => requestSplit(drink.id)}
                               />
-                            )}
-                          </>
+                            </>
+                          ) : (
+                            <>
+                              <div>
+                                To send a request, you need at least one friend
+                              </div>
+                              <Button
+                                onClick={() =>
+                                  history.push('/profile?tab=friends')
+                                }
+                              >
+                                Add Friends
+                              </Button>
+                            </>
+                          )
                         }
                         handleClose={togglePopup}
                       />
