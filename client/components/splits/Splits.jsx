@@ -6,8 +6,9 @@ import SentRequests from './SentRequests';
 import { SplitRow, SplitConfirm, SplitTab } from '../../styles/Splits';
 import Checkout from '../utils/Checkout';
 import { Button } from '../../styles/GlobalStyle';
+import { connectUserSocket } from '../utils/Socket';
 
-const Splits = ({ socket }) => {
+const Splits = () => {
   const steps = {
     LANDING: 'LANDING',
     NEW_TAB: 'NEW_TAB',
@@ -17,12 +18,12 @@ const Splits = ({ socket }) => {
   };
 
   const [loading, setLoading] = useState(true);
+  const [socket, setSocket] = useState(null);
   const [reqConfig, setReqConfig] = useState(null);
   const [journeyStep, setJourneyStep] = useState(steps.LANDING);
   const [userTab, setUserTab] = useState(null);
   const [requestList, setRequestList] = useState([]);
   const [requestCurrent, setRequestCurrent] = useState(null);
-  const [socketLoaded, setSocketLoaded] = useState(false);
 
   const advanceToCardCapture = () => setJourneyStep(steps.CARD_CAPTURE);
   const advanceToConfirmSplit = () => setJourneyStep(steps.ACCEPT_SPLIT);
@@ -61,6 +62,11 @@ const Splits = ({ socket }) => {
           );
           setRequestList(requests);
           setLoading(false);
+          if (!socket) {
+            const token = window.localStorage.getItem('token');
+            const newSocket = connectUserSocket(token, 'test');
+            setSocket(newSocket);
+          }
         }
       } catch (err) {
         console.error(err);
@@ -72,17 +78,16 @@ const Splits = ({ socket }) => {
     if (socket) {
       const listener = (message) => {
         console.log(message);
-        if (message === 'NEW_SPLITS') {
+        if (message === 'NEW_SPLIT') {
           setLoading(true);
         }
       };
       socket.on('split', listener);
-      setSocketLoaded(true);
       return () => {
-        socket.removeListener(listener);
+        socket.disconnect();
       };
     }
-  });
+  }, [socket]);
 
   if (loading) {
     return (

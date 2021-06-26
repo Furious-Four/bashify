@@ -18,14 +18,12 @@ import AllVenues from './venues/AllVenues.jsx';
 import SingleDrink from './drinks/SingleDrink.jsx';
 import CurrentOrder from './orders/CurrentOrder.jsx';
 import Splits from './splits/Splits.jsx';
-import { connectUserSocket } from './utils/Socket.js';
 
 const App = () => {
   const [user, setUser] = useState({});
   const [venue, setVenue] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState(null);
-  const [socket, setSocket] = useState(null);
 
   const fetchUserDetails = async (token) => {
     try {
@@ -40,18 +38,16 @@ const App = () => {
 
   useEffect(async () => {
     // Like componentDidMount and componentDidUpdate all in one
+    console.log(loggedIn, token, user.id);
     if (!token) {
       const localToken = window.localStorage.getItem('token');
       if (localToken) {
         setToken(localToken);
         setLoggedIn(true);
       }
-    }
-    if (!user.id && loggedIn) {
+    } else if (!user.id && loggedIn) {
       try {
         await fetchUserDetails(token);
-        const socket = connectUserSocket(token, venue.id);
-        setSocket(socket);
       } catch (err) {
         console.error(err);
         window.localStorage.removeItem('token');
@@ -62,8 +58,6 @@ const App = () => {
     if (user.id && !loggedIn) {
       setUser({});
       setToken(null);
-      socket.disconnect();
-      setSocket(null);
     }
   }, [loggedIn, token, user]);
 
@@ -85,13 +79,13 @@ const App = () => {
           )}
         </Route>
         <Route path="/profile">
-          <Profile socket={socket} user={user} />
+          <Profile user={user} />
         </Route>
         <Route path="/order">
           <CurrentOrder user={user} setUser={setUser} />
         </Route>
         <Route path="/tab">
-          <CurrentTab socket={socket} />
+          <CurrentTab />
         </Route>
         <Route exact path="/venue/:id" component={AllDrinks}></Route>
         <Route
@@ -100,7 +94,7 @@ const App = () => {
           component={SingleDrink}
         ></Route>
         <Route exact path="/splits">
-          <Splits socket={socket} />
+          <Splits />
         </Route>
         <Route exact path="/menu">
           {venue ? <Redirect to={`/venue/${venue.id}`} /> : <Redirect to="/" />}
