@@ -8,13 +8,13 @@ export const CurrentOrderPage = styled(motion.div)`
 `;
 
 export const Button = styled(motion.button)`
- color: var(--blue);
- text-align: center;
- transition: all 0.15s;
- background: var(--orange);
- height: 25%;
- margin: 0.25rem;
-`
+   color: var(--blue);
+   text-align: center;
+   transition: all 0.15s;
+  background: var(--orange);
+  height: 25%;
+  margin: 0.25rem;
+`;
 
 export const CurrentOrderHeader = styled(motion.div)`
   display: flex;
@@ -28,7 +28,7 @@ export const CurrentOrderCard = styled(motion.div)`
   align-items: center;
   background: var(--white);
   color: var(--blue);
-  width: 75%;
+  width: calc(100% - 2rem);
   margin: 1rem;
 `;
 
@@ -38,8 +38,7 @@ export const CurrentOrderForm = styled(motion.div)`
     display: flex;
     align-items: center;
   }
-  div { 
+  div {
     padding: 1rem;
   }
 `;
-
