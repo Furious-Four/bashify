@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import PopUp from './PopUp';
-import { Button } from '../../styles/GlobalStyle';
 import {
   CurrentTabHeader,
   CurrentTabCard,
@@ -13,12 +12,14 @@ import {
   Tip,
 } from '../../styles/Tab';
 
+import { Button } from '../../styles/GlobalStyle';
+
 const CurrentTab = () => {
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [tip, setTip] = useState(0.15);
-  let [total, setTotal] = useState(0);
+  let [total, setTotal] = useState(subtotal);
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [friends, setFriends] = useState([]);
@@ -50,7 +51,9 @@ const CurrentTab = () => {
     if (drinks) {
       const prices = [];
       drinks.map((drink) => {
-        prices.push(drink.drink.price * drink.quantity);
+        if (drink.status !== 'ACCEPTED') {
+          prices.push(drink.drink.price * drink.quantity);
+        }
       });
       const subtotal = prices.reduce((acc, cum) => acc + cum, 0);
 
@@ -101,10 +104,18 @@ const CurrentTab = () => {
         <CurrentTabCard>
           <CurrentTabForm>
             {drinks.map((drink) => {
-              let value =
-                drink.status === 'REQUESTED-OUTBOUND'
-                  ? 'request pending'
-                  : 'split drink';
+              let value;
+              if (drink.status === 'ACCEPTED') {
+                value = 'split accepted';
+              } else {
+                value =
+                  drink.status === 'REQUESTED-OUTBOUND'
+                    ? 'request pending'
+                    : 'split drink';
+              }
+              const buttonOpt =
+                drink.status === 'ACCEPTED' ||
+                drink.status === 'REQUESTED-OUTBOUND';
               return (
                 <TabRow key={drink.drink.id}>
                   <div> {drink.drink.name} </div>
@@ -112,8 +123,13 @@ const CurrentTab = () => {
                     <div>{drink.quantity}</div>
                     <div> x </div>
                     <div> ${drink.drink.price} </div>
-
-                    <Button onClick={togglePopup}>{value}</Button>
+                    <Button
+                      disabled={buttonOpt}
+                      secondary={buttonOpt}
+                      onClick={togglePopup}
+                    >
+                      {value}
+                    </Button>
                   </div>
                   {isOpen && (
                     <PopUp
