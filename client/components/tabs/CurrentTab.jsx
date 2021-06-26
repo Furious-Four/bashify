@@ -15,7 +15,6 @@ import {
 import { Button } from '../../styles/GlobalStyle';
 
 const CurrentTab = ({ socket }) => {
-  console.log(socket);
   const history = useHistory();
   const [tab, setTab] = useState({});
   const [drinks, setDrinks] = useState([]);

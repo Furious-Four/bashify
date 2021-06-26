@@ -69,9 +69,9 @@ const Splits = ({ socket }) => {
   }, [loading, reqConfig]);
 
   useEffect(() => {
-    if (socket && !socketLoaded) {
-      console.log(socket);
+    if (socket) {
       const listener = (message) => {
+        console.log(message);
         if (message === 'NEW_SPLITS') {
           setLoading(true);
         }
@@ -79,7 +79,7 @@ const Splits = ({ socket }) => {
       socket.on('split', listener);
       setSocketLoaded(true);
       return () => {
-        socket.removeListener('split', listener);
+        socket.removeListener(listener);
       };
     }
   });

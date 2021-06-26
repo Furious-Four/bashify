@@ -50,7 +50,7 @@ const App = () => {
     if (!user.id && loggedIn) {
       try {
         await fetchUserDetails(token);
-        const socket = connectUserSocket(token, 'test');
+        const socket = connectUserSocket(token, venue.id);
         setSocket(socket);
       } catch (err) {
         console.error(err);
