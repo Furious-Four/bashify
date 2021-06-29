@@ -6,6 +6,7 @@ import SentRequests from './SentRequests';
 import { SplitRow, SplitConfirm, SplitTab } from '../../styles/Splits';
 import Checkout from '../utils/Checkout';
 import { Button } from '../../styles/GlobalStyle';
+import { connectUserSocket } from '../utils/Socket';
 
 const Splits = () => {
   const steps = {
@@ -17,6 +18,7 @@ const Splits = () => {
   };
 
   const [loading, setLoading] = useState(true);
+  const [socket, setSocket] = useState(null);
   const [reqConfig, setReqConfig] = useState(null);
   const [journeyStep, setJourneyStep] = useState(steps.LANDING);
   const [userTab, setUserTab] = useState(null);
@@ -34,6 +36,7 @@ const Splits = () => {
       { tabDrinkId },
       reqConfig
     );
+    socket.emit('split', 'ACCEPT_SPLIT', requestCurrent.requestedById);
     setLoading(true);
     backToLanding();
   };
@@ -60,12 +63,33 @@ const Splits = () => {
           );
           setRequestList(requests);
           setLoading(false);
+          if (!socket) {
+            const token = window.localStorage.getItem('token');
+            const newSocket = connectUserSocket(token, 'test');
+            setSocket(newSocket);
+          }
         }
       } catch (err) {
         console.error(err);
       }
     }
   }, [loading, reqConfig]);
+
+  useEffect(() => {
+    if (socket) {
+      const listener = (message) => {
+        console.log(message);
+        if (message === 'NEW_SPLIT') {
+          setLoading(true);
+        }
+      };
+      socket.on('split', listener);
+      return () => {
+        socket.disconnect();
+        setSocket(null);
+      };
+    }
+  }, [socket]);
 
   if (loading) {
     return (
