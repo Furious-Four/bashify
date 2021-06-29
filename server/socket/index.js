@@ -5,6 +5,7 @@ const {
 
 const socketServer = (server) => {
   const io = socket(server, { path: '/socket' });
+  const userSockets = {};
 
   const usersNamespace = io.of('/users');
 
@@ -21,6 +22,7 @@ const socketServer = (server) => {
 
   usersNamespace.on('connection', (socket) => {
     const { user, venue } = socket;
+    userSockets[user.id] = socket;
     //console.log('User', user.id, 'connected');
 
     socket.join(venue);
@@ -29,6 +31,17 @@ const socketServer = (server) => {
     socket.on('disconnect', () => {
       //console.log('User', user.id, 'disconnected');
       usersNamespace.to(venue).emit('message', `User ${user.id} disconnected`);
+    });
+
+    socket.on('split', async (type, requestUserId) => {
+      console.log(type, requestUserId);
+      const receiveSocket = userSockets[requestUserId];
+      if (type === 'NEW_SPLIT') {
+        receiveSocket.emit('split', type);
+      }
+      if (type === 'ACCEPT_SPLIT') {
+        receiveSocket.emit('split', type);
+      }
     });
   });
 

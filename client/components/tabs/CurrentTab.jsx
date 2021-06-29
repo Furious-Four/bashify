@@ -13,6 +13,7 @@ import {
 } from '../../styles/Tab';
 
 import { Button } from '../../styles/GlobalStyle';
+import { connectUserSocket } from '../utils/Socket';
 
 const CurrentTab = () => {
   const history = useHistory();
@@ -22,31 +23,54 @@ const CurrentTab = () => {
   const [tip, setTip] = useState(0.15);
   let [total, setTotal] = useState(subtotal);
   const [loading, setLoading] = useState(true);
+  const [socket, setSocket] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [friends, setFriends] = useState([]);
+
+  useEffect(async () => {
+    if (loading) {
+      try {
+        const token = window.localStorage.getItem('token');
+        const { data: tab } = await axios.get(`/api/user/tab/current`, {
+          headers: { authorization: token },
+        });
+        setTab(tab);
+        const { data: friends } = await axios.get(`api/user/friend/all`, {
+          headers: { authorization: token },
+        });
+        setFriends(friends);
+        setLoading(false);
+        const drinks = tab.tabDrinks;
+        setDrinks(drinks);
+        if (!socket) {
+          const newSocket = connectUserSocket(token, 'test');
+          setSocket(newSocket);
+        }
+      } catch (ex) {
+        console.log(ex);
+      }
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    if (socket) {
+      const listener = (message) => {
+        console.log(message);
+        if (message === 'ACCEPT_SPLIT' || message === 'REJECT_SPLIT') {
+          setLoading(true);
+        }
+      };
+      socket.on('split', listener);
+      return () => {
+        socket.disconnect();
+        setSocket(null);
+      };
+    }
+  }, [socket]);
 
   const togglePopup = () => {
     setIsOpen(!isOpen);
   };
-
-  useEffect(async () => {
-    try {
-      const token = window.localStorage.getItem('token');
-      const { data: tab } = await axios.get(`/api/user/tab/current`, {
-        headers: { authorization: token },
-      });
-      setTab(tab);
-      const { data: friends } = await axios.get(`api/user/friend/all`, {
-        headers: { authorization: token },
-      });
-      setFriends(friends);
-      setLoading(false);
-      const drinks = tab.tabDrinks;
-      setDrinks(drinks);
-    } catch (ex) {
-      console.log(ex);
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     if (drinks) {
@@ -61,7 +85,7 @@ const CurrentTab = () => {
       setSubtotal(subtotal);
       setTotal(subtotal + subtotal * tip);
     }
-  });
+  }, [drinks]);
 
   const handleClick = function (value) {
     setTip(value);
@@ -73,11 +97,12 @@ const CurrentTab = () => {
 
   const requestSplit = async (tabDrinkId, requestUserId) => {
     const token = window.localStorage.getItem('token');
-    const { data: updatedDrink } = await axios.put(
+    await axios.put(
       '/api/user/tab/current/request-split',
       { tabDrinkId, requestUserId },
       { headers: { authorization: token } }
     );
+    socket.emit('split', 'NEW_SPLIT', requestUserId);
     setLoading(true);
   };
 
