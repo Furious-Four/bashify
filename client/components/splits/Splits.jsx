@@ -76,7 +76,6 @@ const Splits = () => {
   useEffect(() => {
     if (socket) {
       const listener = (message) => {
-        console.log(message);
         if (message === 'NEW_SPLIT') {
           setLoading(true);
         }
