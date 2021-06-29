@@ -8,10 +8,10 @@ const stripePromise = loadStripe('pk_test_51IvtaYFkob7fZ9T0uLozxOC3cAPrDRZzVn8FJ
   //stripeAccount: '{{CONNECTED_STRIPE_ACCOUNT_ID}}'
 });
 
-const Checkout = () => {
+const Checkout = ({onSuccess}) => {
   return (
     <Elements stripe={stripePromise}>
-      <CardSetupForm />
+      <CardSetupForm onSuccess={onSuccess}/>
     </Elements>
   );
 };
