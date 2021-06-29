@@ -41,8 +41,6 @@ const Splits = () => {
     backToLanding();
   };
 
-  useEffect(() => console.log(requestCurrent), [requestCurrent]);
-
   useEffect(async () => {
     if (loading) {
       try {

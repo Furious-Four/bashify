@@ -43,6 +43,25 @@ const socketServer = (server) => {
         receiveSocket.emit('split', type);
       }
     });
+
+    socket.on('friend', async (type, requestUser) => {
+      console.log(type, requestUser);
+      if (type === 'NEW_FRIEND' || type === 'ACCEPT_FRIEND') {
+        let receiveSocket;
+        if (type === 'NEW_FRIEND') {
+          const requestUserId = (
+            await User.findOne({
+              where: { username: requestUser },
+            })
+          ).id;
+          receiveSocket = userSockets[requestUserId];
+        }
+        if (type === 'ACCEPT_FRIEND') {
+          receiveSocket = userSockets[requestUser];
+        }
+        receiveSocket.emit('friend', type);
+      }
+    });
   });
 
   const venuesNamespace = io.of('/venues');
