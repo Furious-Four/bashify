@@ -19,6 +19,7 @@ const seed = async () => {
       name: 'Furious Four Pub',
       type: 'Pub',
       email: 'furiousfourpub@email.com',
+      password: 'venuetest',
       address: '4 Furious Ave, NY, 00000',
       state: 'NY',
       website: 'www.furiousfourpub.com',
@@ -28,6 +29,7 @@ const seed = async () => {
       name: 'Fullstack Academy of Alcohol',
       type: 'Bar',
       email: 'erickats@alsoknownasprof.com',
+      password: 'venuetest',
       address: '100 Code Ave, NY, 00001',
       state: 'NY',
       website: 'www.fullstackalcohol.com',
@@ -37,6 +39,7 @@ const seed = async () => {
       name: 'Crocodile Lounge',
       type: 'Bar',
       email: 'crocodilebar@NYU.com',
+      password: 'venuetest',
       address: '999 Crocodile Ave, NY, 10293',
       state: 'NY',
       website: 'www.crocodilelounge.com',
@@ -46,6 +49,7 @@ const seed = async () => {
       name: 'Alligator Bar',
       type: 'Bar',
       email: 'alligatorbar@grr.com',
+      password: 'venuetest',
       address: '198 Alligator Pkwy, NY, 03993',
       state: 'NY',
       website: 'www.alligatorbar.com',
@@ -225,25 +229,25 @@ const seed = async () => {
       menuId: nightMenu.id,
     });
     // added test order
-    const testOrder = await Order.create({
-      status: 'ORDERING',
-      userId: 3,
-      venueId: 1,
-    });
+    // const testOrder = await Order.create({
+    //   status: 'ORDERING',
+    //   userId: 3,
+    //   venueId: 1,
+    // });
 
-    const testOrderDrink1 = await OrderDrink.create({
-      quantity: 1,
-      price: donJulioShot.price,
-      orderId: testOrder.id,
-      drinkId: donJulioShot.id,
-    });
+    // const testOrderDrink1 = await OrderDrink.create({
+    //   quantity: 1,
+    //   price: donJulioShot.price,
+    //   orderId: testOrder.id,
+    //   drinkId: donJulioShot.id,
+    // });
 
-    const testOrderDrink2 = await OrderDrink.create({
-      quantity: 1,
-      price: patronShot.price,
-      orderId: testOrder.id,
-      drinkId: patronShot.id,
-    });
+    // const testOrderDrink2 = await OrderDrink.create({
+    //   quantity: 1,
+    //   price: patronShot.price,
+    //   orderId: testOrder.id,
+    //   drinkId: patronShot.id,
+    // });
 
     //tab data
     const michelleTab = await Tab.create({ userId: michelle.id });
@@ -259,16 +263,16 @@ const seed = async () => {
     });
 
     //tab data
-    const domisobiTab = await Tab.create({ userId: dominique.id });
+    // const domisobiTab = await Tab.create({ userId: dominique.id });
 
-    //tabDrink data
-    const domisobiTabDrink = await TabDrink.create({
-      userId: dominique.id,
-      tabId: domisobiTab.id,
-      drinkId: donJulioShot.id,
-      price: donJulioShot.price,
-      quantity: 1,
-    });
+    // //tabDrink data
+    // const domisobiTabDrink = await TabDrink.create({
+    //   userId: dominique.id,
+    //   tabId: domisobiTab.id,
+    //   drinkId: donJulioShot.id,
+    //   price: donJulioShot.price,
+    //   quantity: 1,
+    // });
 
     const domisobiDrinkRequest = await TabDrink.create({
       userId: dominique.id,

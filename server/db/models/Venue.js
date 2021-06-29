@@ -79,6 +79,13 @@ Venue.init(
         isEmail: true,
       },
     },
+    password: {
+      type: STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
     address: {
       type: TEXT,
       allowNull: false,
@@ -111,7 +118,7 @@ Venue.init(
 
 Venue.addHook('beforeSave', async (venue) => {
   if (venue._changed.has('password')) {
-    user.password = await bcrypt.hash(user.password, 5);
+    venue.password = await bcrypt.hash(venue.password, 5);
   }
 });
 

@@ -18,6 +18,7 @@ import AllVenues from './venues/AllVenues.jsx';
 import SingleDrink from './drinks/SingleDrink.jsx';
 import CurrentOrder from './orders/CurrentOrder.jsx';
 import Splits from './splits/Splits.jsx';
+import AllMenues from "./admin/VenueLandingPage.jsx";
 
 const App = () => {
   const [user, setUser] = useState({});
@@ -98,6 +99,11 @@ const App = () => {
         <Route exact path="/menu">
           {venue ? <Redirect to={`/venue/${venue.id}`} /> : <Redirect to="/" />}
         </Route>
+        <Route
+          exact
+          path="/venue/:id/admin/landingpage"
+          component={AllMenues}
+        ></Route>
         {/*
         AllDrinks
         SingleDrink
