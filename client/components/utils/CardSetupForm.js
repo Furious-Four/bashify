@@ -40,6 +40,8 @@ export default function CardSetupForm() {
       // card to a Customer
       alert('tab opened!');
       console.log(result.setupIntent.payment_method);
+      await createTabDrinks();
+      history.push('/tab');
     }
   };
 
@@ -61,7 +63,7 @@ export default function CardSetupForm() {
   return (
     <Form onSubmit={handleSubmit}>
       <CardSection />
-      <Button disabled={!stripe}>Create Tab</Button>
+      <Button disabled={!stripe} >Create Tab</Button>
       <p>you won't be charged until your tab is closed</p>
     </Form>
   );

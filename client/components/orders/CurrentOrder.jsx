@@ -133,15 +133,15 @@ const CurrentOrder = () => {
               <PopUp
                 content={
                 <div>
-                  <Checkout />
-                  <Button
+                  <Checkout/>
+                  {/* <Button
                   onClick={async () => {
                     await createTabDrinks();
                     history.push('/tab');
                   }}
                   >
                   Go to tab
-                </Button>
+                </Button> */}
                 </div>
                 }
                 handleClose={togglePopup}

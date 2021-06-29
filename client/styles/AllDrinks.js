@@ -16,10 +16,12 @@ export const SingleDrinkParent = styled(motion.div)`
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin: 4rem;
   text-decoration: none;
   font-weight: 500;
+  padding: 1rem;
 `;
+
+// i got rid of the margin above to center the drinks on iphone X view & added padding
 
 export const SingleDrink = styled(motion.a)`
   margin: 4rem;
