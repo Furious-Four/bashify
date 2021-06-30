@@ -84,13 +84,14 @@ const CurrentTab = () => {
       setSubtotal(subtotal);
       setTotal(subtotal + subtotal * tip);
     }
-  }, [drinks]);
+  }, [drinks, tip]);
 
   const handleClick = function (value) {
+    console.log(value);
     setTip(value);
     // let total = tab.tax * subtotal + tip * subtotal + subtotal;
     // total = total.toFixed(2);
-    // // currently total is 0 until we add tip?
+    // currently total is 0 until we add tip?
     // setTotal(total);
   };
 

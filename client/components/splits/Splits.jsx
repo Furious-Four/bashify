@@ -114,7 +114,12 @@ const Splits = () => {
             if (journeyStep === steps.CARD_CAPTURE) {
               return (
                 <SplitTab>
-                  <Checkout onSuccess={() => setLoading(true)} />
+                  <Checkout
+                    onSuccess={() => {
+                      setLoading(true);
+                      backToLanding();
+                    }}
+                  />
                 </SplitTab>
               );
             }
