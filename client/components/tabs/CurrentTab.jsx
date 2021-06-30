@@ -55,7 +55,6 @@ const CurrentTab = () => {
   useEffect(() => {
     if (socket) {
       const listener = (message) => {
-        console.log(message);
         if (message === 'ACCEPT_SPLIT' || message === 'REJECT_SPLIT') {
           setLoading(true);
         }

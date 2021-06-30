@@ -10,45 +10,75 @@ import {
   FriendRequest,
   FriendRequestForm,
 } from '../../styles/Profile';
+import { connectUserSocket } from '../utils/Socket';
 
 const Friends = () => {
   const [friendList, setFriendList] = useState([]);
   const [requestList, setRequestList] = useState([]);
+  const [sentList, setSentList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [socket, setSocket] = useState(null);
   const [requestConfig, setRequestConfig] = useState(null);
   const [requestForm, setRequestForm] = useState('');
 
   useEffect(async () => {
     if (loading) {
       try {
-        const token = window.localStorage.getItem('token');
-        if (token) {
+        if (!requestConfig) {
+          const token = window.localStorage.getItem('token');
           const config = {
             headers: { authorization: token },
           };
+          setRequestConfig(config);
+        } else {
           const { data: friends } = await axios.get(
             '/api/user/friend/all',
-            config
+            requestConfig
           );
           setFriendList(friends);
           const { data: requests } = await axios.get(
             '/api/user/friend/requests',
-            config
+            requestConfig
           );
           setRequestList(requests);
-          setRequestConfig(config);
+          const { data: sentRequests } = await axios.get(
+            '/api/user/friend/sent',
+            requestConfig
+          );
+          setSentList(sentRequests);
+          if (!socket) {
+            const token = window.localStorage.getItem('token');
+            const newSocket = connectUserSocket(token, 'test');
+            setSocket(newSocket);
+          }
+          setLoading(false);
         }
-        setLoading(false);
       } catch (err) {
         window.alert(err);
       }
     }
-  }, [loading]);
+  }, [loading, requestConfig]);
+
+  useEffect(() => {
+    if (socket) {
+      const listener = (message) => {
+        if (message === 'NEW_FRIEND' || message === 'ACCEPT_FRIEND') {
+          setLoading(true);
+        }
+      };
+      socket.on('friend', listener);
+      return () => {
+        socket.disconnect();
+        setSocket(null);
+      };
+    }
+  }, [socket]);
 
   const requestResponse = async (friendId, mode) => {
     try {
       const body = { friendId, mode };
       await axios.put('/api/user/friend/request', body, requestConfig);
+      if (socket) socket.emit('friend', 'ACCEPT_FRIEND', friendId);
       setLoading(true);
     } catch (err) {
       window.alert('Failed to respond to request');
@@ -66,11 +96,11 @@ const Friends = () => {
         { username: requestForm },
         requestConfig
       );
-      // Something visual to let the user know the request was successful
+      if (socket) socket.emit('friend', 'NEW_FRIEND', requestForm);
       setLoading(true);
       setRequestForm('');
     } catch (err) {
-      window.alert('Failed to create request');
+      console.error(err);
     }
   };
 
@@ -86,7 +116,7 @@ const Friends = () => {
       <FriendSection>
         {requestList.length ? (
           <>
-            <h3>Requests</h3>
+            <h3>Requests received</h3>
             {requestList.map((friend) => (
               <RequestRow key={friend.id}>
                 <div>{friend.fullName}</div>
@@ -100,6 +130,23 @@ const Friends = () => {
                 </div>
               </RequestRow>
             ))}
+          </>
+        ) : (
+          ''
+        )}
+      </FriendSection>
+
+      <FriendSection>
+        {sentList.length ? (
+          <>
+            <h3>Sent requests</h3>
+            {sentList.map((request) => {
+              return (
+                <RequestRow key={request.id}>
+                  <div>{request.fullName}</div>
+                </RequestRow>
+              );
+            })}
           </>
         ) : (
           ''

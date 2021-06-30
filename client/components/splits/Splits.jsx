@@ -41,8 +41,6 @@ const Splits = () => {
     backToLanding();
   };
 
-  useEffect(() => console.log(requestCurrent), [requestCurrent]);
-
   useEffect(async () => {
     if (loading) {
       try {
@@ -78,7 +76,6 @@ const Splits = () => {
   useEffect(() => {
     if (socket) {
       const listener = (message) => {
-        console.log(message);
         if (message === 'NEW_SPLIT') {
           setLoading(true);
         }

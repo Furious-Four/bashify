@@ -154,6 +154,25 @@ class User extends Model {
       });
   }
 
+  getSentFriendRequests() {
+    const {
+      models: { users, friendships },
+    } = db;
+    return friendships
+      .findAll({
+        where: { status: 'PENDING', userId: this.id },
+      })
+      .then((requests) => {
+        return Promise.all(
+          requests.map((request) =>
+            users.findByPk(request.friendId, {
+              attributes: ['id', 'fullName', 'firstName', 'lastName'],
+            })
+          )
+        );
+      });
+  }
+
   currentOrder() {
     const {
       models: { orders },

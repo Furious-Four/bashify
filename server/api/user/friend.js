@@ -21,6 +21,7 @@ router.get('/all', requireUserToken, async (req, res, next) => {
   }
 });
 
+// GET /api/user/friend/requests
 router.get('/requests', requireUserToken, async (req, res, next) => {
   try {
     const { user } = req;
@@ -31,6 +32,18 @@ router.get('/requests', requireUserToken, async (req, res, next) => {
   }
 });
 
+// GET /api/user/friend/sent
+router.get('/sent', requireUserToken, async (req, res, next) => {
+  try {
+    const { user } = req;
+    const requests = await user.getSentFriendRequests();
+    res.send(requests);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/user/friend/request
 router.post('/request', requireUserToken, async (req, res, next) => {
   try {
     const {
@@ -45,6 +58,7 @@ router.post('/request', requireUserToken, async (req, res, next) => {
   }
 });
 
+// PUT /api/user/friend/request
 router.put('/request', requireUserToken, async (req, res, next) => {
   try {
     const {
