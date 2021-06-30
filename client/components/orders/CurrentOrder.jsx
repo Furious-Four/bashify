@@ -46,7 +46,7 @@ const CurrentOrder = () => {
     }
   }, [order]);
 
-  const createTabDrinks = async () => {
+  const createTabDrinks = async() => {
     try {
       const token = window.localStorage.getItem('token');
       const { data: tabDrinks } = await axios.put(
@@ -79,8 +79,16 @@ const CurrentOrder = () => {
     setIsOpen(!isOpen);
   };
 
-
-
+  const onSuccess = async() => {
+    try {
+      await createTabDrinks();
+      history.push('/tab');
+    }
+    catch (ex) {
+      console.log(ex)
+    }
+  }
+  
   if (loading) {
     return <div>...loading</div>;
   } else {
@@ -133,15 +141,15 @@ const CurrentOrder = () => {
               <PopUp
                 content={
                 <div>
-                  <Checkout />
-                  <Button
+                  <Checkout onSuccess={onSuccess}/>
+                  {/* <Button
                   onClick={async () => {
                     await createTabDrinks();
                     history.push('/tab');
                   }}
                   >
                   Go to tab
-                </Button>
+                </Button> */}
                 </div>
                 }
                 handleClose={togglePopup}

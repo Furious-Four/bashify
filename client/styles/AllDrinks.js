@@ -16,7 +16,7 @@ export const SingleDrinkParent = styled(motion.div)`
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin: 4rem;
+  padding: 1rem;
   text-decoration: none;
   font-weight: 500;
 `;

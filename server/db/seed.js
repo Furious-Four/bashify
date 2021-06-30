@@ -225,25 +225,25 @@ const seed = async () => {
       menuId: nightMenu.id,
     });
     // added test order
-    const testOrder = await Order.create({
-      status: 'ORDERING',
-      userId: 3,
-      venueId: 1,
-    });
+    // const testOrder = await Order.create({
+    //   status: 'ORDERING',
+    //   userId: 3,
+    //   venueId: 1,
+    // });
 
-    const testOrderDrink1 = await OrderDrink.create({
-      quantity: 1,
-      price: donJulioShot.price,
-      orderId: testOrder.id,
-      drinkId: donJulioShot.id,
-    });
+    // const testOrderDrink1 = await OrderDrink.create({
+    //   quantity: 1,
+    //   price: donJulioShot.price,
+    //   orderId: testOrder.id,
+    //   drinkId: donJulioShot.id,
+    // });
 
-    const testOrderDrink2 = await OrderDrink.create({
-      quantity: 1,
-      price: patronShot.price,
-      orderId: testOrder.id,
-      drinkId: patronShot.id,
-    });
+    // const testOrderDrink2 = await OrderDrink.create({
+    //   quantity: 1,
+    //   price: patronShot.price,
+    //   orderId: testOrder.id,
+    //   drinkId: patronShot.id,
+    // });
 
     //tab data
     const michelleTab = await Tab.create({ userId: michelle.id });
@@ -259,26 +259,26 @@ const seed = async () => {
     });
 
     //tab data
-    const domisobiTab = await Tab.create({ userId: dominique.id });
+    //const domisobiTab = await Tab.create({ userId: dominique.id });
 
     //tabDrink data
-    const domisobiTabDrink = await TabDrink.create({
-      userId: dominique.id,
-      tabId: domisobiTab.id,
-      drinkId: donJulioShot.id,
-      price: donJulioShot.price,
-      quantity: 1,
-    });
+    // const domisobiTabDrink = await TabDrink.create({
+    //   userId: dominique.id,
+    //   tabId: domisobiTab.id,
+    //   drinkId: donJulioShot.id,
+    //   price: donJulioShot.price,
+    //   quantity: 1,
+    // });
 
-    const domisobiDrinkRequest = await TabDrink.create({
-      userId: dominique.id,
-      requestedById: michelle.id,
-      drinkId: donJulioShot.id,
-      price: donJulioShot.price,
-      quantity: 2,
-      status: 'REQUESTED-INCOMING',
-      associatedTabDrinkId: michelleTabDrink.id,
-    });
+    // const domisobiDrinkRequest = await TabDrink.create({
+    //   userId: dominique.id,
+    //   requestedById: michelle.id,
+    //   drinkId: donJulioShot.id,
+    //   price: donJulioShot.price,
+    //   quantity: 2,
+    //   status: 'REQUESTED-INCOMING',
+    //   associatedTabDrinkId: michelleTabDrink.id,
+    // });
   } catch (error) {
     console.log(error);
   }
